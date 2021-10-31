@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid'
-
 import { EditorView, highlightSpecialChars, drawSelection, highlightActiveLine, keymap } from '@codemirror/view'
 import { EditorState, EditorSelection, Extension, Transaction } from '@codemirror/state'
 import { history, historyKeymap } from '@codemirror/history'
