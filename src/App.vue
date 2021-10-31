@@ -6,8 +6,13 @@ import HelloWorld from './components/HelloWorld.vue'
 import {EditorState, EditorView, basicSetup} from "@codemirror/basic-setup"
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown"
 import { defaultHighlightStyle } from "@codemirror/highlight"
+import { lineNumbers, highlightActiveLineGutter } from '@codemirror/gutter';
 
 import {gutter, GutterMarker} from "@codemirror/gutter"
+import {foldGutter} from "@codemirror/fold"
+
+import {StateField, StateEffect} from "@codemirror/state"
+import {RangeSet} from "@codemirror/rangeset"
 
 const emptyMarker = new class extends GutterMarker {
   toDOM() { return document.createTextNode("ø") }
@@ -15,9 +20,15 @@ const emptyMarker = new class extends GutterMarker {
 
 const emptyLineGutter = gutter({
   lineMarker(view, line) {
+    console.log(line)
     return line.from == line.to ? emptyMarker : null
   },
   initialSpacer: () => emptyMarker
+})
+
+const foldGutterInout = foldGutter({
+  openText: 'a',
+  closedText: 'b'
 })
 
 let baseTheme = EditorView.baseTheme({
@@ -30,8 +41,15 @@ let baseTheme = EditorView.baseTheme({
     fontFamily: "Consolas, 'Courier New', monospace, sans-serif",
     fontSize: '14px',
     lineHeight: '1.5'
+  },
+  ".cm-breakpoint-gutter .cm-gutterElement": {
+    color: "red",
+    paddingLeft: "5px",
+    cursor: "default"
   }
 })
+
+
 
 let state = EditorState.create({doc: `## title1
 
@@ -50,9 +68,11 @@ import { markdown, markdownLanguage } from "@codemirror/lang-markdown"
 
 中文
 `, extensions: [
-  basicSetup,
-  baseTheme,
+  // basicSetup,
+  lineNumbers(),
+  foldGutterInout,
   emptyLineGutter,
+  baseTheme,
   markdown({
     base: markdownLanguage
   }),
