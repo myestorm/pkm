@@ -28,7 +28,7 @@ class MarkdownEditor {
   extensions: Extension[] = []
 
   mounted (element: Element, options?: IEditorOptionsType) {
-    const baseTheme = EditorView.baseTheme(Theme)
+    const baseTheme = EditorView.theme(Theme, { dark: true })
     const updateListener = this.updateListener
     const extensions = [
       lineNumbers(),

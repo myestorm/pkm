@@ -1,12 +1,14 @@
 <template>
-  <div>
-    <button @click="insert">H2</button>
-    <button @click="blod">加粗</button>
-    <button @click="blockCode">代码块</button>
-  </div>
-  <div :id="id" :style="{
+  <div class="md-editor" :style="{
     height: height
-  }"></div>
+  }">
+    <div class="md-editor-toolbar">
+      <button @click="insert">H2</button>
+      <button @click="blod">加粗</button>
+      <button @click="blockCode">代码块</button>
+    </div>
+    <div class="md-editor-body" :id="id"></div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -24,7 +26,7 @@ export default defineComponent({
     },
     height: {
       type: String,
-      default: '500px'
+      default: '100vh'
     }
   },
   setup (props, ctx) {
@@ -99,8 +101,21 @@ export default defineComponent({
 })
 </script>
 <style lang="scss">
+.md-editor {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  &-toolbar {
+    height: 48px;
+    background: #424242;
+  }
+  &-body {
+    flex: 1;
+    height: calc(100vh - 48px)
+  }
+}
 .cm-editor {
   height: 100%;
-  border: 1px #dddddd solid;
+  // border-bottom: $--dark-border;
 }
 </style>
