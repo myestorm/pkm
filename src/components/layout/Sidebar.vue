@@ -1,6 +1,8 @@
 <template>
   <pkm-layout class="app-side-bar">
-    <pkm-layout-header style="color: #fff; padding: 16px 0; text-align: center">APP</pkm-layout-header>
+    <pkm-layout-header>
+      <img src="../../assets/logo/logo.svg" class="logo">
+    </pkm-layout-header>
     <pkm-layout-content>
       <div class="menu">
         <ul>
@@ -53,6 +55,12 @@ export default {
 .app-side-bar {
   height: calc(100vh - 0px);
   background-color: #424242;
+  .logo {
+    width: auto;
+    height: 40px;
+    display: block;
+    margin: 8px auto;
+  }
   .menu {
     ul, li {
       margin: 0;
