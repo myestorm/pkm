@@ -1,0 +1,153 @@
+$--toolbar-height: 48px;
+.md-editor {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  &-toolbar {
+    height: $--toolbar-height;
+    background: #424242;
+  }
+  &-body {
+    flex: 1;
+    height: calc(100vh - #{$--toolbar-height})
+  }
+  &-toolbar {
+    display: flex;
+    align-items: center;
+    ul, li {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .c {
+      flex: 1;
+    }
+    .toolbar {
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      li {
+        padding: 0 4px;
+      }
+      .split {
+        width: 1px;
+        height: $--toolbar-height;
+        position: relative;
+        margin: 0 8px;
+        padding: 0;
+        &::before {
+          content: " ";
+          width: 1px;
+          height: 32%;
+          position: absolute;
+          left: 0;
+          top: 34%;
+          background-color: #565656;
+        }
+      }
+      &-btn {
+        width: 32px;
+        height: 32px;
+        background: none;
+        border: 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 260ms ease-in;
+        border-radius: 4px;
+        &:hover, &:focus {
+          background-color: #313132;
+        }
+        > i {
+          width: 100%;
+          height: 100%;
+          display: block;
+          background-position: center center;
+          background-size: 100% auto;
+          background-repeat: no-repeat;
+        }
+      }
+      .icon- {
+        &header {
+          background-image: url(./svg/header.svg);
+        }
+        &bold {
+          background-image: url(./svg/bold.svg);
+        }
+        &italic {
+          background-image: url(./svg/italic.svg);
+          background-size: auto 60%;
+        }
+        &strikethrough {
+          background-image: url(./svg/strikethrough.svg);
+        }
+        &hrline {
+          background-image: url(./svg/hrline.svg);
+        }
+        &quote {
+          background-image: url(./svg/quote.svg);
+        }
+        &unordered-list {
+          background-image: url(./svg/unordered-list.svg);
+        }
+        &ordered-list {
+          background-image: url(./svg/ordered-list.svg);
+        }
+        &task-list {
+          background-image: url(./svg/task-list.svg);
+        }
+        &table {
+          background-image: url(./svg/table.svg);
+        }
+        &inline-code {
+          background-image: url(./svg/inline-code.svg);
+        }
+        &block-code {
+          background-image: url(./svg/block-code.svg);
+        }
+        &link {
+          background-image: url(./svg/link.svg);
+        }
+        &media {
+          background-image: url(./svg/media.svg);
+        }
+        &preview {
+          background-image: url(./svg/preview.svg);
+        }
+        &fullscreen {
+          background-image: url(./svg/fullscreen.svg);
+        }
+        &exit-fullscreen {
+          background-image: url(./svg/exit-fullscreen.svg);
+        }
+      }
+    }
+  }
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+.cm-editor {
+  height: 100%;
+  .editor-unfold, .editor-fold {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    background-image: url(./svg/arrow-down.svg);
+    background-size: 100% 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    margin: 4px 0 0;
+  }
+  .editor-fold {
+    background-image: url(./svg/arrow-right.svg);
+  }
+}

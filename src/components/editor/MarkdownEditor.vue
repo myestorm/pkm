@@ -3,21 +3,47 @@
     height: height
   }">
     <div class="md-editor-toolbar">
-      <button @click="insert">H2</button>
-      <button @click="blod">加粗</button>
-      <button @click="blockCode">代码块</button>
+      <div class="l">
+        <ul class="toolbar">
+          <li class="item"><button @click="insert" class="toolbar-btn"><i class="icon-header"></i></button></li>
+          <li class="item"><button @click="blod" class="toolbar-btn"><i class="icon-bold"></i></button></li>
+          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-italic"></i></button></li>
+          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-strikethrough"></i></button></li>
+          <li class="split"></li>
+          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-hrline"></i></button></li>
+          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-quote"></i></button></li>
+          <li class="split"></li>
+          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-unordered-list"></i></button></li>
+          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-ordered-list"></i></button></li>
+          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-task-list"></i></button></li>
+          <li class="split"></li>
+          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-table"></i></button></li>
+          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-inline-code"></i></button></li>
+          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-block-code"></i></button></li>
+          <li class="split"></li>
+          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-link"></i></button></li>
+          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-media"></i></button></li>
+        </ul>
+      </div>
+      <div class="c"></div>
+      <div class="r">
+        <ul class="toolbar">
+          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-preview"></i></button></li>
+          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-fullscreen"></i></button></li>
+        </ul>
+      </div>
     </div>
     <div class="md-editor-body" :id="id"></div>
   </div>
 </template>
 
 <script lang="ts">
-import { onMounted, defineComponent } from 'vue'
+import { onMounted } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 import MarkdownEditor from './MarkdownEditor'
+import './Theme.scss'
 
-
-export default defineComponent({
+export default {
   name: 'MarkdownEditor',
   props: {
     value: {
@@ -59,63 +85,7 @@ export default defineComponent({
       blockCode () {
         editor.insertAroundLine('```', '```')
       }
-      // insert (text: string) {
-      //   const anchor = editorView.state.selection.ranges[0].toJSON()
-      //   const selectionText = editorView.state.sliceDoc(editorView.state.selection.ranges[0].from, editorView.state.selection.ranges[0].to)
-      //   // console.log(editorView.state.sliceDoc(editorView.state.selection.ranges[0].from, editorView.state.selection.ranges[0].to))
-      //   console.log(editorView.state.doc.lineAt(editorView.state.selection.ranges[0].from))
-      //   const tr = editorView.state.update(
-      //     editorView.state.changeByRange(range => {
-      //       const line = editorView.state.doc.lineAt(range.from)
-      //       return {
-      //         changes: {
-      //           from: range.from,
-      //           to: range.to,
-      //           insert: `${text} ${selectionText}`
-      //         },
-      //         range: EditorSelection.range(line.from, line.to + 3)
-      //       }
-      //     })
-      //   )
-      //   editorView.dispatch(tr)
-      //   editorView.focus()
-      //   // let tr = editorView.state.update(editorView.state.replaceSelection("!"))
-      //   // console.log(editorView.state.selection)
-      //   // console.log(tr.state.doc.toString()) // "!o!"
-      //   // editorView.focus()
-      //   // let transaction = editorView.state.update({changes: {from: 0, insert: text}})
-      //   // console.log(transaction.state.doc.toString()) // "0123"
-      //   // At this point the view still shows the old state.
-      //   // const from = 2
-      //   // const tr = editorView.state.update({
-      //   //   changes: [
-      //   //     { from, insert: ' ] ' }
-      //   //   ],
-      //   //   selection: { anchor: from + 41},
-      //   //   scrollIntoView: true
-      //   // })
-      //   // editorView.dispatch(tr)
-      // }
     }
   }
-})
+}
 </script>
-<style lang="scss">
-.md-editor {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  &-toolbar {
-    height: 48px;
-    background: #424242;
-  }
-  &-body {
-    flex: 1;
-    height: calc(100vh - 48px)
-  }
-}
-.cm-editor {
-  height: 100%;
-  // border-bottom: $--dark-border;
-}
-</style>

@@ -48,7 +48,9 @@
     "@codemirror/view": "^0.19.9",
     "@lezer/markdown": "^0.15.1",
     "uuid": "^8.3.2",
-    "vue": "^3.2.16"
+    "vue": "^3.2.16",
+    "vue-router": "^4.0.12",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@arco-design/web-vue": "^2.0.3",

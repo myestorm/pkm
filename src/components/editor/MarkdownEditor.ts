@@ -15,7 +15,7 @@ import { defaultHighlightStyle } from '@codemirror/highlight'
 import { lintKeymap } from '@codemirror/lint'
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown'
 
-import Theme from './Theme'
+import { oneDark } from './MarkdownTheme'
 
 export interface IEditorOptionsType {
   initValue: string;
@@ -28,7 +28,6 @@ class MarkdownEditor {
   extensions: Extension[] = []
 
   mounted (element: Element, options?: IEditorOptionsType) {
-    const baseTheme = EditorView.theme(Theme, { dark: true })
     const updateListener = this.updateListener
     const extensions = [
       lineNumbers(),
@@ -37,9 +36,10 @@ class MarkdownEditor {
       history(),
       foldGutter({
         markerDOM (open) {
-          const b = document.createElement('span')
-          b.innerText = open ? '折叠' : '展开'
-          return b
+          const className = open ? 'editor-unfold' : 'editor-fold'
+          const span = document.createElement('span')
+          span.classList.add(className)
+          return span
         }
       }),
       drawSelection(),
@@ -65,7 +65,7 @@ class MarkdownEditor {
       markdown({
         base: markdownLanguage
       }),
-      baseTheme,
+      oneDark,
       updateListener
     ]
 

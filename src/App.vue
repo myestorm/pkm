@@ -1,38 +1,24 @@
 <template>
   <pkm-layout class="layout-app">
-    <pkm-layout-sider collapsible breakpoint="xl" class="aside"></pkm-layout-sider>
+    <pkm-layout-sider class="side-bar">
+      <sidebar></sidebar>
+    </pkm-layout-sider>
     <pkm-layout-content>
-      <markdown-editor :value="value" />
+      <router-view></router-view>
     </pkm-layout-content>
   </pkm-layout>
 </template>
 <script lang="ts">
 import './assets/scss/app.scss'
-import MarkdownEditor from './components/editor/MarkdownEditor.vue'
-const value = `## title1
-
-~~sdadas~~
-
-**sadsad**
-
-\`test\`
-
-\`\`\`javascript
-import { onMounted } from 'vue'
-import { EditorState, EditorView, basicSetup } from "@codemirror/basic-setup"
-import { markdown, markdownLanguage } from "@codemirror/lang-markdown"
-\`\`\`
-
-中文`
+import Sidebar from './components/layout/Sidebar.vue'
 export default {
   name: 'App',
   components: {
-    MarkdownEditor
+    Sidebar
   },
   setup () {
     document.body.setAttribute('arco-theme', 'dark')
     return {
-      value
     }
   }
 }

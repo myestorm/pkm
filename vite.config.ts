@@ -19,6 +19,7 @@ export default defineConfig({
           'color-border-2': '#e5e6eb',
           'color-border-3': '#c9cdd4',
           'color-border-4': '#869C90',
+          'arcoblue-6': '#009844',
         },
         javascriptEnabled: true,
       },
