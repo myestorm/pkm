@@ -1,4 +1,4 @@
-import { EditorView, highlightSpecialChars, drawSelection, highlightActiveLine, keymap, ViewUpdate } from '@codemirror/view'
+import { EditorView, highlightSpecialChars, drawSelection, highlightActiveLine, keymap, ViewUpdate, BlockInfo } from '@codemirror/view'
 import { EditorState, EditorSelection, Extension, Transaction, Compartment } from '@codemirror/state'
 import { history, historyKeymap } from '@codemirror/history'
 import { foldGutter, foldKeymap } from '@codemirror/fold'
@@ -71,7 +71,12 @@ class MarkdownEditor {
       }),
       oneDark,
       updateListener,
-      lineWrappingComp.of(EditorView.lineWrapping) // 自动换行
+      lineWrappingComp.of(EditorView.lineWrapping), // 自动换行
+      EditorView.domEventHandlers({
+        scroll (event: Event) {
+          console.log(event)
+        }
+      })
     ]
 
     this.extensions = extensions
@@ -86,6 +91,21 @@ class MarkdownEditor {
         state: this.state,
         parent: element
       })
+      this.view.viewportLines((line) => {
+        console.log(line)
+      }, 300)
+      // this.view.scrollDOM.scrollTop = 300
+      // this.view.scrollDOM.addEventListener('scroll', (event: Event) => {
+      //   const target = event.target as HTMLInputElement
+      //   const scrollTop = target?.scrollTop || 0
+      //   const a = this.view?.visualLineAt(scrollTop)
+      //   console.log(a)
+      //   if (a) {
+      //     const line = this.view?.state.doc.lineAt(a.from)
+      //     const item = this.preview?.getDombyLine(line?.number)
+      //     console.log(item?.scrollIntoView())
+      //   }
+      // })
       if (options?.preview) {
         this.preview = options.preview
       }
@@ -113,14 +133,12 @@ class MarkdownEditor {
     if (update.docChanged) {
       // console.log(update.state.doc.toString())
     }
-    if (update.selectionSet) {
-      // const range = update.state.selection.ranges[0]
-      // const line = update.state.doc.lineAt(range.from)
-      // const a = this.preview?.doc?.querySelector('[data-source-start="3"][data-source-level="0"]')
-      // a?.classList.add('active')
-      // console.log(line.number)
-      // console.log(update.view.hasFocus)
+    if (update.selectionSet) { // 选区变化
       this.selectionSet(update)
+    }
+
+    if (update.focusChanged) { // 焦点变化
+      this.focusChanged(update)
     }
   })
 
@@ -128,13 +146,13 @@ class MarkdownEditor {
     const preview = this.preview
     const range = update.state.selection.ranges[0]
     const line = update.state.doc.lineAt(range.from)
-    console.log(update)
-    if (preview) {
-      const item = preview.findActiveDom(line.number)
-      console.log(item)
-      if (item && update.view.hasFocus) {
-        item.classList.add('active')
-      }
+    preview?.setActive(line.number)
+  }
+
+  focusChanged (update: ViewUpdate) {
+    const preview = this.preview
+    if(!update.view.hasFocus) {
+      preview?.removeActive()
     }
   }
 

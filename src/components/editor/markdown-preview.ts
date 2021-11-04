@@ -6,6 +6,8 @@ class MarkdownPreview {
   doc: Document | null = null
   markdownIt = markdownIt
 
+  activeCLass = 'active'
+
   init (iframe: HTMLIFrameElement | null) {
     if (iframe) {
       this.iframe = iframe
@@ -55,6 +57,61 @@ class MarkdownPreview {
       }
     }
     return res
+  }
+
+  getTopLevelNodes () {
+    const nodes = this.doc?.querySelectorAll('[data-source-level="0"]')
+    return nodes
+  }
+
+  getDombyLine (line?: number): Element | null {
+    let res: Element | null = null
+    if (typeof line === 'undefined') {
+      return res
+    }
+    const nodes = this.getTopLevelNodes()
+    if (nodes && nodes.length > 0) {
+      const items = Array.from(nodes) 
+      for (const item of items) {
+        const start = Number(item.getAttribute('data-source-start'))
+        const end = Number(item.getAttribute('data-source-end'))
+        if (line >= start && line <= end) {
+          res = item
+          break
+        }
+      }
+    }
+    return res
+  }
+
+  setActive (line: number) {
+    const nodes = this.getTopLevelNodes()
+    let res: Element | null = null
+    if (nodes && nodes.length > 0) {
+      const items = Array.from(nodes) 
+      for (const item of items) {
+        const start = Number(item.getAttribute('data-source-start'))
+        const end = Number(item.getAttribute('data-source-end'))
+        if (line >= start && line <= end) {
+          res = item
+          item.classList.add(this.activeCLass)
+        } else {
+          item.classList.remove(this.activeCLass)
+        }
+      }
+    }
+    return res
+  }
+
+  removeActive () {
+    const nodes = this.getTopLevelNodes()
+    let res: Element | null = null
+    if (nodes && nodes.length > 0) {
+      const items = Array.from(nodes) 
+      for (const item of items) {
+        item.classList.remove(this.activeCLass)
+      }
+    }
   }
 
 }
