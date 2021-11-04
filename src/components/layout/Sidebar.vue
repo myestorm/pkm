@@ -22,6 +22,9 @@
             <router-link to="/" class="link"><icon-user :strokeWidth="strokeWidth" /></router-link>
           </li>
           <li>
+            <router-link to="/" class="link"><icon-question-circle :strokeWidth="strokeWidth" /></router-link>
+          </li>
+          <li>
             <router-link to="/" class="link"><icon-settings :strokeWidth="strokeWidth" /></router-link>
           </li>
         </ul>
@@ -34,7 +37,8 @@ import {
   IconFolder,
   IconFile,
   IconSettings,
-  IconUser
+  IconUser,
+  IconQuestionCircle
 } from '@arco-design/web-vue/es/icon'
 export default {
   name: 'SideBar',
@@ -42,7 +46,8 @@ export default {
     IconFolder,
     IconFile,
     IconSettings,
-    IconUser
+    IconUser,
+    IconQuestionCircle
   },
   setup () {
     return {
@@ -71,12 +76,11 @@ export default {
       .link {
         border-left-color: #ffffff;
         color: #ffffff;
-        border-radius: 4px 0 0 4px;
       }
     }
     .link {
-      border-left: 3px solid transparent;
-      border-right: 3px solid transparent;
+      border-left: 2px solid transparent;
+      border-right: 2px solid transparent;
       color: #999999;
       transition: all 260ms ease-in;
       display: block;
