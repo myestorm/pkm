@@ -47,6 +47,8 @@
     "@codemirror/tooltip": "^0.19.4",
     "@codemirror/view": "^0.19.9",
     "@lezer/markdown": "^0.15.1",
+    "markdown-it": "^12.2.0",
+    "prettier": "^2.4.1",
     "uuid": "^8.3.2",
     "vue": "^3.2.16",
     "vue-router": "^4.0.12",
@@ -54,6 +56,7 @@
   },
   "devDependencies": {
     "@arco-design/web-vue": "^2.0.3",
+    "@types/markdown-it": "^12.2.3",
     "@types/uuid": "^8.3.1",
     "@vitejs/plugin-vue": "^1.9.4",
     "less": "^4.1.2",

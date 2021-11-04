@@ -1,5 +1,5 @@
-import { EditorView, highlightSpecialChars, drawSelection, highlightActiveLine, keymap } from '@codemirror/view'
-import { EditorState, EditorSelection, Extension, Transaction } from '@codemirror/state'
+import { EditorView, highlightSpecialChars, drawSelection, highlightActiveLine, keymap, ViewUpdate } from '@codemirror/view'
+import { EditorState, EditorSelection, Extension, Transaction, Compartment } from '@codemirror/state'
 import { history, historyKeymap } from '@codemirror/history'
 import { foldGutter, foldKeymap } from '@codemirror/fold'
 import { indentOnInput } from '@codemirror/language'
@@ -15,20 +15,24 @@ import { defaultHighlightStyle } from '@codemirror/highlight'
 import { lintKeymap } from '@codemirror/lint'
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown'
 
-import { oneDark } from './MarkdownTheme'
+import { oneDark } from './markdown-theme'
+import MarkdownPreview from './markdown-preview'
 
 export interface IEditorOptionsType {
   initValue: string;
+  preview: MarkdownPreview
 }
 
 class MarkdownEditor {
   state: EditorState | null = null
   view: EditorView | null = null
+  preview: MarkdownPreview | null = null
   elem: Element | null = null
   extensions: Extension[] = []
 
   mounted (element: Element, options?: IEditorOptionsType) {
     const updateListener = this.updateListener
+    const lineWrappingComp = new Compartment()
     const extensions = [
       lineNumbers(),
       highlightActiveLineGutter(),
@@ -66,7 +70,8 @@ class MarkdownEditor {
         base: markdownLanguage
       }),
       oneDark,
-      updateListener
+      updateListener,
+      lineWrappingComp.of(EditorView.lineWrapping) // 自动换行
     ]
 
     this.extensions = extensions
@@ -81,6 +86,9 @@ class MarkdownEditor {
         state: this.state,
         parent: element
       })
+      if (options?.preview) {
+        this.preview = options.preview
+      }
     }
   }
 
@@ -105,7 +113,30 @@ class MarkdownEditor {
     if (update.docChanged) {
       // console.log(update.state.doc.toString())
     }
+    if (update.selectionSet) {
+      // const range = update.state.selection.ranges[0]
+      // const line = update.state.doc.lineAt(range.from)
+      // const a = this.preview?.doc?.querySelector('[data-source-start="3"][data-source-level="0"]')
+      // a?.classList.add('active')
+      // console.log(line.number)
+      // console.log(update.view.hasFocus)
+      this.selectionSet(update)
+    }
   })
+
+  selectionSet (update: ViewUpdate) {
+    const preview = this.preview
+    const range = update.state.selection.ranges[0]
+    const line = update.state.doc.lineAt(range.from)
+    console.log(update)
+    if (preview) {
+      const item = preview.findActiveDom(line.number)
+      console.log(item)
+      if (item && update.view.hasFocus) {
+        item.classList.add('active')
+      }
+    }
+  }
 
   /**
    * 在行首插入字符

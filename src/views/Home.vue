@@ -25,7 +25,7 @@
 <script lang="ts">
 import { ref } from 'vue'
 import '../assets/scss/app.scss'
-import MarkdownEditor from '../components/editor/MarkdownEditor.vue'
+import MarkdownEditor from '../components/editor/markdown-editor.vue'
 const value = `## title1
 
 ~~sdadas~~
@@ -39,6 +39,21 @@ import { onMounted } from 'vue'
 import { EditorState, EditorView, basicSetup } from "@codemirror/basic-setup"
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown"
 \`\`\`
+
+- sdsd
+- dsad
+  - asdsa
+  - dasdsad
+- dsadasd
+
+1. sadsa
+2. sadsad
+   1. asda
+   2. asdsad
+3. 2323
+
+- [ ] sadsadas
+- [ ] sadsadas
 
 中文`
 export default {
