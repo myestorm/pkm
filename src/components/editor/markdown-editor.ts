@@ -1,4 +1,4 @@
-import { EditorView, highlightSpecialChars, drawSelection, highlightActiveLine, keymap, ViewUpdate, BlockInfo } from '@codemirror/view'
+import { EditorView, highlightSpecialChars, drawSelection, highlightActiveLine, keymap, ViewUpdate } from '@codemirror/view'
 import { EditorState, EditorSelection, Extension, Transaction, Compartment } from '@codemirror/state'
 import { history, historyKeymap } from '@codemirror/history'
 import { foldGutter, foldKeymap } from '@codemirror/fold'
@@ -18,22 +18,44 @@ import { markdown, markdownLanguage } from '@codemirror/lang-markdown'
 import { oneDark } from './markdown-theme'
 import MarkdownPreview from './markdown-preview'
 
+interface IEditorEventsType {
+  focus: Function;
+  change: Function;
+  blur: Function;
+}
+
 export interface IEditorOptionsType {
+  id: string;
   initValue: string;
-  preview: MarkdownPreview
+  events: IEditorEventsType;
 }
 
 class MarkdownEditor {
-  state: EditorState | null = null
-  view: EditorView | null = null
-  preview: MarkdownPreview | null = null
-  elem: Element | null = null
-  extensions: Extension[] = []
+  state!: EditorState
+  view!: EditorView
+  preview!: MarkdownPreview
+  elem!: Element
+  extensions!: Extension[]
+  events!: IEditorEventsType
 
-  mounted (element: Element, options?: IEditorOptionsType) {
-    const updateListener = this.updateListener
-    const lineWrappingComp = new Compartment()
-    const extensions = [
+  isEditorScroll = false
+  isPreviewScroll = false
+
+  constructor (options: IEditorOptionsType) {
+    const elem = this.$$(`#${options.id}-editor`)
+    const previewEle = this.$$(`#${options.id}-preview`)
+    if (!elem || !previewEle) {
+      return
+    }
+    this.elem = elem
+    this.events = options.events
+    const preview = new MarkdownPreview(previewEle)
+    const updateListener = this.updateListener // 编辑器更新
+    const lineWrappingComp = new Compartment() // 较长文本是否换行
+    const scrollEvent = (event: Event) => { // 编辑器滚动事件
+      this.editorToPreview()
+    }
+    const extensions = [ // 编辑器扩展
       lineNumbers(),
       highlightActiveLineGutter(),
       highlightSpecialChars(),
@@ -72,44 +94,41 @@ class MarkdownEditor {
       oneDark,
       updateListener,
       lineWrappingComp.of(EditorView.lineWrapping), // 自动换行
-      EditorView.domEventHandlers({
-        scroll (event: Event) {
-          console.log(event)
-        }
+      EditorView.domEventHandlers({ // 绑定事件
+        scroll: scrollEvent
       })
     ]
-
     this.extensions = extensions
-
     this.state = EditorState.create({
-      doc: options?.initValue || '',
+      doc: options.initValue,
       extensions: this.extensions
     })
-    if (element) {
-      this.elem = element
-      this.view = new EditorView({
-        state: this.state,
-        parent: element
-      })
-      this.view.viewportLines((line) => {
-        console.log(line)
-      }, 300)
-      // this.view.scrollDOM.scrollTop = 300
-      // this.view.scrollDOM.addEventListener('scroll', (event: Event) => {
-      //   const target = event.target as HTMLInputElement
-      //   const scrollTop = target?.scrollTop || 0
-      //   const a = this.view?.visualLineAt(scrollTop)
-      //   console.log(a)
-      //   if (a) {
-      //     const line = this.view?.state.doc.lineAt(a.from)
-      //     const item = this.preview?.getDombyLine(line?.number)
-      //     console.log(item?.scrollIntoView())
-      //   }
-      // })
-      if (options?.preview) {
-        this.preview = options.preview
-      }
-    }
+    this.view = new EditorView({
+      state: this.state,
+      parent: this.elem
+    })
+    this.preview = preview // 预览
+    this.preview.setEditor(this)
+    this.preview.update(options.initValue)
+  }
+
+  $$ (exp: string): Element | null {
+    return document.querySelector(exp)
+  }
+
+  getValue (): string {
+    const value = this.view.state.doc.toString()
+    return value
+  }
+
+  setValue (val: string = '') {
+    const state = EditorState.create({
+      doc: val,
+      extensions: this.extensions
+    })
+    this.view.setState(state)
+    this.state = state
+    this.preview.update(val)
   }
 
   regExpcharacterEscape (str: string) {
@@ -131,7 +150,9 @@ class MarkdownEditor {
    */
   updateListener = EditorView.updateListener.of((update) => {
     if (update.docChanged) {
-      // console.log(update.state.doc.toString())
+      const value = update.state.doc.toString()
+      this.preview.update(value)
+      this.events.change(update)
     }
     if (update.selectionSet) { // 选区变化
       this.selectionSet(update)
@@ -153,6 +174,44 @@ class MarkdownEditor {
     const preview = this.preview
     if(!update.view.hasFocus) {
       preview?.removeActive()
+      this.events.blur(update)
+    } else {
+      this.events.focus(update)
+    }
+  }
+
+  // editor -> preview
+  editorToPreview () {
+    if (this.isPreviewScroll) {
+      this.isPreviewScroll = false
+      return false
+    }
+    this.isEditorScroll = true
+    const editor = this.view.scrollDOM
+    const doc = this.preview.doc
+    if (editor && doc) {
+      const preview = doc.body
+      const height = editor.scrollHeight - editor.clientHeight
+      const ratio = parseFloat(editor.scrollTop.toString()) / height
+      const move = (preview.scrollHeight - preview.clientHeight) * ratio
+      preview.scrollTop = move
+    }
+  }
+  // preview -> editor
+  previewToEditor () {
+    if (this.isEditorScroll) {
+      this.isEditorScroll = false
+      return false
+    }
+    const editor = this.view.scrollDOM
+    const doc = this.preview.doc
+    if (editor && doc) {
+      this.isPreviewScroll = true
+      const preview = doc.body
+      const height = preview.scrollHeight - preview.clientHeight
+      const ratio = parseFloat(preview.scrollTop.toString()) / height
+      const move = (editor.scrollHeight - editor.clientHeight) * ratio
+      editor.scrollTop = move
     }
   }
 
@@ -334,6 +393,32 @@ class MarkdownEditor {
               insert: `\n\n${beforeInsertion}${text ? '\n' : ''}${text}\n${afterInsertion}\n\n`
             },
             range: EditorSelection.range(from , to)
+          }
+        })
+      )
+      view.dispatch(tr)
+      view.focus()
+    }
+  }
+
+  /**
+   * 在光标后插入一行
+   * @param insertion string
+   */
+   insertLineAfterCursor (insertion: string) {
+    const { view } = this
+    if (view) {
+      const state = view.state
+      const tr: Transaction = state.update(
+        state.changeByRange(range => {
+          const text = state.sliceDoc(range.from, range.to)
+          return {
+            changes: {
+              from: range.from,
+              to: range.to,
+              insert: `${text}\n\n${insertion}\n\n`
+            },
+            range: EditorSelection.range(range.from , range.to)
           }
         })
       )

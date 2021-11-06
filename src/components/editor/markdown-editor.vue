@@ -1,5 +1,5 @@
 <template>
-  <div class="pkm-md-editor" :style="{
+  <div class="pkm-md-editor" :id="id" :style="{
     height: height
   }">
     <div class="pkm-md-editor-toolbar" :style="{
@@ -7,12 +7,12 @@
     }">
       <div class="l">
         <ul class="toolbar">
-          <li class="item"><button @click="insert" class="toolbar-btn"><i class="icon-header"></i></button></li>
-          <li class="item"><button @click="blod" class="toolbar-btn"><i class="icon-bold"></i></button></li>
-          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-italic"></i></button></li>
-          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-strikethrough"></i></button></li>
+          <li class="item"><toolbar-header :getEditor="getEditor" /></li>
+          <li class="item"><toolbar-blod :getEditor="getEditor" /></li>
+          <li class="item"><toolbar-italic :getEditor="getEditor" /></li>
+          <li class="item"><toolbar-strikethrough :getEditor="getEditor" /></li>
           <li class="split"></li>
-          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-hrline"></i></button></li>
+          <li class="item"><toolbar-hrline :getEditor="getEditor" /></li>
           <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-quote"></i></button></li>
           <li class="split"></li>
           <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-unordered-list"></i></button></li>
@@ -38,23 +38,35 @@
     <div class="pkm-md-editor-main" :style="{
       height: `calc(${height} - ${toolbarHeight})`
     }">
-      <div class="pkm-md-editor-content" :id="id"></div>
-      <div class="pkm-md-editor-preview" :id="`${id}-prevview`" v-if="showPreview">
-        <iframe src="about:blank" :id="`${id}-iframe`" @load="previewLoaded"></iframe>
-      </div>
+      <div class="pkm-md-editor-content" :id="`${id}-editor`"></div>
+      <div class="pkm-md-editor-preview" :id="`${id}-preview`" v-show="showPreview"></div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
+import { defineComponent, onMounted, ref, reactive } from 'vue'
+import { ViewUpdate } from '@codemirror/view'
 import { v4 as uuidv4 } from 'uuid'
 import MarkdownEditor from './markdown-editor'
-import MarkdownPreview from './markdown-preview'
 import './theme.scss'
+
+import ToolbarHeader from './toolbar/header.vue'
+import ToolbarBlod from './toolbar/blod.vue'
+import ToolbarItalic from './toolbar/italic.vue'
+import ToolbarStrikethrough from './toolbar/strikethrough.vue'
+import ToolbarHrline from './toolbar/hrline.vue'
 
 export default defineComponent({
   name: 'MarkdownEditor',
+  components: {
+    ToolbarHeader,
+    ToolbarBlod,
+    ToolbarItalic,
+    ToolbarStrikethrough,
+    ToolbarHrline
+  },
+  emits: ['ready', 'update:value', 'change', 'focus', 'blur'],
   props: {
     value: {
       type: String,
@@ -62,7 +74,7 @@ export default defineComponent({
     },
     autoPreview: {
       type: Boolean,
-      default: true
+      default: false
     },
     height: {
       type: String,
@@ -77,18 +89,31 @@ export default defineComponent({
     const prefix = 'markdown-editor-'
     const id = uuidv4()
     const showPreview = ref(props.autoPreview)
-    
-    const preview = new MarkdownPreview()
-    const editor = new MarkdownEditor()
+    const mdEditor = reactive({
+      editor: null,
+      props
+    })
+
+    let editor: MarkdownEditor
     const init = () => {
-      const editorElement: Element | null = document.querySelector(`#${prefix}${id}`)
-      if (editorElement) {
-        editor.mounted(editorElement, {
-          initValue: props.value || '',
-          preview
-        })
-        ctx.emit('ready', editor)
-      }
+      editor = new MarkdownEditor({
+        id: prefix + id,
+        initValue: props.value || '',
+        events: {
+          focus (update: ViewUpdate) {
+            ctx.emit('focus', update, editor)
+          },
+          blur (update: ViewUpdate) {
+            ctx.emit('blur', update, editor)
+          },
+          change (update: ViewUpdate) {
+            const value = editor.getValue()
+            ctx.emit('update:value', value)
+            ctx.emit('change', update, editor)
+          }
+        }
+      })
+      ctx.emit('ready', editor)
     }
 
     onMounted(() => {
@@ -98,18 +123,8 @@ export default defineComponent({
     return {
       id: prefix + id,
       showPreview,
-      previewLoaded () {
-        if (props.autoPreview) {
-          const iframeElement: Element | null = document.querySelector(`#${prefix}${id}-iframe`)
-          preview.init(iframeElement)
-          preview.update(props.value)
-        }
-      },
-      insert () {
-        editor.toggleInsertLineStart('## ')
-      },
-      blod () {
-        editor.toggleAroundSelection('**', '**')
+      getEditor () {
+        return editor
       },
       blockCode () {
         editor.insertAroundLine('```', '```')

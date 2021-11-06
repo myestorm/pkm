@@ -18,7 +18,7 @@
       </pkm-layout>
     </pkm-layout-sider>
     <pkm-layout-content>
-      <markdown-editor :value="value" />
+      <markdown-editor v-model:value="value" />
     </pkm-layout-content>
   </pkm-layout>
 </template>
@@ -26,7 +26,7 @@
 import { ref } from 'vue'
 import '../assets/scss/app.scss'
 import MarkdownEditor from '../components/editor/markdown-editor.vue'
-const value = `## title1
+const _value = `## title1
 
 ~~sdadas~~
 
@@ -108,6 +108,10 @@ import { markdown, markdownLanguage } from "@codemirror/lang-markdown"
 
 - [ ] sadsadas
 - [ ] sadsadas
+
+| dsad | ddsada |
+|------|--------|
+| dasdasd| asdsadasd |
 
 中文`
 export default {
@@ -116,9 +120,10 @@ export default {
     MarkdownEditor
   },
   setup () {
-    const hh = 46
+    const hh = 48
     const vh = document.body.clientHeight
     const loading = ref(true)
+    const value = ref(_value)
     let data = ref([])
     return {
       hh,

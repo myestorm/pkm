@@ -49,6 +49,8 @@
     display: flex;
     align-items: center;
     background: #424242;
+    position: relative;
+    z-index: 99;
     ul, li {
       margin: 0;
       padding: 0;
@@ -63,20 +65,25 @@
       padding: 0 8px;
       li {
         padding: 0 4px;
+        &:hover {
+          .toolbar-btn {
+            background-color: #313132;
+          }
+        }
       }
       .split {
         width: 1px;
-        height: 50%;
+        height: 16px;
         position: relative;
         margin: 0 8px;
         padding: 0;
         &::before {
           content: " ";
           width: 1px;
-          height: 32%;
+          height: 100%;
           position: absolute;
           left: 0;
-          top: 34%;
+          top: 0;
           background-color: #565656;
         }
       }
@@ -155,6 +162,34 @@
         }
         &exit-fullscreen {
           background-image: url(./svg/exit-fullscreen.svg);
+        }
+      }
+    }
+    .toolbar-group {
+      display: inline-block;
+      position: relative;
+      &:hover {
+        .toolbar-group-list {
+          display: block;
+        }
+      }
+      &-list {
+        display: none;
+        position: absolute;
+        left: 0;
+        top: 100%;
+        background-color: #313132;
+        padding: 4px 0;
+        .item {
+          white-space: nowrap;
+          color: #d4d4d4;
+          padding: 6px 8px;
+          cursor: pointer;
+          transition: all 260ms ease-in;
+          &:hover {
+            color: #ffffff;
+            background-color: #000000;
+          }
         }
       }
     }
