@@ -57,6 +57,10 @@ const oneDarkTheme = EditorView.theme({
         fontSize,
         lineHeight
     },
+    '.cm-lineNumbers .cm-gutterElement': {
+        paddingLeft: '16px',
+        paddingRight: '5px'
+    },
     '.cm-activeLineGutter': {
         backgroundColor: highlightBackground,
         color: '#ffffff'

@@ -1,4 +1,4 @@
-import { EditorView, highlightSpecialChars, drawSelection, highlightActiveLine, keymap, ViewUpdate } from '@codemirror/view'
+import { EditorView, highlightSpecialChars, drawSelection, highlightActiveLine, keymap, ViewUpdate, KeyBinding } from '@codemirror/view'
 import { EditorState, EditorSelection, Extension, Transaction, Compartment } from '@codemirror/state'
 import { history, historyKeymap } from '@codemirror/history'
 import { foldGutter, foldKeymap } from '@codemirror/fold'
@@ -22,6 +22,7 @@ interface IEditorEventsType {
   focus: Function;
   change: Function;
   blur: Function;
+  save: Function;
 }
 
 export interface IEditorOptionsType {
@@ -55,6 +56,18 @@ class MarkdownEditor {
     const scrollEvent = (event: Event) => { // 编辑器滚动事件
       this.editorToPreview()
     }
+    // 自定义快捷键
+    const saveKeyMap: KeyBinding[] = [
+      {
+        key: 'Ctrl-s',
+        mac: 'Cmd-s',
+        preventDefault: true,
+        run: (view: EditorView) => {
+          options.events.save(view)
+          return false
+        }
+      }
+    ]
     const extensions = [ // 编辑器扩展
       lineNumbers(),
       highlightActiveLineGutter(),
@@ -86,7 +99,8 @@ class MarkdownEditor {
         ...foldKeymap,
         ...commentKeymap,
         ...completionKeymap,
-        ...lintKeymap
+        ...lintKeymap,
+        ...saveKeyMap
       ]),
       markdown({
         base: markdownLanguage

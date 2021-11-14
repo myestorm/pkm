@@ -119,7 +119,6 @@
         }
         &italic {
           background-image: url(./svg/italic.svg);
-          background-size: auto 60%;
         }
         &strikethrough {
           background-image: url(./svg/strikethrough.svg);
@@ -162,6 +161,12 @@
         }
         &exit-fullscreen {
           background-image: url(./svg/exit-fullscreen.svg);
+        }
+        &info {
+          background-image: url(./svg/info.svg);
+        }
+        &save {
+          background-image: url(./svg/save.svg);
         }
       }
     }

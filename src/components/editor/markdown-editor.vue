@@ -25,13 +25,16 @@
           <li class="split"></li>
           <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-link"></i></button></li>
           <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-media"></i></button></li>
+          <li class="split"></li>
+          <li class="item"><button @click="showPreview = !showPreview" class="toolbar-btn"><i class="icon-preview"></i></button></li>
+          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-fullscreen"></i></button></li>
+          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-info"></i></button></li>
         </ul>
       </div>
       <div class="c"></div>
       <div class="r">
         <ul class="toolbar">
-          <li class="item"><button @click="showPreview = !showPreview" class="toolbar-btn"><i class="icon-preview"></i></button></li>
-          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-fullscreen"></i></button></li>
+          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-save"></i></button></li>
         </ul>
       </div>
     </div>
@@ -46,7 +49,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref, reactive } from 'vue'
-import { ViewUpdate } from '@codemirror/view'
+import { ViewUpdate, EditorView } from '@codemirror/view'
 import { v4 as uuidv4 } from 'uuid'
 import MarkdownEditor from './markdown-editor'
 import './theme.scss'
@@ -66,7 +69,7 @@ export default defineComponent({
     ToolbarStrikethrough,
     ToolbarHrline
   },
-  emits: ['ready', 'update:value', 'change', 'focus', 'blur'],
+  emits: ['ready', 'update:value', 'change', 'focus', 'blur', 'editorSave'],
   props: {
     value: {
       type: String,
@@ -89,10 +92,6 @@ export default defineComponent({
     const prefix = 'markdown-editor-'
     const id = uuidv4()
     const showPreview = ref(props.autoPreview)
-    const mdEditor = reactive({
-      editor: null,
-      props
-    })
 
     let editor: MarkdownEditor
     const init = () => {
@@ -110,6 +109,10 @@ export default defineComponent({
             const value = editor.getValue()
             ctx.emit('update:value', value)
             ctx.emit('change', update, editor)
+          },
+          save (view: EditorView) {
+            const value = editor.getValue()
+            ctx.emit('editorSave', value, view, editor)
           }
         }
       })
