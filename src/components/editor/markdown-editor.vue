@@ -13,13 +13,13 @@
           <li class="item"><toolbar-strikethrough :getEditor="getEditor" /></li>
           <li class="split"></li>
           <li class="item"><toolbar-hrline :getEditor="getEditor" /></li>
-          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-quote"></i></button></li>
+          <li class="item"><toolbar-quote :getEditor="getEditor" /></li>
           <li class="split"></li>
-          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-unordered-list"></i></button></li>
-          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-ordered-list"></i></button></li>
-          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-task-list"></i></button></li>
+          <li class="item"><toolbar-unordered-list :getEditor="getEditor" /></li>
+          <li class="item"><toolbar-ordered-list :getEditor="getEditor" /></li>
+          <li class="item"><toolbar-task-list :getEditor="getEditor" /></li>
           <li class="split"></li>
-          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-table"></i></button></li>
+          <li class="item"><toolbar-table :getEditor="getEditor" /></li>
           <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-inline-code"></i></button></li>
           <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-block-code"></i></button></li>
           <li class="split"></li>
@@ -59,6 +59,11 @@ import ToolbarBlod from './toolbar/blod.vue'
 import ToolbarItalic from './toolbar/italic.vue'
 import ToolbarStrikethrough from './toolbar/strikethrough.vue'
 import ToolbarHrline from './toolbar/hrline.vue'
+import ToolbarQuote from './toolbar/quote.vue'
+import ToolbarUnorderedList from './toolbar/unordered-list.vue'
+import ToolbarOrderedList from './toolbar/ordered-list.vue'
+import ToolbarTaskList from './toolbar/task-list.vue'
+import ToolbarTable from './toolbar/table.vue'
 
 export default defineComponent({
   name: 'MarkdownEditor',
@@ -67,7 +72,12 @@ export default defineComponent({
     ToolbarBlod,
     ToolbarItalic,
     ToolbarStrikethrough,
-    ToolbarHrline
+    ToolbarHrline,
+    ToolbarQuote,
+    ToolbarUnorderedList,
+    ToolbarOrderedList,
+    ToolbarTaskList,
+    ToolbarTable
   },
   emits: ['ready', 'update:value', 'change', 'focus', 'blur', 'editorSave'],
   props: {

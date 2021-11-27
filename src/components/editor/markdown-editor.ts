@@ -249,7 +249,7 @@ class MarkdownEditor {
               to: line.to,
               insert: `${insertion}${text}` // 替换字符
             },
-            range: EditorSelection.range(line.from, line.to + insertion.length) // 重置选区
+            range: EditorSelection.range(line.from + insertion.length, line.to + insertion.length) // 重置选区
           }
         })
       )
@@ -325,7 +325,7 @@ class MarkdownEditor {
               to: range.to,
               insert: `${startInsertion}${text}${endInsertion}`
             },
-            range: EditorSelection.range(range.from, range.to + startInsertion.length + endInsertion.length)
+            range: EditorSelection.range(range.from + startInsertion.length, range.to + startInsertion.length)
           }
         })
       )
@@ -425,14 +425,49 @@ class MarkdownEditor {
       const state = view.state
       const tr: Transaction = state.update(
         state.changeByRange(range => {
+          const _insertion = `\n${insertion}\n`
+          const to = range.to
+          return {
+            changes: {
+              from: to,
+              to: to,
+              insert: _insertion
+            },
+            range: EditorSelection.range(to + _insertion.length - 1, to + _insertion.length - 1)
+          }
+        })
+      )
+      view.dispatch(tr)
+      view.focus()
+    }
+  }
+
+  /**
+   * 选中的每行前插入
+   * @param insertion string
+   */
+  insertStartPerLine (insertion: string) {
+    const { view } = this
+    if (view) {
+      const state = view.state
+      const tr: Transaction = state.update(
+        state.changeByRange(range => {
           const text = state.sliceDoc(range.from, range.to)
+          const textLines = text.split('\n')
+          let offset = 0
+          textLines.forEach((textLine, index) => {
+            const _insertion = insertion.replace(/\{num\}/g, (index + 1).toString())
+            offset += _insertion.length
+            textLines[index] = _insertion + textLine
+          })
+          const newText = textLines.join('\n')
           return {
             changes: {
               from: range.from,
               to: range.to,
-              insert: `${text}\n\n${insertion}\n\n`
+              insert: newText
             },
-            range: EditorSelection.range(range.from , range.to)
+            range: EditorSelection.range(range.from, range.to + offset)
           }
         })
       )

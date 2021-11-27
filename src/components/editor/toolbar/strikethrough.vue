@@ -14,7 +14,7 @@ export default defineComponent({
     return {
       handler () {
         const editor = props.getEditor()
-        editor.toggleAroundSelection('*', '*')
+        editor.toggleAroundSelection('~~', '~~')
       }
     }
   }

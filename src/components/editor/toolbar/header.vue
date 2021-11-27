@@ -1,7 +1,7 @@
 <template>
   <toolbar-list>
     <template #button>
-      <button @click="insert" class="toolbar-btn"><i class="icon-header"></i></button>
+      <button class="toolbar-btn"><i class="icon-header"></i></button>
     </template>
     <template #list>
       <div class="item" v-for="i in 6" @click="handler(i)">标题 {{ i }}</div>
@@ -23,7 +23,7 @@ export default defineComponent({
   },
   setup (props) {
     return {
-      handler (heading) {
+      handler (heading: number) {
         const editor = props.getEditor()
         let text = ''
         for (let i = 0; i < heading; i++) {
