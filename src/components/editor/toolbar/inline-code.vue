@@ -1,5 +1,5 @@
 <template>
-  <button class="toolbar-btn"><i class="icon-info"></i></button>
+  <button @click="handler" class="toolbar-btn"><i class="icon-inline-code"></i></button>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
@@ -14,7 +14,7 @@ export default defineComponent({
     return {
       handler () {
         const editor = props.getEditor()
-        editor.toggleAroundSelection('**', '**')
+        editor.toggleAroundSelection('`', '`')
       }
     }
   }

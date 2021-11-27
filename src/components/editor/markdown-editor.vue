@@ -1,5 +1,5 @@
 <template>
-  <div class="pkm-md-editor" :id="id" :style="{
+  <div class="pkm-md-editor" :class="[isFullscreen ? 'pkm-md-editor-fullscreen' : '']" :id="id" :style="{
     height: height
   }">
     <div class="pkm-md-editor-toolbar" :style="{
@@ -20,21 +20,22 @@
           <li class="item"><toolbar-task-list :getEditor="getEditor" /></li>
           <li class="split"></li>
           <li class="item"><toolbar-table :getEditor="getEditor" /></li>
-          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-inline-code"></i></button></li>
-          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-block-code"></i></button></li>
+          <li class="item"><toolbar-inline-code :getEditor="getEditor" /></li>
+          <li class="item"><toolbar-block-code :getEditor="getEditor" /></li>
           <li class="split"></li>
-          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-link"></i></button></li>
-          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-media"></i></button></li>
+          <li class="item"><toolbar-link :getEditor="getEditor" /></li>
+          <li class="item"><toolbar-media :getEditor="getEditor" /></li>
           <li class="split"></li>
-          <li class="item"><button @click="showPreview = !showPreview" class="toolbar-btn"><i class="icon-preview"></i></button></li>
-          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-fullscreen"></i></button></li>
-          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-info"></i></button></li>
+          <li class="item"><toolbar-preview @click="preview" :getEditor="getEditor" /></li>
+          <li class="item"><toolbar-fullscreen @click="fullscreen" :getEditor="getEditor" /></li>
+          <li class="item"><toolbar-format @click="format" :getEditor="getEditor" /></li>
+          <li class="item"><toolbar-info :getEditor="getEditor" /></li>
         </ul>
       </div>
       <div class="c"></div>
       <div class="r">
         <ul class="toolbar">
-          <li class="item"><button @click="blockCode" class="toolbar-btn"><i class="icon-save"></i></button></li>
+          <li class="item"><toolbar-save @click="save" :getEditor="getEditor" /></li>
         </ul>
       </div>
     </div>
@@ -64,6 +65,15 @@ import ToolbarUnorderedList from './toolbar/unordered-list.vue'
 import ToolbarOrderedList from './toolbar/ordered-list.vue'
 import ToolbarTaskList from './toolbar/task-list.vue'
 import ToolbarTable from './toolbar/table.vue'
+import ToolbarInlineCode from './toolbar/inline-code.vue'
+import ToolbarBlockCode from './toolbar/block-code.vue'
+import ToolbarLink from './toolbar/link.vue'
+import ToolbarMedia from './toolbar/media.vue'
+import ToolbarPreview from './toolbar/preview.vue'
+import ToolbarFullscreen from './toolbar/fullscreen.vue'
+import ToolbarInfo from './toolbar/info.vue'
+import ToolbarSave from './toolbar/save.vue'
+import ToolbarFormat from './toolbar/format.vue'
 
 export default defineComponent({
   name: 'MarkdownEditor',
@@ -77,9 +87,18 @@ export default defineComponent({
     ToolbarUnorderedList,
     ToolbarOrderedList,
     ToolbarTaskList,
-    ToolbarTable
+    ToolbarTable,
+    ToolbarInlineCode,
+    ToolbarBlockCode,
+    ToolbarLink,
+    ToolbarMedia,
+    ToolbarPreview,
+    ToolbarFullscreen,
+    ToolbarInfo,
+    ToolbarSave,
+    ToolbarFormat
   },
-  emits: ['ready', 'update:value', 'change', 'focus', 'blur', 'editorSave'],
+  emits: ['ready', 'update:value', 'change', 'focus', 'blur', 'editorSave', 'format'],
   props: {
     value: {
       type: String,
@@ -102,28 +121,39 @@ export default defineComponent({
     const prefix = 'markdown-editor-'
     const id = uuidv4()
     const showPreview = ref(props.autoPreview)
+    const isFullscreen = ref(false)
+    const toolbarFormat = ref(null)
 
     let editor: MarkdownEditor
+    const save = (view: EditorView) => {
+      const value = editor.getValue()
+      ctx.emit('editorSave', value, view, editor)
+    }
+    const focus = (update: ViewUpdate) => {
+      ctx.emit('focus', update, editor)
+    }
+    const blur = (update: ViewUpdate) => {
+      ctx.emit('blur', update, editor)
+    }
+    const change = (update: ViewUpdate) => {
+      const value = editor.getValue()
+      ctx.emit('update:value', value)
+      ctx.emit('change', update, editor)
+    }
+    const format = (view: EditorView) => {
+      const { old, value } = editor.format()
+      ctx.emit('format', value, old, view, editor)
+    }
     const init = () => {
       editor = new MarkdownEditor({
         id: prefix + id,
         initValue: props.value || '',
         events: {
-          focus (update: ViewUpdate) {
-            ctx.emit('focus', update, editor)
-          },
-          blur (update: ViewUpdate) {
-            ctx.emit('blur', update, editor)
-          },
-          change (update: ViewUpdate) {
-            const value = editor.getValue()
-            ctx.emit('update:value', value)
-            ctx.emit('change', update, editor)
-          },
-          save (view: EditorView) {
-            const value = editor.getValue()
-            ctx.emit('editorSave', value, view, editor)
-          }
+          focus,
+          blur,
+          change,
+          save,
+          format
         }
       })
       ctx.emit('ready', editor)
@@ -136,11 +166,22 @@ export default defineComponent({
     return {
       id: prefix + id,
       showPreview,
+      isFullscreen,
+      toolbarFormat,
       getEditor () {
         return editor
       },
-      blockCode () {
-        editor.insertAroundLine('```', '```')
+      preview () {
+        showPreview.value = !showPreview.value
+      },
+      fullscreen () {
+        isFullscreen.value = !isFullscreen.value
+      },
+      save () {
+        save(editor.view)
+      },
+      format () {
+        format(editor.view)
       }
     }
   }

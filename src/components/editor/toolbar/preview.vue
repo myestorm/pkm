@@ -1,5 +1,5 @@
 <template>
-  <button class="toolbar-btn"><i class="icon-save"></i></button>
+  <button class="toolbar-btn"><i class="icon-preview"></i></button>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'

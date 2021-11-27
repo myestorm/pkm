@@ -18,11 +18,19 @@ import { markdown, markdownLanguage } from '@codemirror/lang-markdown'
 import { oneDark } from './markdown-theme'
 import MarkdownPreview from './markdown-preview'
 
+import parserMarkdown from 'prettier/parser-markdown'
+import prettier from 'prettier/standalone'
+const prettierConfig = {
+  parser: 'markdown',
+  plugins: [parserMarkdown]
+}
+
 interface IEditorEventsType {
   focus: Function;
   change: Function;
   blur: Function;
   save: Function;
+  format: Function;
 }
 
 export interface IEditorOptionsType {
@@ -64,6 +72,15 @@ class MarkdownEditor {
         preventDefault: true,
         run: (view: EditorView) => {
           options.events.save(view)
+          return false
+        }
+      },
+      {
+        key: 'Ctrl-b',
+        mac: 'Cmd-b',
+        preventDefault: true,
+        run: (view: EditorView) => {
+          options.events.format(view)
           return false
         }
       }
@@ -143,6 +160,16 @@ class MarkdownEditor {
     this.view.setState(state)
     this.state = state
     this.preview.update(val)
+  }
+
+  format () {
+    const value = this.getValue()
+    const _value = prettier.format(value, prettierConfig)
+    this.setValue(_value)
+    return {
+      old: value,
+      value: _value
+    }
   }
 
   regExpcharacterEscape (str: string) {
@@ -345,16 +372,18 @@ class MarkdownEditor {
       const state = view.state
       const tr: Transaction = state.update(
         state.changeByRange(range => {
-          let text = state.sliceDoc(range.from, range.to)
+          const from = range.from - startInsertion.length
+          const to = range.to + endInsertion.length
+          let text = state.sliceDoc(from, to)
           text = text.replace(new RegExp(`^${this.regExpcharacterEscape(startInsertion)}`), '')
           text = text.replace(new RegExp(`${this.regExpcharacterEscape(endInsertion)}$`), '')
           return {
             changes: {
-              from: range.from,
-              to: range.to,
+              from: from,
+              to: to,
               insert: text
             },
-            range: EditorSelection.range(range.from, range.to - startInsertion.length - endInsertion.length)
+            range: EditorSelection.range(from, to - startInsertion.length - endInsertion.length)
           }
         })
       )
@@ -373,7 +402,7 @@ class MarkdownEditor {
     if (view) {
       const state = view.state
       state.selection.ranges.map(range => {
-        const selectionText = state.sliceDoc(range.from, range.to)
+        const selectionText = state.sliceDoc(range.from - startInsertion.length, range.to + endInsertion.length)
         const hasStartInsertion = new RegExp(`^${this.regExpcharacterEscape(startInsertion)}`).test(selectionText)
         const hasEndInsertion = new RegExp(`${this.regExpcharacterEscape(endInsertion)}$`).test(selectionText)
       
@@ -468,6 +497,27 @@ class MarkdownEditor {
               insert: newText
             },
             range: EditorSelection.range(range.from, range.to + offset)
+          }
+        })
+      )
+      view.dispatch(tr)
+      view.focus()
+    }
+  }
+
+  /**
+   * 设置光标位置，以当前光标为基准，设置便宜量
+   * @param offsetFrom number 开始点偏移量
+   * @param offsetTo number 结束点偏移量
+   */
+  setCursor (offsetFrom: number, offsetTo: number) {
+    const { view } = this
+    if (view) {
+      const state = view.state
+      const tr: Transaction = state.update(
+        state.changeByRange(range => {
+          return {
+            range: EditorSelection.range(range.from + offsetFrom, range.to + offsetTo)
           }
         })
       )
