@@ -1,10 +1,16 @@
 {
   "name": "totonoo-pkm",
   "version": "0.0.1",
+  "type": "module",
   "scripts": {
-    "dev": "vite --host",
-    "build": "vue-tsc --noEmit && vite build",
-    "serve": "vite preview"
+    "dev": "concurrently -k -p \"[{name}]\" -n \"Vite,TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run vite-dev\" \"npm run app-watch\" \"npm run app-nodemon\"",
+    "build": "npm run vite-build && npm run app-build",
+    "vite-dev": "vite --host",
+    "vite-build": "vue-tsc --noEmit && vite build",
+    "vite-serve": "vite preview",
+    "app-watch": "tsc -p tsconfig.app.json -w",
+    "app-nodemon": "nodemon",
+    "app-build": "tsc -p tsconfig.app.json"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^0.19.4",
@@ -47,6 +53,7 @@
     "@codemirror/tooltip": "^0.19.4",
     "@codemirror/view": "^0.19.9",
     "@lezer/markdown": "^0.15.1",
+    "koa": "^2.13.4",
     "markdown-it": "^12.2.0",
     "prettier": "^2.4.1",
     "uuid": "^8.3.2",
@@ -56,13 +63,17 @@
   },
   "devDependencies": {
     "@arco-design/web-vue": "^2.0.3",
+    "@types/koa": "^2.13.4",
     "@types/markdown-it": "^12.2.3",
     "@types/prettier": "^2.4.2",
     "@types/uuid": "^8.3.1",
     "@vitejs/plugin-vue": "^1.9.4",
+    "concurrently": "^6.4.0",
     "less": "^4.1.2",
+    "nodemon": "^2.0.15",
     "sass": "^1.43.4",
-    "typescript": "^4.4.4",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.2",
     "vite": "^2.6.13",
     "vue-tsc": "^0.28.10"
   }
