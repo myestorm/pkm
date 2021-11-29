@@ -3,11 +3,10 @@ import path from 'path'
 import { Context, Next } from 'koa'
 import koaStatic from 'koa-static'
 import koaBody from 'koa-body'
-import Router from '@koa/router'
+
+import router from './routes/index'
 
 const app = new Koa()
-const router = new Router()
-const __dirname = path.resolve()
 
 app.use(async (ctx: Context, next: Next) => {
   try {
@@ -15,16 +14,6 @@ app.use(async (ctx: Context, next: Next) => {
   } catch (err) {
     ctx.app.emit('error', err, ctx)
   }
-})
-
-router.get('/', async (ctx: Context, next: Next) => {
-  ctx.body = 'index'
-  await next()
-})
-
-router.get('/a', async (ctx: Context, next: Next) => {
-  ctx.body = 'a'
-  await next()
 })
 
 const staticDir = path.join(__dirname, 'assets')

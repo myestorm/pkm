@@ -2,6 +2,6 @@
   "watch": ["www"],
   "ext": "js,ts,json",
   "ignore": ["app/**/*.spec.ts"],
-  "exec": "node www/app.js",
+  "exec": "node www/app/app.js",
   "delay": 2500
 }

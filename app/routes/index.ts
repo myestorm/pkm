@@ -1,19 +1,10 @@
-import Router from '@koa/router'
-import glob from 'glob'
-import path from 'path'
-const files = glob.sync(path.join(__dirname, '!(index).js'))
+import { AppRouter } from '../core/router'
+import Home from './home'
+import User from './user'
 
-const router = new Router()
+const appRouter = new AppRouter()
+appRouter
+  .mount(Home)
+  .mount(User)
 
-export default (options) => {
-  if (options?.prefix) {
-    router.prefix(options?.prefix)
-  }
-  for (const file of files) {
-    const filePathData = path.parse(file)
-    const fileName = filePathData.name === 'home' ? '' : '/' + filePathData.name
-    const route = require(file)
-    router.use(fileName, route.routes(), route.allowedMethods())
-  }
-  return router.routes()
-}
+export default appRouter.router

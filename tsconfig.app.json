@@ -1,18 +1,16 @@
 {
   "compilerOptions": {
-    "types": ["node", "koa"],
     "target": "esnext",
-    "useDefineForClassFields": true,
-    "module": "esnext",
-    "moduleResolution": "node",
+    "module": "commonjs",
     "strict": true,
-    "jsx": "preserve",
     "sourceMap": true,
-    "resolveJsonModule": true,
     "esModuleInterop": true,
-    "lib": ["esnext", "dom"],
     "outDir": "www",
-    "baseUrl": "."
+    "rootDir": ".",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true 
   },
   "include": [
     "app/**/*.ts",
