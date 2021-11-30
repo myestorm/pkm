@@ -16,13 +16,13 @@ app.use(async (ctx: Context, next: Next) => {
   }
 })
 
-const staticDir = path.join(__dirname, 'assets')
+const staticDir = path.join(__dirname, '../resource')
 app.use(koaStatic(staticDir))
 
 app.use(koaBody({
   multipart: true,
   formidable: {
-    uploadDir: path.join(__dirname, 'uploads'),
+    uploadDir: path.join(__dirname, '../resource/uploads'),
     maxFields: 500,
     keepExtensions: true,
     maxFieldsSize: 5 * 1024 * 1024

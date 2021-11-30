@@ -27,5 +27,10 @@ export default defineConfig({
         additionalData: '@import "./src/assets/scss/var.scss";'
       }
     }
+  },
+  server: {
+    proxy: {
+      '/api': 'http://localhost:4000'
+    }
   }
 })
