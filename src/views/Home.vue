@@ -8,11 +8,12 @@
         <pkm-layout-content>
           <pkm-list :max-height="vh - hh" :bordered="false" @reach-bottom="reachBottom" class="pkm-list">
             <pkm-list-item-meta
-              v-for="i in 30"
+              v-for="(item, index) in list"
+              :key="item.id"
               class="pkm-list-item"
-              :class="[i === 2 ? 'current' : '']"
-              title="智能设计体系连接轻盈体验"
-              description="通过arco风格配置平台和IconBox图标平台，智能生成适合多种业务需求的个性化主题..."></pkm-list-item-meta>
+              :class="[index === 0 ? 'current' : '']"
+              :title="item.title"
+              :description="item.desc"></pkm-list-item-meta>
           </pkm-list>
         </pkm-layout-content>
       </pkm-layout>
@@ -23,109 +24,30 @@
   </pkm-layout>
 </template>
 <script lang="ts">
-import { ref } from 'vue'
 import '../assets/scss/app.scss'
+import { ref } from 'vue'
 import MarkdownEditor from '../components/editor/markdown-editor.vue'
-const _value = `## title1
+import { ApiDocuments } from '../apis/index'
+import { IDocumentListItemType } from '../../app/types/document'
+const _value = ''
 
-~~sdadas~~
-
-**sadsad**
-
-\`test\`
-
-\`\`\`javascript
-import { onMounted } from 'vue'
-import { EditorState, EditorView, basicSetup } from "@codemirror/basic-setup"
-import { markdown, markdownLanguage } from "@codemirror/lang-markdown"
-\`\`\`
-
-- sdsd
-- dsad
-  - asdsa
-  - dasdsad
-- dsadasd
-
-1. sadsa
-2. sadsad
-   1. asda
-   2. asdsad
-3. 2323
-
-- [ ] sadsadas
-- [ ] sadsadas
-
-~~sdadas~~
-
-**sadsad**
-
-\`test\`
-
-\`\`\`javascript
-import { onMounted } from 'vue'
-import { EditorState, EditorView, basicSetup } from "@codemirror/basic-setup"
-import { markdown, markdownLanguage } from "@codemirror/lang-markdown"
-\`\`\`
-
-- sdsd
-- dsad
-  - asdsa
-  - dasdsad
-- dsadasd
-
-1. sadsa
-2. sadsad
-   1. asda
-   2. asdsad
-3. 2323
-
-- [ ] sadsadas
-- [ ] sadsadas
-
-~~sdadas~~
-
-**sadsad**
-
-\`test\`
-
-\`\`\`javascript
-import { onMounted } from 'vue'
-import { EditorState, EditorView, basicSetup } from "@codemirror/basic-setup"
-import { markdown, markdownLanguage } from "@codemirror/lang-markdown"
-\`\`\`
-
-- sdsd
-- dsad
-  - asdsa
-  - dasdsad
-- dsadasd
-
-1. sadsa
-2. sadsad
-   1. asda
-   2. asdsad
-3. 2323
-
-- [ ] sadsadas
-- [ ] sadsadas
-
-| dsad | ddsada |
-|------|--------|
-| dasdasd| asdsadasd |
-
-中文`
 export default {
   name: 'Home',
   components: {
     MarkdownEditor
   },
   setup () {
+    const list = ref<IDocumentListItemType[]>([])
+    ApiDocuments().then(res => {
+      list.value = res.data.list
+    })
     const hh = 48
     const vh = document.body.clientHeight
     const loading = ref(true)
     const value = ref(_value)
     let data = ref([])
     return {
+      list,
       hh,
       vh,
       loading,
