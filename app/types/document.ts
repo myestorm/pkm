@@ -5,3 +5,13 @@ export interface IDocumentListItemType {
   createdAt: Date,
   thumb?: string
 }
+
+export interface IDocumentType extends IDocumentListItemType {
+  content: string
+}
+
+export interface IDocumentListQueryType {
+  page: number,
+  pagesize: number,
+  keyword?: string
+}

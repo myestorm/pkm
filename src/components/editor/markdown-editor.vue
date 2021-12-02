@@ -26,15 +26,15 @@
           <li class="item"><toolbar-link :getEditor="getEditor" /></li>
           <li class="item"><toolbar-media :getEditor="getEditor" /></li>
           <li class="split"></li>
+          <li class="item"><toolbar-format @click="format" :getEditor="getEditor" /></li>
           <li class="item"><toolbar-preview @click="preview" :getEditor="getEditor" /></li>
           <li class="item"><toolbar-fullscreen @click="fullscreen" :getEditor="getEditor" /></li>
-          <li class="item"><toolbar-format @click="format" :getEditor="getEditor" /></li>
-          <li class="item"><toolbar-info :getEditor="getEditor" /></li>
         </ul>
       </div>
       <div class="c"></div>
       <div class="r">
         <ul class="toolbar">
+          <li class="item"><toolbar-info :getEditor="getEditor" /></li>
           <li class="item"><toolbar-save @click="save" :getEditor="getEditor" /></li>
         </ul>
       </div>
@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, reactive } from 'vue'
+import { defineComponent, onMounted, watch, ref, reactive } from 'vue'
 import { ViewUpdate, EditorView } from '@codemirror/view'
 import { v4 as uuidv4 } from 'uuid'
 import MarkdownEditor from './markdown-editor'
@@ -161,6 +161,11 @@ export default defineComponent({
 
     onMounted(() => {
       init()
+    })
+    watch(() => props.value, (val) => {
+      if (val !== editor.getValue()) {
+        editor.setValue(val)
+      }
     })
 
     return {
