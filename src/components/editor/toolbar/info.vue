@@ -11,12 +11,7 @@ export default defineComponent({
     }
   },
   setup (props) {
-    return {
-      handler () {
-        const editor = props.getEditor()
-        editor.toggleAroundSelection('**', '**')
-      }
-    }
+    return {}
   }
 })
 </script>

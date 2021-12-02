@@ -34,7 +34,10 @@
       <div class="c"></div>
       <div class="r">
         <ul class="toolbar">
-          <li class="item"><toolbar-info :getEditor="getEditor" /></li>
+          <li class="item">
+            <toolbar-info :getEditor="getEditor" @click="$emit('infoClick')" />
+            <slot name="info"></slot>
+          </li>
           <li class="item"><toolbar-save @click="save" :getEditor="getEditor" /></li>
         </ul>
       </div>
@@ -98,7 +101,7 @@ export default defineComponent({
     ToolbarSave,
     ToolbarFormat
   },
-  emits: ['ready', 'update:value', 'change', 'focus', 'blur', 'editorSave', 'format'],
+  emits: ['ready', 'update:value', 'change', 'focus', 'blur', 'editorSave', 'format', 'infoClick'],
   props: {
     value: {
       type: String,

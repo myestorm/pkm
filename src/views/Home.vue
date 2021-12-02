@@ -20,7 +20,40 @@
       </pkm-layout>
     </pkm-layout-sider>
     <pkm-layout-content>
-      <markdown-editor v-model:value="value" />
+      <markdown-editor v-model:value="value" @infoClick="infoHandleClick">
+        <template #info>
+          <pkm-drawer :width="600" :visible="infoVisible" @ok="infoHandleOk" @cancel="infoHandleCancel" unmountOnClose>
+            <template #title>
+              文档信息
+            </template>
+            <pkm-form ref="formRef" :model="form" label-align="left">
+              <pkm-form-item field="name" label="文档名称" :rules="rules">
+                <pkm-input v-model="form.name" placeholder="please enter your username..." />
+              </pkm-form-item>
+              <pkm-form-item field="name" label="所属目录" :rules="rules">
+                <pkm-input v-model="form.name" placeholder="please enter your username..." />
+              </pkm-form-item>
+              <pkm-form-item field="name" label="文档简介" :rules="rules">
+                <pkm-input v-model="form.name" placeholder="please enter your username..." />
+              </pkm-form-item>
+              <pkm-form-item field="name" label="文档标签" :rules="rules">
+                <pkm-input v-model="form.name" placeholder="please enter your username..." />
+              </pkm-form-item>
+              <pkm-form-item field="post" label="封面图片">
+                <pkm-input v-model="form.post" placeholder="please enter your post..." />
+              </pkm-form-item>
+              <pkm-form-item field="post" label="发布时间">
+                <pkm-input v-model="form.post" placeholder="please enter your post..." />
+              </pkm-form-item>
+              <pkm-form-item field="isRead">
+                <pkm-checkbox v-model="form.isRead">
+                前台是否可见
+                </pkm-checkbox>
+              </pkm-form-item>
+            </pkm-form>
+          </pkm-drawer>
+        </template>
+      </markdown-editor>
     </pkm-layout-content>
   </pkm-layout>
 </template>
@@ -44,6 +77,7 @@ export default {
     const value = ref('')
     const loading = ref(false)
     const keyword = ref('')
+    const infoVisible = ref(true)
 
     let searchTimer: number | null = null
 
@@ -115,7 +149,19 @@ export default {
       data,
       getDetail,
       search,
-      reachBottom
+      reachBottom,
+      infoVisible,
+      form: {
+        name: '',
+        post: '',
+        isRead: false,
+      },
+      rules: [],
+      infoHandleClick () {
+        infoVisible.value = true
+      },
+      infoHandleOk () {},
+      infoHandleCancel () {},
     }
   }
 }
