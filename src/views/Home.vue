@@ -3,7 +3,19 @@
     <pkm-layout-sider class="aside">
       <pkm-layout class="home-side-bar">
         <pkm-layout-header>
-          <pkm-input-search :style="{width:'100%', height: `${hh}px`}" placeholder="输入关键字搜索" v-model="keyword" allow-clear :loading="loading" @change="search"  @input="search" />
+          <pkm-row :style="{width:'100%', height: `${hh}px`}">
+            <pkm-col :span="12">
+              <pkm-input-search placeholder="输入关键字搜索" v-model="keyword" allow-clear :loading="loading" @change="search"  @input="search" />
+            </pkm-col>
+            <pkm-col :span="12">
+              <pkm-button type="primary">
+                <template #icon>
+                  <icon-plus />
+                </template>
+                <template #default>添加文章</template>
+              </pkm-button>
+            </pkm-col>
+          </pkm-row>
         </pkm-layout-header>
         <pkm-layout-content>
           <pkm-list :max-height="vh - hh" :bordered="false" @reach-bottom="reachBottom" class="pkm-list">
@@ -28,22 +40,35 @@
             </template>
             <pkm-form ref="formRef" :model="form" label-align="left">
               <pkm-form-item field="name" label="文档名称" :rules="rules">
-                <pkm-input v-model="form.name" placeholder="please enter your username..." />
+                <pkm-input v-model="form.name" placeholder="请输入文档名称" />
               </pkm-form-item>
               <pkm-form-item field="name" label="所属目录" :rules="rules">
-                <pkm-input v-model="form.name" placeholder="please enter your username..." />
+                <pkm-cascader :options="options" :style="{width:'320px'}" placeholder="请选择所属目录" allow-search/>
               </pkm-form-item>
               <pkm-form-item field="name" label="文档简介" :rules="rules">
-                <pkm-input v-model="form.name" placeholder="please enter your username..." />
+                <pkm-textarea placeholder="请输入文档简介" :max-length="200" show-word-limit />
               </pkm-form-item>
               <pkm-form-item field="name" label="文档标签" :rules="rules">
-                <pkm-input v-model="form.name" placeholder="please enter your username..." />
+                <pkm-input-tag :default-value="['one','two','three','four']" :style="{width:'380px'}" placeholder="请输入文档标签" :max-tag-count="3" allow-clear/>
               </pkm-form-item>
               <pkm-form-item field="post" label="封面图片">
-                <pkm-input v-model="form.post" placeholder="please enter your post..." />
+                <pkm-upload
+                  list-type="picture-card"
+                  action="/"
+                  :default-file-list="fileList"
+                  @preview="onPreview"
+                />
               </pkm-form-item>
               <pkm-form-item field="post" label="发布时间">
-                <pkm-input v-model="form.post" placeholder="please enter your post..." />
+                <pkm-date-picker
+                  placeholder="请选择发布时间"
+                  style="width: 220px; margin: 0 24px 24px 0;"
+                  show-time
+                  format="YYYY-MM-DD hh:mm"
+                  @change="onChange"
+                  @select="onSelect"
+                  @ok="onOk"
+                />
               </pkm-form-item>
               <pkm-form-item field="isRead">
                 <pkm-checkbox v-model="form.isRead">
@@ -59,7 +84,7 @@
 </template>
 <script lang="ts">
 import '../assets/scss/app.scss'
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import MarkdownEditor from '../components/editor/markdown-editor.vue'
 import { ApiDocuments, ApiDocumentId } from '../apis/index'
 import { IDocumentListItemType, IDocumentListQueryType } from '../../app/types/document'
@@ -77,7 +102,7 @@ export default {
     const value = ref('')
     const loading = ref(false)
     const keyword = ref('')
-    const infoVisible = ref(true)
+    const infoVisible = ref(false)
 
     let searchTimer: number | null = null
 
@@ -136,9 +161,13 @@ export default {
     
     const hh = 48
     const vh = document.body.clientHeight
-    
-    
-    let data = ref([])
+
+    const form = reactive({
+      name: '',
+      post: '',
+      isRead: false,
+    })    
+  
     return {
       list,
       hh,
@@ -146,16 +175,11 @@ export default {
       loading,
       keyword,
       value,
-      data,
       getDetail,
       search,
       reachBottom,
       infoVisible,
-      form: {
-        name: '',
-        post: '',
-        isRead: false,
-      },
+      form,
       rules: [],
       infoHandleClick () {
         infoVisible.value = true

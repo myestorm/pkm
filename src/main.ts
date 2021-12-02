@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 
 import ArcoVue from '@arco-design/web-vue'
+import ArcoVueIcon from '@arco-design/web-vue/es/icon'
 import '@arco-design/web-vue/es/index.less'
 
 import Axios from './plugins/axios'
@@ -14,6 +15,7 @@ const app = createApp(App)
 app.use(ArcoVue, {
   componentPrefix: 'pkm'
 })
+app.use(ArcoVueIcon)
 app.use(Axios)
 app.use(Router)
 app.use(store, key)
