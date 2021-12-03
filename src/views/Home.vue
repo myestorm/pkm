@@ -3,19 +3,26 @@
     <pkm-layout-sider class="aside">
       <pkm-layout class="home-side-bar">
         <pkm-layout-header>
-          <pkm-row :style="{width:'100%', height: `${hh}px`}">
-            <pkm-col :span="12">
-              <pkm-input-search placeholder="输入关键字搜索" v-model="keyword" allow-clear :loading="loading" @change="search"  @input="search" />
-            </pkm-col>
-            <pkm-col :span="12">
-              <pkm-button type="primary">
+          <div :style="{width:'100%', height: `${hh}px`}">
+            <pkm-input-search placeholder="输入关键字搜索" v-model="keyword" allow-clear :loading="loading" @change="search"  @input="search" />
+            <pkm-button>
+              <template #icon>
+              <icon-plus />
+              </template>
+            </pkm-button>
+            <pkm-dropdown>
+              <pkm-button>
                 <template #icon>
-                  <icon-plus />
+                  <icon-more />
                 </template>
-                <template #default>添加文章</template>
               </pkm-button>
-            </pkm-col>
-          </pkm-row>
+              <template #content>
+                <pkm-doption>Option 1</pkm-doption>
+                <pkm-doption disabled>Option 2</pkm-doption>
+                <pkm-doption>Option 3</pkm-doption>
+              </template>
+            </pkm-dropdown>
+          </div>
         </pkm-layout-header>
         <pkm-layout-content>
           <pkm-list :max-height="vh - hh" :bordered="false" @reach-bottom="reachBottom" class="pkm-list">
