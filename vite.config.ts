@@ -24,7 +24,10 @@ export default defineConfig({
         javascriptEnabled: true,
       },
       scss: {
-        additionalData: '@import "./src/assets/scss/var.scss";'
+        additionalData: `
+          @import "./src/assets/scss/var.scss";
+          @import "./src/assets/scss/mixins.scss";
+        `
       }
     }
   },

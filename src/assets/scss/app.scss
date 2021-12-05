@@ -1,34 +1,14 @@
 html, body, #app {
   width: 100%;
   height: 100%;
-}
-.layout-app {
-  width: 100%;
-  height: 100%;
-  backdrop-filter: blur(60px);
-  background-color: rgba(0, 0, 0, 0.4);
-}
-.side-bar {
-  width: 200px !important;
-  background-color: var(--color-bg-2);
-}
-.aside {
-  height: 100%;
-  .arco-layout-sider-trigger {
-    height: 46px;
-    line-height: 46px;
-  }
-}
-.vh-100 {
-  height: calc(100vh - 1px);
-  box-sizing: border-box;
+  background-color: var(--color-bg-1);
 }
 
 #app {
-  background-image: url(../bg/green.jpg);
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
+  // background-image: url(../bg/green.jpg);
+  // background-repeat: no-repeat;
+  // background-position: center center;
+  // background-size: cover;
   background-color: var(--color-bg-1);
   ::-webkit-scrollbar {
     width: 12px;
@@ -41,3 +21,12 @@ html, body, #app {
     background: rgba(255, 255, 255, 0.2);
   }
 }
+
+.#{$--prefix}-layout-app {
+  width: 100%;
+  height: 100%;
+}
+// .#{$--prefix}-layout-sidebar, .#{$--prefix}-layout-content {
+//   backdrop-filter: blur(12px);
+//   background-color: rgba(0,0,0,0.92);
+// }
