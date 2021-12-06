@@ -4,7 +4,7 @@
       <sidebar></sidebar>
     </pkm-layout-sider>
     <pkm-layout-content class="pkm-layout-content">
-      <!-- <router-view></router-view> -->
+      <router-view></router-view>
     </pkm-layout-content>
   </pkm-layout>
 </template>

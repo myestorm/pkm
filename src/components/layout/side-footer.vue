@@ -21,9 +21,13 @@ export default defineComponent({
   display: flex;
   padding: 16px;
   a {
-    color: var(--color-text-1);
+    color: var(--color-text-4);
     margin: 4px;
     font-size: 20px;
+    transition: $--transition;
+    &:hover {
+      color: var(--color-text-1);
+    }
   }
 }
 </style>

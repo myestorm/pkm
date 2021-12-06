@@ -26,7 +26,22 @@ html, body, #app {
   width: 100%;
   height: 100%;
 }
+.#{$--prefix}-layout-sidebar {
+  background-color: var(--color-bg-3);
+}
+.#{$--prefix}-flex-scroll-container {
+  position: relative;
+  > .scroll-body {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    overflow: auto;
+  }
+}
 // .#{$--prefix}-layout-sidebar, .#{$--prefix}-layout-content {
 //   backdrop-filter: blur(12px);
 //   background-color: rgba(0,0,0,0.92);
+ 
 // }

@@ -8,6 +8,14 @@ const routes: RouteRecordRaw[] = [{
     icon: 'signin',
     keepAlive: false
   }
+}, {
+  path: '/document/:cid/:id?',
+  name: 'Document',
+  component: () => import('../views/document/document.vue'),
+  meta: {
+    icon: 'document',
+    keepAlive: false
+  }
 }]
 
 const router: Router = createRouter({
