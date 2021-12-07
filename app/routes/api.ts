@@ -1,11 +1,27 @@
 import { Context, Next } from 'koa'
 import { prefix, get, post } from '../core/router'
 
+import Knowledge from '../controllers/knowledge'
+
 import { IResponeBodyType, IResponePageBodyType } from '../types/index'
 import { IDocumentListItemType, IDocumentListQueryType, IDocumentType } from '../types/document'
+import { IKnowledgeType } from '../types/knowledge'
+
+const knowledge = new Knowledge()
 
 @prefix('/api')
 export default class Api {
+  @post('/knowledge/add')
+  async KnowledgeAdd (ctx: Context, next: Next) {
+    const body = ctx.request.body as unknown as IKnowledgeType
+    const result = await knowledge.add(body)
+    ctx.body = {
+      code: 0,
+      msg: 'success',
+      data: result
+    }
+  }
+
   @get('/documents')
   async Document (ctx: Context, next: Next) {
     const query = ctx.query as unknown as IDocumentListQueryType
