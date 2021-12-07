@@ -11,15 +11,42 @@ const knowledge = new Knowledge()
 
 @prefix('/api')
 export default class Api {
-  @post('/knowledge/add')
-  async KnowledgeAdd (ctx: Context, next: Next) {
-    const body = ctx.request.body as unknown as IKnowledgeType
-    const result = await knowledge.add(body)
-    ctx.body = {
+
+  @get('/knowledge/list')
+  async KnowledgeList (ctx: Context, next: Next) {
+    const result = await knowledge.find()
+    const body: IResponeBodyType<IKnowledgeType[]> = {
       code: 0,
       msg: 'success',
       data: result
     }
+    ctx.body = body
+    await next()
+  }
+
+  @get('/knowledge/info/:id')
+  async KnowledgeInfoId (ctx: Context, next: Next) {
+    const result = await knowledge.find()
+    const body: IResponeBodyType<IKnowledgeType> = {
+      code: 0,
+      msg: 'success',
+      data: result
+    }
+    ctx.body = body
+    await next()
+  }
+
+  @post('/knowledge/add')
+  async KnowledgeAdd (ctx: Context, next: Next) {
+    const _body = ctx.request.body as unknown as IKnowledgeType
+    const result = await knowledge.add(_body)
+    const body: IResponeBodyType<IKnowledgeType> = {
+      code: 0,
+      msg: 'success',
+      data: result
+    }
+    ctx.body = body
+    await next()
   }
 
   @get('/documents')

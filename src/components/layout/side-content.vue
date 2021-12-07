@@ -100,14 +100,33 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, reactive } from 'vue'
+import { IKnowledgeType } from '../../../app/types/knowledge'
+
+import { ApiDocuments, ApiDocumentId } from '../../apis/index'
+
 export default defineComponent({
   name: 'SideHeader',
   setup () {
-    const collections = ref<{
-      title: string,
-      id: string
-    }[]>([])
+    const collections = ref<IKnowledgeType[]>([])
     const collectionsFold = ref(false)
+    const getList = () => {
+      ApiDocuments().then(res => {
+        if (list.value.length > 0) {
+          list.value = [
+            ...list.value,
+            ... res.data.list
+          ]
+        } else {
+          list.value = res.data.list
+        }
+        isLast.value = (res.data.page * res.data.pagesize) >= res.data.total
+        page.value = Number(res.data.page)
+        pagesize.value = Number(res.data.pagesize)
+      }).finally(() => {
+        loading.value = false
+      })
+    }
+
     const recycles = ref<{
 
     }[]>([])

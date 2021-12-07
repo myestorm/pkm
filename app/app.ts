@@ -9,7 +9,7 @@ import router from './routes/index'
 
 const app = new Koa()
 
-mongoose.connect(`mongodb://mylife:${encodeURIComponent('mylife!@#$%12345')}@localhost:27017/pkm`)
+mongoose.connect(`mongodb://mylife:${encodeURIComponent('mylife!@#$%12345')}@49.233.189.155:27017/pkm`)
 mongoose.connection.on('error', console.error)
 
 app.use(async (ctx: Context, next: Next) => {

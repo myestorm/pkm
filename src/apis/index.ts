@@ -3,11 +3,20 @@ import { AxiosRequestConfig } from 'axios'
 
 import { IResponeBodyType, IResponePageBodyType } from '../../app/types/index'
 import { IDocumentListItemType, IDocumentListQueryType, IDocumentType } from '../../app/types/document'
+import { IKnowledgeDocType, IKnowledgeType } from '../../app/types/knowledge'
 
-// 获取所有文档列表分页
-export const ApiDocuments = (data: IDocumentListQueryType, options?: AxiosRequestConfig): Promise<IResponeBodyType<IResponePageBodyType<IDocumentListItemType>>> => {
-  return axios.get('/api/documents', {
-    params: data,
+const prefix = '/api'
+
+// 获取所有知识库
+export const ApiKnowledge = (options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeType[]>> => {
+  return axios.get(`${prefix}/knowledge/list`, {
+    ...options
+  })
+}
+
+// 添加知识库
+export const ApiKnowledgeAdd = (postData: IKnowledgeType, options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeType>> => {
+  return axios.post(`${prefix}/knowledge/add`, postData, {
     ...options
   })
 }
