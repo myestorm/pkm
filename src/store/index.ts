@@ -1,13 +1,13 @@
 import { InjectionKey } from 'vue'
 import { createStore, useStore as baseUseStore, Store } from 'vuex'
 
-import knowledge from './modules/knowledge'
+import knowledge from './modules/knowledge/index'
 import { State, RootState, GetterTypes, Getter, MutationTypes, Mutations } from './types'
 
 
 export const key: InjectionKey<Store<RootState>> = Symbol()
 
-const state: State | RootState = {
+const state: State = {
   visibleKnowledge: false
 }
 
@@ -17,25 +17,19 @@ const getters: Getter = {
   }
 }
 
-const actions = {}
-
 const mutations: Mutations = {
   [MutationTypes.setVisibleKnowledge] (state, visibleKnowledge) {
     state.visibleKnowledge = visibleKnowledge
   }
 }
 
-const modules = {
-  knowledge
-}
-
 export const store = createStore<RootState>({
   state,
   getters,
-  mutations,
-  actions,
-  modules
+  mutations
 })
+
+store.registerModule('knowledge', knowledge)
 
 export function useStore () {
   return baseUseStore(key)

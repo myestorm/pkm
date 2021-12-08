@@ -77,7 +77,7 @@ export default defineComponent({
     const msg = app?.appContext.config.globalProperties.$message
 
     const isDisplay = ref(false) // 新建按钮的菜单控制
-    const visibleKnowledge = computed(() => store.getters.Get_Visible_Knowledge) // 是否显示新建知识库抽屉
+    const visibleKnowledge = computed(() => store.getters.getVisibleKnowledge) // 是否显示新建知识库抽屉
     const knowledgeFormRef = ref<FormInstance | null>(null) // 新建知识库的表单
     const loading = ref(false) // 新建知识库的按钮loading状态
     const form = reactive<IKnowledgeType>({
@@ -105,10 +105,10 @@ export default defineComponent({
     const hideKnowledgeDrawer = () => {
       knowledgeFormRef.value?.clearValidate()
       knowledgeFormRef.value?.resetFields()
-      store.commit('Set_Visible_Knowledge', false)
+      store.commit('setVisibleKnowledge', false)
     }
     const showKnowledgeDrawer = () => {
-      store.commit('Set_Visible_Knowledge', true)
+      store.commit('setVisibleKnowledge', true)
     }
     // 新建菜单接口
     const addKnowledge = (postData: IKnowledgeType) => {
@@ -128,9 +128,7 @@ export default defineComponent({
         }
       })
     }
-    store.commit('knowledge/SET_LIST', 8)
-    console.log(store.getters.knowledge)
-
+    
     return {
       isDisplay,
       hideAction,

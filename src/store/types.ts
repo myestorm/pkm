@@ -1,26 +1,23 @@
 import { MutationTree, GetterTree } from 'vuex'
-import { KnowledgeState, KnowledgeStore } from './modules/types'
 
 export type State = {
-  visibleKnowledge: Boolean
+  visibleKnowledge: boolean
 }
 
-export type RootState = State & {
-  knowledge?: KnowledgeState
-}
+export type RootState = State
 
 export enum GetterTypes {
-  getVisibleKnowledge = 'Get_Visible_Knowledge'
+  getVisibleKnowledge = 'getVisibleKnowledge'
 }
 type GetterFuns = {
-  [GetterTypes.getVisibleKnowledge] (state: State): Boolean;
+  [GetterTypes.getVisibleKnowledge] (state: State): boolean;
 }
 export type Getter = GetterTree<State, RootState> & GetterFuns
 
 export enum MutationTypes {
-  setVisibleKnowledge = 'Set_Visible_Knowledge'
+  setVisibleKnowledge = 'setVisibleKnowledge'
 }
 type MutationsFuns = {
-  [MutationTypes.setVisibleKnowledge] (state: State, value: Boolean): void;
+  [MutationTypes.setVisibleKnowledge] (state: State, value: boolean): void;
 }
 export type Mutations = MutationTree<State> & MutationsFuns

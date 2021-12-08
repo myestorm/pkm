@@ -21,6 +21,7 @@
         </div>
       </div>
       <div class="list" v-show="!collectionsFold">
+        {{collections}}
         <pkm-skeleton :animation="true" v-if="collectionsLoading">
           <pkm-space direction="vertical" :style="{ width:'100%' }">
             <pkm-skeleton-line :line-height="12" :line-spacing="8" :rows="3" />
@@ -104,7 +105,9 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, reactive } from 'vue'
+import { defineComponent, ref, reactive, computed } from 'vue'
+import { useStore  } from '../../store'
+
 import { IKnowledgeType } from '../../../app/types/knowledge'
 
 import { ApiKnowledge, ApiDocumentId } from '../../apis/index'
@@ -112,16 +115,21 @@ import { ApiKnowledge, ApiDocumentId } from '../../apis/index'
 export default defineComponent({
   name: 'SideHeader',
   setup () {
-    const collections = ref<IKnowledgeType[]>([])
+    const store = useStore()
+    const collections = computed(() => store.getters['knowledge/getList'])
     const collectionsFold = ref(false)
     const collectionsLoading = ref(false)
     const getList = () => {
       collectionsLoading.value = true
-      ApiKnowledge().then(res => {
-        collections.value = res.data
-      }).finally(() => {
+      store.dispatch('knowledge/getList').finally(() => {
+        console.log(collections)
         collectionsLoading.value = false
       })
+      // ApiKnowledge().then(res => {
+      //   collections.value = res.data
+      // }).finally(() => {
+      //   collectionsLoading.value = false
+      // })
     }
     getList()
 

@@ -21,6 +21,13 @@ export const ApiKnowledgeAdd = (postData: IKnowledgeType, options?: AxiosRequest
   })
 }
 
+// 通过id查找知识库信息
+export const ApiKnowledgeInfoId = (id: string, options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeType>> => {
+  return axios.get(`${prefix}/knowledge/info/${id}`, {
+    ...options
+  })
+}
+
 // 获取文档详细信息
 export const ApiDocumentId = (id: number, options?: AxiosRequestConfig): Promise<IResponeBodyType<IDocumentType>> => {
   return axios.get(`/api/document/${id}`, options)
