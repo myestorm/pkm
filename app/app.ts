@@ -4,12 +4,13 @@ import { Context, Next } from 'koa'
 import koaStatic from 'koa-static'
 import koaBody from 'koa-body'
 import mongoose from 'mongoose'
+import mongoConfig from './.mongo.config'
 
 import router from './routes/index'
 
 const app = new Koa()
 
-mongoose.connect(`mongodb://mylife:${encodeURIComponent('mylife!@#$%12345')}@49.233.189.155:27017/pkm`)
+mongoose.connect(mongoConfig)
 mongoose.connection.on('error', console.error)
 
 app.use(async (ctx: Context, next: Next) => {

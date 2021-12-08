@@ -10,6 +10,10 @@ class KnowledgeController {
   async add (data: IKnowledgeType): Promise<IKnowledgeType> {
     return await new Knowledge(data).save()
   }
+
+  async findById (id: string): Promise<IKnowledgeType | null> {
+    return await Knowledge.findOne({ id })
+  }
 }
 
 export default KnowledgeController

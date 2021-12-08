@@ -26,8 +26,9 @@ export default class Api {
 
   @get('/knowledge/info/:id')
   async KnowledgeInfoId (ctx: Context, next: Next) {
-    const result = await knowledge.find()
-    const body: IResponeBodyType<IKnowledgeType> = {
+    const { id = '' } = ctx.params
+    const result = await knowledge.findById(id)
+    const body: IResponeBodyType<IKnowledgeType | null> = {
       code: 0,
       msg: 'success',
       data: result

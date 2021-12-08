@@ -28,7 +28,7 @@
       </template>
     </pkm-button>
     <div class="add-button-options" v-show="isDisplay">
-      <pkm-button long @click="a">
+      <pkm-button long>
         <template #icon>
           <icon-file />
         </template>
@@ -36,7 +36,7 @@
           <span class="w">文档</span>
         </template>
       </pkm-button>
-      <pkm-button long>
+      <pkm-button long @click="showKnowledgeDrawer">
         <template #icon>
           <icon-folder />
         </template>
@@ -46,13 +46,45 @@
       </pkm-button>
     </div>
   </div>
+  <pkm-drawer :width="360" :ok-loading="loading" :visible="visibleKnowledge" @ok="submitKnowledge" @cancel="hideKnowledgeDrawer" unmountOnClose>
+    <template #title>
+      新建知识库
+    </template>
+    <pkm-form :model="form" ref="knowledgeFormRef">
+      <pkm-form-item field="title" label="名称" :rules="[{ required: true, message: '请输入知识库名称' }]">
+        <pkm-input v-model="form.title" placeholder="请输入知识库名称" :max-length="20" show-word-limit />
+        <template #help>
+          <div>尽量保持10以内的汉字</div>
+        </template>
+      </pkm-form-item>
+    </pkm-form>
+  </pkm-drawer>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, reactive, computed, getCurrentInstance } from 'vue'
+import { useStore  } from '../../store'
+
+import { ApiKnowledgeAdd } from '../../apis/index'
+import { IKnowledgeType } from '../../../app/types/knowledge'
+import { ValidatedError } from '@arco-design/web-vue/es/form/interface'
+import { FormInstance } from '@arco-design/web-vue/es/form'
+
 export default defineComponent({
   name: 'SideHeader',
   setup () {
-    const isDisplay = ref(false)
+    const store = useStore()
+    const app = getCurrentInstance()
+    const msg = app?.appContext.config.globalProperties.$message
+
+    const isDisplay = ref(false) // 新建按钮的菜单控制
+    const visibleKnowledge = computed(() => store.getters.Get_Visible_Knowledge) // 是否显示新建知识库抽屉
+    const knowledgeFormRef = ref<FormInstance | null>(null) // 新建知识库的表单
+    const loading = ref(false) // 新建知识库的按钮loading状态
+    const form = reactive<IKnowledgeType>({
+      title: ''
+    })
+
+    // 隐藏新建按钮的菜单
     const hideAction = () => {
       isDisplay.value = false
       document.removeEventListener('click', hideAction)
@@ -68,13 +100,52 @@ export default defineComponent({
         showAction()
       }
     }
+
+    // 隐藏新建按钮的抽屉
+    const hideKnowledgeDrawer = () => {
+      knowledgeFormRef.value?.clearValidate()
+      knowledgeFormRef.value?.resetFields()
+      store.commit('Set_Visible_Knowledge', false)
+    }
+    const showKnowledgeDrawer = () => {
+      store.commit('Set_Visible_Knowledge', true)
+    }
+    // 新建菜单接口
+    const addKnowledge = (postData: IKnowledgeType) => {
+      knowledgeFormRef.value?.validate((errors: undefined | Record<string, ValidatedError>) => {
+        if (!errors) {
+          loading.value = true
+          ApiKnowledgeAdd({
+            ...postData
+          }).then(() => {
+            hideKnowledgeDrawer()
+            msg.success(`成功新建${postData.title}`)
+          }).catch(err => {
+            msg.error(err.message)
+          }).then(() => {
+            loading.value = false
+          })
+        }
+      })
+    }
+    store.commit('knowledge/SET_LIST', 8)
+    console.log(store.getters.knowledge)
+
     return {
       isDisplay,
       hideAction,
       showAction,
       toggleAction,
-      a () {
-        console.log(1111)
+      visibleKnowledge,
+      hideKnowledgeDrawer,
+      showKnowledgeDrawer,
+      loading,
+      knowledgeFormRef,
+      form,
+      submitKnowledge () {
+        addKnowledge({
+          ...form
+        })
       }
     }
   }

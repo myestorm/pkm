@@ -10,7 +10,12 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true 
+    "forceConsistentCasingInFileNames": true,
+    "typeRoots": [
+      "./node_modules/koa-body",
+      "./node_modules/@types",
+      "./app/types"
+    ]
   },
   "include": [
     "app/**/*.ts",

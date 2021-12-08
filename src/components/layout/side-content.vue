@@ -21,10 +21,15 @@
         </div>
       </div>
       <div class="list" v-show="!collectionsFold">
-        <ul class="links">
+        <pkm-skeleton :animation="true" v-if="collectionsLoading">
+          <pkm-space direction="vertical" :style="{ width:'100%' }">
+            <pkm-skeleton-line :line-height="12" :line-spacing="8" :rows="3" />
+          </pkm-space>
+        </pkm-skeleton>
+        <ul class="links" v-else>
           <li v-for="(item, index) in collections" :key="item.id" :class="[index == 0 ? 'current' : '' ]">
             <div class="name">
-              <router-link to="/document/1/2" class="arco-link arco-link-status-normal">{{ item.title }}</router-link>
+              <router-link :to="`/document/${item._id}`" class="arco-link arco-link-status-normal">{{ item.title }}</router-link>
             </div>
             <pkm-dropdown position="br" class="pkm-more-dropdown">
               <pkm-button size="mini" class="more">
@@ -102,48 +107,28 @@
 import { defineComponent, ref, reactive } from 'vue'
 import { IKnowledgeType } from '../../../app/types/knowledge'
 
-import { ApiDocuments, ApiDocumentId } from '../../apis/index'
+import { ApiKnowledge, ApiDocumentId } from '../../apis/index'
 
 export default defineComponent({
   name: 'SideHeader',
   setup () {
     const collections = ref<IKnowledgeType[]>([])
     const collectionsFold = ref(false)
+    const collectionsLoading = ref(false)
     const getList = () => {
-      ApiDocuments().then(res => {
-        if (list.value.length > 0) {
-          list.value = [
-            ...list.value,
-            ... res.data.list
-          ]
-        } else {
-          list.value = res.data.list
-        }
-        isLast.value = (res.data.page * res.data.pagesize) >= res.data.total
-        page.value = Number(res.data.page)
-        pagesize.value = Number(res.data.pagesize)
+      collectionsLoading.value = true
+      ApiKnowledge().then(res => {
+        collections.value = res.data
       }).finally(() => {
-        loading.value = false
+        collectionsLoading.value = false
       })
     }
+    getList()
 
     const recycles = ref<{
 
     }[]>([])
     const recyclesFold = ref(true)
-    collections.value = [{
-      id: '1',
-      title: '中国古代文学史'
-    }, {
-      id: '2',
-      title: '前端学习笔记'
-    }, {
-      id: '3',
-      title: '古代汉语'
-    }, {
-      id: '4',
-      title: '未分类'
-    }]
     recycles.value = [{
       groupName: '2021-12-06',
       children: [{
@@ -180,6 +165,7 @@ export default defineComponent({
       name: ''
     })
     return {
+      collectionsLoading,
       collections,
       collectionsFold,
       recycles,
@@ -242,6 +228,7 @@ export default defineComponent({
       }
     }
     > .list {
+      padding-top: 8px 0 4px;
       ul, li {
         @include reset();
       }

@@ -11,7 +11,12 @@
     "esModuleInterop": true,
     "lib": ["esnext", "dom"],
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "typeRoots": [
+			"./node_modules/koa-body",
+      "./node_modules/@types",
+      "./app/types"
+    ]
   },
   "exclude": [
     "node_modules",
