@@ -11,7 +11,8 @@ const state: State = {
   visibleKnowledge: false,
   knowledgeForm: {
     title: ''
-  }
+  },
+  visibleSelectKnowledge: false
 }
 
 const getters: Getter = {
@@ -20,7 +21,10 @@ const getters: Getter = {
   },
   [GetterTypes.getKnowledgeForm] (state) {
     return state.knowledgeForm
-  }
+  },
+  [GetterTypes.getVisibleSelectKnowledge] (state) {
+    return state.visibleSelectKnowledge
+  },
 }
 
 const mutations: Mutations = {
@@ -29,6 +33,9 @@ const mutations: Mutations = {
   },
   [MutationTypes.setKnowledgeForm] (state, knowledgeForm) {
     state.knowledgeForm = knowledgeForm
+  },
+  [MutationTypes.setVisibleSelectKnowledge] (state, visibleSelectKnowledge) {
+    state.visibleSelectKnowledge = visibleSelectKnowledge
   }
 }
 

@@ -28,7 +28,7 @@
       </template>
     </pkm-button>
     <div class="add-button-options" v-show="isDisplay">
-      <pkm-button long>
+      <pkm-button long @click="showSelectKnowledgeDrawer">
         <template #icon>
           <icon-file />
         </template>
@@ -60,18 +60,27 @@
     </pkm-form>
   </pkm-drawer>
 
-  <pkm-drawer :width="360" :ok-loading="loading" :visible="visibleSelectKnowledge" @ok="submitKnowledge" @cancel="hideKnowledgeDrawer" unmountOnClose>
+  <pkm-drawer :width="360" :ok-button-props="{
+    disabled: !selected
+  }" placement="left" :visible="visibleSelectKnowledge" @ok="toDocumentLink" @cancel="hideSelectKnowledgeDrawer" unmountOnClose>
     <template #title>
       新建文档
-      <p>请选择目标知识库</p>
     </template>
-    <pkm-list size="small">
-      <pkm-list-item v-for="item in collections" :key="item.id">{{ item.title }}</pkm-list-item>
-    </pkm-list>
+    <div class="pkm-select-knowledge">
+      <p class="tips">请选择目标知识库</p>
+      <div class="pkm-flex-scroll-container list">
+        <div class="scroll-body">
+          <pkm-radio-group direction="vertical" style="width: 100%" v-model="selected">
+            <pkm-radio v-for="item in collections" :key="item.id" :value="item._id">{{ item.title }}</pkm-radio>
+          </pkm-radio-group>
+        </div>
+      </div>
+    </div>
   </pkm-drawer>
 </template>
 <script lang="ts">
 import { defineComponent, ref, reactive, computed, getCurrentInstance } from 'vue'
+import { useRouter } from 'vue-router'
 import { useStore  } from '../../store'
 
 import { IKnowledgeType } from '../../../app/types/knowledge'
@@ -82,6 +91,7 @@ export default defineComponent({
   name: 'SideHeader',
   setup () {
     const store = useStore()
+    const router = useRouter()
     const app = getCurrentInstance()
     const msg = app?.appContext.config.globalProperties.$message
 
@@ -109,7 +119,7 @@ export default defineComponent({
       }
     }
 
-    // 隐藏新建按钮的抽屉
+    // 隐藏新建知识库的抽屉
     const hideKnowledgeDrawer = () => {
       knowledgeFormRef.value?.clearValidate()
       knowledgeFormRef.value?.resetFields()
@@ -144,7 +154,24 @@ export default defineComponent({
     }
 
     // 新建文档
+    const visibleSelectKnowledge = computed(() => store.getters.getVisibleSelectKnowledge)
     const collections = computed(() => store.getters['knowledge/getList'])
+    const selected = ref('')
+    // 隐藏选择知识库的抽屉
+    const hideSelectKnowledgeDrawer = () => {
+      store.commit('setVisibleSelectKnowledge', false)
+    }
+    const showSelectKnowledgeDrawer = () => {
+      store.commit('setVisibleSelectKnowledge', true)
+    }
+    const toDocumentLink = () => {
+      if (selected.value) {
+        const id = selected.value
+        selected.value = ''
+        hideSelectKnowledgeDrawer()
+        router.push(`/document/${id}`)
+      }
+    }
     
     return {
       isDisplay,
@@ -158,7 +185,12 @@ export default defineComponent({
       knowledgeFormRef,
       form,
       submitKnowledge,
-      collections
+      visibleSelectKnowledge,
+      hideSelectKnowledgeDrawer,
+      showSelectKnowledgeDrawer,
+      selected,
+      collections,
+      toDocumentLink
     }
   }
 })
@@ -215,6 +247,15 @@ export default defineComponent({
         width: 60px;
       }
     }
+  }
+}
+.#{$--prefix}-select-knowledge {
+  width: 100%;
+  height: 96%;
+  display: flex;
+  flex-direction: column;
+  .list {
+    flex: 1;
   }
 }
 </style>

@@ -1,3 +1,5 @@
+/// <reference path ='../../node_modules/koa-body/index.d.ts'/>
+
 export interface IResponeBodyType<T> {
   code: number,
   msg: string,
