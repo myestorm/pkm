@@ -59,6 +59,16 @@
       </pkm-form-item>
     </pkm-form>
   </pkm-drawer>
+
+  <pkm-drawer :width="360" :ok-loading="loading" :visible="visibleSelectKnowledge" @ok="submitKnowledge" @cancel="hideKnowledgeDrawer" unmountOnClose>
+    <template #title>
+      新建文档
+      <p>请选择目标知识库</p>
+    </template>
+    <pkm-list size="small">
+      <pkm-list-item v-for="item in collections" :key="item.id">{{ item.title }}</pkm-list-item>
+    </pkm-list>
+  </pkm-drawer>
 </template>
 <script lang="ts">
 import { defineComponent, ref, reactive, computed, getCurrentInstance } from 'vue'
@@ -132,6 +142,9 @@ export default defineComponent({
         ...form.value
       })
     }
+
+    // 新建文档
+    const collections = computed(() => store.getters['knowledge/getList'])
     
     return {
       isDisplay,
@@ -144,7 +157,8 @@ export default defineComponent({
       loading,
       knowledgeFormRef,
       form,
-      submitKnowledge
+      submitKnowledge,
+      collections
     }
   }
 })
