@@ -14,3 +14,7 @@ export interface IKnowledgeType {
   thumb?: string,
   children?: IKnowledgeDocType[]
 }
+
+export interface IKnowledgeUpdateType extends IKnowledgeType {
+  _id: string
+}

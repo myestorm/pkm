@@ -13,7 +13,7 @@
           个人知识库
         </div>
         <div class="action">
-          <pkm-button size="mini" @click="visible = true">
+          <pkm-button size="mini" @click="add">
             <template #icon>
               <icon-plus />
             </template>
@@ -21,7 +21,6 @@
         </div>
       </div>
       <div class="list" v-show="!collectionsFold">
-        {{collections}}
         <pkm-skeleton :animation="true" v-if="collectionsLoading">
           <pkm-space direction="vertical" :style="{ width:'100%' }">
             <pkm-skeleton-line :line-height="12" :line-spacing="8" :rows="3" />
@@ -39,13 +38,13 @@
                 </template>
               </pkm-button>
               <template #content>
-                <pkm-doption class="pkm-more-doption">
+                <pkm-doption class="pkm-more-doption" @click.stop="edit(item)">
                   <template #icon>
                     <icon-edit />
                   </template>
                   编辑
                 </pkm-doption>
-                <pkm-doption class="pkm-more-doption">
+                <pkm-doption class="pkm-more-doption" @click.stop="del(item)">
                   <template #icon>
                     <icon-delete />
                   </template>
@@ -86,50 +85,28 @@
         </ul>
       </div>
     </div>
-    <pkm-drawer
-      :width="320"
-      :visible="visible"
-      @ok="handleOk"
-      @cancel="handleCancel"
-    >
-      <template #title>新建知识库</template>
-      <pkm-form :model="form">
-        <pkm-form-item field="name" label="名称">
-          <pkm-input v-model="form.name" placeholder="请输入名称" autofocus />
-          <template #help>
-            <div>尽量控制在10个汉字以内</div>
-          </template>
-        </pkm-form-item>
-      </pkm-form>
-    </pkm-drawer>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, reactive, computed } from 'vue'
+import { defineComponent, ref, reactive, computed, getCurrentInstance } from 'vue'
 import { useStore  } from '../../store'
-
 import { IKnowledgeType } from '../../../app/types/knowledge'
-
-import { ApiKnowledge, ApiDocumentId } from '../../apis/index'
 
 export default defineComponent({
   name: 'SideHeader',
   setup () {
+    const app = getCurrentInstance()
+    const modal = app?.appContext.config.globalProperties.$modal
     const store = useStore()
+
     const collections = computed(() => store.getters['knowledge/getList'])
     const collectionsFold = ref(false)
     const collectionsLoading = ref(false)
     const getList = () => {
       collectionsLoading.value = true
       store.dispatch('knowledge/getList').finally(() => {
-        console.log(collections)
         collectionsLoading.value = false
       })
-      // ApiKnowledge().then(res => {
-      //   collections.value = res.data
-      // }).finally(() => {
-      //   collectionsLoading.value = false
-      // })
     }
     getList()
 
@@ -168,22 +145,29 @@ export default defineComponent({
         title: '交互按钮类图标'
       }]
     }]
-    const visible = ref(false)
-    const form = reactive({
-      name: ''
-    })
     return {
       collectionsLoading,
       collections,
       collectionsFold,
       recycles,
       recyclesFold,
-      visible,
-      form,
-      handleOk () {},
-      handleCancel () {
-        visible.value = false
+      add () {
+        store.commit('setVisibleKnowledge', true)
       },
+      edit (data: IKnowledgeType) {
+        store.commit('setKnowledgeForm', { ...data })
+        store.commit('setVisibleKnowledge', true)
+      },
+      del (data: IKnowledgeType) {
+        modal.warning({
+          title: '系统提示',
+          content: `是否确定删除“${data.title}”？该知识库下的文档自动转移到“未分类”目录下。`,
+          hideCancel: false,
+          onOk () {
+            store.dispatch('knowledge/remove', data._id)
+          }
+        })
+      }
     }
   }
 })

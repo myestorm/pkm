@@ -8,18 +8,27 @@ import { State, RootState, GetterTypes, Getter, MutationTypes, Mutations } from 
 export const key: InjectionKey<Store<RootState>> = Symbol()
 
 const state: State = {
-  visibleKnowledge: false
+  visibleKnowledge: false,
+  knowledgeForm: {
+    title: ''
+  }
 }
 
 const getters: Getter = {
   [GetterTypes.getVisibleKnowledge] (state) {
     return state.visibleKnowledge
+  },
+  [GetterTypes.getKnowledgeForm] (state) {
+    return state.knowledgeForm
   }
 }
 
 const mutations: Mutations = {
   [MutationTypes.setVisibleKnowledge] (state, visibleKnowledge) {
     state.visibleKnowledge = visibleKnowledge
+  },
+  [MutationTypes.setKnowledgeForm] (state, knowledgeForm) {
+    state.knowledgeForm = knowledgeForm
   }
 }
 

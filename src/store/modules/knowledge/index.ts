@@ -1,18 +1,19 @@
 import { 
   State,
-  GetterTypes, Getter,
+  GetterTypes, Getters,
   MutationTypes, Mutations,
-  ActionTypes, Actions
+  ActionTypes, Actions,
+  ModuleType
 } from './types'
 
-import { ApiKnowledge, ApiKnowledgeInfoId } from '../../../apis/index'
+import { ApiKnowledge, ApiKnowledgeInfoId, ApiKnowledgeAdd, ApiKnowledgeUpdate, ApiKnowledgeRemove } from '../../../apis/index'
 
 export const state: State = {
   list: [],
   selected: null
 }
 
-export const getter: Getter = {
+export const getters: Getters = {
   [GetterTypes.getList] (state) {
     return state.list
   },
@@ -23,7 +24,6 @@ export const getter: Getter = {
 
 export const mutations: Mutations = {
   [MutationTypes.setList] (state, list) {
-    console.log(state, list)
     state.list = list || []
   },
   [MutationTypes.setSelected] (state, selected) {
@@ -50,13 +50,54 @@ export const actions: Actions = {
         reject(err)
       })
     })
+  },
+  [ActionTypes.add] ({ commit, state }, postData) {
+    return new Promise((resolve, reject) => {
+      ApiKnowledgeAdd(postData).then(res => {
+        const list = [...state.list]
+        list.unshift(res.data)
+        commit('setList', list)
+        resolve(res.data)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  [ActionTypes.update] ({ commit, state }, postData) {
+    return new Promise((resolve, reject) => {
+      ApiKnowledgeUpdate(postData).then(res => {
+        const data = res.data
+        const list = [...state.list]
+        const index = list.findIndex(i => i._id === data._id)
+        list[index] = { ...data }
+        commit('setList', list)
+        resolve(res.data)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  [ActionTypes.remove] ({ commit, state }, id) {
+    return new Promise((resolve, reject) => {
+      ApiKnowledgeRemove(id).then(res => {
+        const list = [...state.list]
+        const index = list.findIndex(i => i._id === id)
+        list.splice(index, 1)
+        commit('setList', list)
+        resolve(res.data)
+      }).catch(err => {
+        reject(err)
+      })
+    })
   }
 }
 
-export default {
+const module: ModuleType =  {
   namespaced: true,
   state,
-  getter,
+  getters,
   mutations,
   actions
 }
+
+export default module

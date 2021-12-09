@@ -1,5 +1,5 @@
 import { Context, Next } from 'koa'
-import { prefix, get, post } from '../core/router'
+import { prefix, get, post, put, del } from '../core/router'
 
 import Knowledge from '../controllers/knowledge'
 
@@ -27,13 +27,61 @@ export default class Api {
   @get('/knowledge/info/:id')
   async KnowledgeInfoId (ctx: Context, next: Next) {
     const { id = '' } = ctx.params
-    const result = await knowledge.findById(id)
-    const body: IResponeBodyType<IKnowledgeType | null> = {
-      code: 0,
-      msg: 'success',
-      data: result
+    if (id) {
+      const result = await knowledge.findById(id)
+      const body: IResponeBodyType<IKnowledgeType | null> = {
+        code: 0,
+        msg: 'success',
+        data: result
+      }
+      ctx.body = body
+    } else {
+      ctx.body = {
+        code: 1,
+        msg: '参数不正确'
+      }
     }
-    ctx.body = body
+    await next()
+  }
+
+  @put('/knowledge/update/:id')
+  async KnowledgeUpdateId (ctx: Context, next: Next) {
+    const { id = '' } = ctx.params
+    const _body = ctx.request.body as unknown as IKnowledgeType
+    if (id) {
+      const result = await knowledge.update(id, _body)
+      const body: IResponeBodyType<IKnowledgeType | null> = {
+        code: 0,
+        msg: 'success',
+        data: result
+      }
+      ctx.body = body
+    } else {
+      ctx.body = {
+        code: 1,
+        msg: '参数不正确'
+      }
+    }
+    await next()
+  }
+
+  @del('/knowledge/remove/:id')
+  async KnowledgeRemoveId (ctx: Context, next: Next) {
+    const { id = '' } = ctx.params
+    if (id) {
+      const result = await knowledge.remove(id)
+      const body: IResponeBodyType<IKnowledgeType | null> = {
+        code: 0,
+        msg: 'success',
+        data: result
+      }
+      ctx.body = body
+    } else {
+      ctx.body = {
+        code: 1,
+        msg: '参数不正确'
+      }
+    }
     await next()
   }
 

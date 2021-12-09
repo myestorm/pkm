@@ -64,7 +64,6 @@
 import { defineComponent, ref, reactive, computed, getCurrentInstance } from 'vue'
 import { useStore  } from '../../store'
 
-import { ApiKnowledgeAdd } from '../../apis/index'
 import { IKnowledgeType } from '../../../app/types/knowledge'
 import { ValidatedError } from '@arco-design/web-vue/es/form/interface'
 import { FormInstance } from '@arco-design/web-vue/es/form'
@@ -78,11 +77,10 @@ export default defineComponent({
 
     const isDisplay = ref(false) // 新建按钮的菜单控制
     const visibleKnowledge = computed(() => store.getters.getVisibleKnowledge) // 是否显示新建知识库抽屉
+    const form = computed(() => store.getters.getKnowledgeForm)
+
     const knowledgeFormRef = ref<FormInstance | null>(null) // 新建知识库的表单
     const loading = ref(false) // 新建知识库的按钮loading状态
-    const form = reactive<IKnowledgeType>({
-      title: ''
-    })
 
     // 隐藏新建按钮的菜单
     const hideAction = () => {
@@ -115,17 +113,23 @@ export default defineComponent({
       knowledgeFormRef.value?.validate((errors: undefined | Record<string, ValidatedError>) => {
         if (!errors) {
           loading.value = true
-          ApiKnowledgeAdd({
+          const url = postData._id ? 'knowledge/update' : 'knowledge/add'
+          store.dispatch(url, {
             ...postData
           }).then(() => {
             hideKnowledgeDrawer()
-            msg.success(`成功新建${postData.title}`)
+            msg.success(`操作成功${postData.title}`)
           }).catch(err => {
             msg.error(err.message)
           }).then(() => {
             loading.value = false
           })
         }
+      })
+    }
+    const submitKnowledge = () => {
+      addKnowledge({
+        ...form.value
       })
     }
     
@@ -140,11 +144,7 @@ export default defineComponent({
       loading,
       knowledgeFormRef,
       form,
-      submitKnowledge () {
-        addKnowledge({
-          ...form
-        })
-      }
+      submitKnowledge
     }
   }
 })

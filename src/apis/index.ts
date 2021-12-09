@@ -21,6 +21,22 @@ export const ApiKnowledgeAdd = (postData: IKnowledgeType, options?: AxiosRequest
   })
 }
 
+// 修改知识库
+export const ApiKnowledgeUpdate = (postData: IKnowledgeType, options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeType>> => {
+  const id = postData._id
+  delete postData._id
+  return axios.put(`${prefix}/knowledge/update/${id}`, postData, {
+    ...options
+  })
+}
+
+// 删除知识库
+export const ApiKnowledgeRemove = (id: string, options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeType>> => {
+  return axios.delete(`${prefix}/knowledge/remove/${id}`, {
+    ...options
+  })
+}
+
 // 通过id查找知识库信息
 export const ApiKnowledgeInfoId = (id: string, options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeType>> => {
   return axios.get(`${prefix}/knowledge/info/${id}`, {
