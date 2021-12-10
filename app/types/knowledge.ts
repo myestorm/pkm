@@ -1,9 +1,11 @@
 export interface IKnowledgeDocType {
   title: string,
-  desc: string,
-  createdAt: Date,
+  desc?: string,
+  createdAt?: Date,
+  publishAt?: Date,
   thumb?: string,
-  content?: string
+  content?: string,
+  tags?: string[]
 }
 
 export interface IKnowledgeType {
@@ -15,6 +17,3 @@ export interface IKnowledgeType {
   children?: IKnowledgeDocType[]
 }
 
-export interface IKnowledgeUpdateType extends IKnowledgeType {
-  _id: string
-}

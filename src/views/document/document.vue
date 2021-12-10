@@ -4,7 +4,7 @@
       <pkm-layout class="document-layout-sider-layout">
         <pkm-layout-header class="document-layout-sider-layout-header">
           <div class="title">
-            <h2 class="arco-typography">前端学习笔记</h2>
+            <h2 class="arco-typography">{{ kInfo.title }}</h2>
             <pkm-button type="primary" shape="circle" size="small">
               <template #icon>
                 <icon-plus />
@@ -53,11 +53,11 @@
           <div class="list scroll-body">
             <pkm-spin dot />
             <ul>
-              <li class="item arco-link arco-link-status-normal" v-for="i in 30" :key="i" :class="[ i == 1 ? 'current' : '']" @click="getDetail(i)">
+              <li class="item arco-link arco-link-status-normal" v-for="(item, index) in kInfo.children" :key="index" :class="[ i == 1 ? 'current' : '']" @click="setDetail(item)">
                 <div class="item-title">
-                  <h3>道教常识 - {{i}}</h3>
+                  <h3>{{ item.title }}</h3>
                   <span class="date">
-                    2021-12-6
+                    {{ formatDate(item.createdAt) }}
                   </span>
                   <div class="action">
                     <pkm-dropdown position="br" class="pkm-more-dropdown">
@@ -69,12 +69,6 @@
                       <template #content>
                         <pkm-doption class="pkm-more-doption">
                           <template #icon>
-                            <icon-edit />
-                          </template>
-                          编辑
-                        </pkm-doption>
-                        <pkm-doption class="pkm-more-doption">
-                          <template #icon>
                             <icon-delete />
                           </template>
                           删除
@@ -84,7 +78,7 @@
                   </div>
                 </div>
                 <p class="desc">
-                  元始天尊（也称玉清大帝、天宝君全称玉清圣境虚无自然原始天尊)灵宝天尊（也称太上大道君,上清大帝、灵宝君等）...
+                  {{ item.desc }}...
                 </p>
               </li>
             </ul>
@@ -100,19 +94,16 @@
               文档信息
             </template>
             <pkm-form ref="formRef" :model="form" label-align="left">
-              <pkm-form-item field="name" label="文档名称" :rules="rules">
-                <pkm-input v-model="form.name" placeholder="请输入文档名称" />
+              <pkm-form-item field="title" label="文档名称" :rules="rules">
+                <pkm-input v-model="form.title" placeholder="请输入文档名称" />
               </pkm-form-item>
-              <pkm-form-item field="name" label="所属目录" :rules="rules">
-                <pkm-cascader :options="options" :style="{width:'320px'}" placeholder="请选择所属目录" allow-search/>
+              <pkm-form-item field="desc" label="文档简介" :rules="rules">
+                <pkm-textarea v-model="form.desc" placeholder="请输入文档简介" :max-length="200" show-word-limit />
               </pkm-form-item>
-              <pkm-form-item field="name" label="文档简介" :rules="rules">
-                <pkm-textarea placeholder="请输入文档简介" :max-length="200" show-word-limit />
-              </pkm-form-item>
-              <pkm-form-item field="name" label="文档标签" :rules="rules">
+              <pkm-form-item field="tags" label="文档标签" :rules="rules">
                 <pkm-input-tag :default-value="['one','two','three','four']" :style="{width:'380px'}" placeholder="请输入文档标签" :max-tag-count="3" allow-clear/>
               </pkm-form-item>
-              <pkm-form-item field="post" label="封面图片">
+              <pkm-form-item field="thumb" label="封面图片">
                 <pkm-upload
                   list-type="picture-card"
                   action="/"
@@ -131,11 +122,6 @@
                   @ok="onOk"
                 />
               </pkm-form-item>
-              <pkm-form-item field="isRead">
-                <pkm-checkbox v-model="form.isRead">
-                前台是否可见
-                </pkm-checkbox>
-              </pkm-form-item>
             </pkm-form>
           </pkm-drawer>
         </template>
@@ -144,49 +130,72 @@
   </pkm-layout>
 </template>
 <script lang="ts">
-import { defineComponent, ref, reactive } from 'vue'
-import MarkdownEditor from '../../components/editor/markdown-editor.vue'
+import { defineComponent, ref, reactive, getCurrentInstance, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useStore  } from '../../store'
 
-import { ApiDocuments, ApiDocumentId } from '../../apis/index'
-import { IDocumentListItemType, IDocumentListQueryType } from '../../../app/types/document'
+import MarkdownEditor from '../../components/editor/markdown-editor.vue'
+import dayjs from 'dayjs'
+import { IKnowledgeType, IKnowledgeDocType } from '../../../app/types/knowledge'
 
 export default defineComponent({
   components: {
     MarkdownEditor
   },
   setup () {
-    const value = ref('')
-    const form = reactive({
-      name: '',
-      post: '',
-      isRead: false,
+    const store = useStore()
+    const router = useRouter()
+    const route = useRoute()
+    const app = getCurrentInstance()
+    const msg = app?.appContext.config.globalProperties.$message
+    const { cid = '', id = '' } = route.params
+
+    const kInfo = reactive<IKnowledgeType>({
+      title: '',
+      children: []
     })
-    // const getList = (params: IDocumentListQueryType) => {
-    //   ApiDocuments(params).then(res => {
-    //     if (list.value.length > 0) {
-    //       list.value = [
-    //         ...list.value,
-    //         ... res.data.list
-    //       ]
-    //     } else {
-    //       list.value = res.data.list
-    //     }
-    //     isLast.value = (res.data.page * res.data.pagesize) >= res.data.total
-    //     page.value = Number(res.data.page)
-    //     pagesize.value = Number(res.data.pagesize)
-    //   }).finally(() => {
-    //     loading.value = false
-    //   })
-    // }
-    const getDetail = (id: number) => {
-      ApiDocumentId(id).then(res => {
-        value.value = res.data.content
-      })
+
+    const getInfo = (kid: any) => {
+      if (kid && typeof kid === 'string') {
+        store.dispatch('knowledge/getInfo', kid).then((res) => {
+          kInfo.title = res.title
+          kInfo.children = res.children || []
+          store.commit('knowledge/setSelected', res)
+        }).catch(err => {
+          msg.error(err.message)
+        })
+      }
     }
+    getInfo(cid)
+    watch(
+      () => route.params,
+      (newParams) => {
+        getInfo(newParams.cid)
+      }
+    )
+
+    const formatDate = (str: Date) => {
+      return dayjs(str).format('MM-DD-YYYY')
+    }
+
+    const value = ref('')
+    const setDetail = (data: IKnowledgeDocType) => {
+      value.value = data.content || ''
+    }
+    const form = reactive<IKnowledgeDocType>({
+      title: '',
+      desc: '',
+      createdAt: new Date(),
+      thumb: '',
+      content: ''
+    })
+    
     return {
+      kInfo,
+      formatDate,
       value,
       form,
-      getDetail
+      setDetail
     }
   },
 })

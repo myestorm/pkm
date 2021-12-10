@@ -27,7 +27,7 @@
           </pkm-space>
         </pkm-skeleton>
         <ul class="links" v-else>
-          <li v-for="(item, index) in collections" :key="item.id" :class="[index == 0 ? 'current' : '' ]">
+          <li v-for="item in collections" :key="item._id" :class="[(selected?._id && item._id == selected._id) ? 'current' : '' ]">
             <div class="name">
               <router-link :to="`/document/${item._id}`" class="arco-link arco-link-status-normal">{{ item.title }}</router-link>
             </div>
@@ -100,6 +100,7 @@ export default defineComponent({
     const store = useStore()
 
     const collections = computed(() => store.getters['knowledge/getList'])
+    const selected = computed(() => store.getters['knowledge/getSelected'])
     const collectionsFold = ref(false)
     const collectionsLoading = ref(false)
     const getList = () => {
@@ -148,6 +149,7 @@ export default defineComponent({
     return {
       collectionsLoading,
       collections,
+      selected,
       collectionsFold,
       recycles,
       recyclesFold,

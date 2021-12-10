@@ -5,7 +5,7 @@ const routes: RouteRecordRaw[] = [{
   name: 'Home',
   component: () => import('../views/Home.vue'),
   meta: {
-    icon: 'signin',
+    icon: 'home',
     keepAlive: false
   }
 }, {

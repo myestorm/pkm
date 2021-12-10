@@ -3,9 +3,8 @@ import { prefix, get, post, put, del } from '../core/router'
 
 import Knowledge from '../controllers/knowledge'
 
-import { IResponeBodyType, IResponePageBodyType } from '../types/index'
-import { IDocumentListItemType, IDocumentListQueryType, IDocumentType } from '../types/document'
-import { IKnowledgeType } from '../types/knowledge'
+import { IResponeBodyType } from '../types/index'
+import { IKnowledgeType, IKnowledgeDocType } from '../types/knowledge'
 
 const knowledge = new Knowledge()
 
@@ -14,7 +13,7 @@ export default class Api {
 
   @get('/knowledge/list')
   async KnowledgeList (ctx: Context, next: Next) {
-    const result = await knowledge.find()
+    const result = await knowledge.list()
     const body: IResponeBodyType<IKnowledgeType[]> = {
       code: 0,
       msg: 'success',
@@ -28,7 +27,7 @@ export default class Api {
   async KnowledgeInfoId (ctx: Context, next: Next) {
     const { id = '' } = ctx.params
     if (id) {
-      const result = await knowledge.findById(id)
+      const result = await knowledge.info(id)
       const body: IResponeBodyType<IKnowledgeType | null> = {
         code: 0,
         msg: 'success',
@@ -98,56 +97,27 @@ export default class Api {
     await next()
   }
 
-  @get('/documents')
-  async Document (ctx: Context, next: Next) {
-    const query = ctx.query as unknown as IDocumentListQueryType
-    const { page = 1, pagesize = 10, keyword = '' } = query
-    const list: IDocumentListItemType[] = []
-    for (let i = 0; i < pagesize; i++) {
-      list.push({
-        id: i + 1,
-        title: 'JS版本的工具包集合' + keyword,
-        desc: '但同样的，JS没有类型检查；提供对外接口代码补全、智能提示都不够友好；书写不规范很容易诱导发生很多隐蔽的bug，而且影响代码的可读性',
-        createdAt: new Date()
-      })
-    }
-    const data: IResponePageBodyType<IDocumentListItemType> = {
-      list,
-      page,
-      pagesize,
-      total: 28
-    }
-    const body: IResponeBodyType<IResponePageBodyType<IDocumentListItemType>> = {
-      code: 0,
-      msg: 'success',
-      data
-    }
-    ctx.body = body
-    await next()
-  }
-
-  @get('/document/:id')
-  async DocumentId (ctx: Context, next: Next) {
-    const params = ctx.params as unknown as {
-      id: number
-    }
-    const { id } = params
+  @post('/document/:id/add')
+  async DocumentAdd (ctx: Context, next: Next) {
+    const { id = '' } = ctx.params
+    const _body = ctx.request.body as unknown as IKnowledgeDocType
     if (id) {
-      const data: IDocumentType = {
-        id,
-        title: 'JS版本的工具包集合',
-        desc: '但同样的，JS没有类型检查；提供对外接口代码补全、智能提示都不够友好；书写不规范很容易诱导发生很多隐蔽的bug，而且影响代码的可读性',
-        content: '## 但同样的，JS没有\n类型检查；提供对外接口代码补全、智能提示都不够友好；书写不规范很容易诱导发生很多隐蔽的bug，而且影响代码的可读性',
-        createdAt: new Date()
+      _body.createdAt = new Date()
+      if (!_body.publishAt) {
+        _body.publishAt = new Date()
       }
-      const body: IResponeBodyType<IDocumentType> = {
+      const result = await knowledge.addDoc(id, _body)
+      const body: IResponeBodyType<IKnowledgeDocType | null> = {
         code: 0,
         msg: 'success',
-        data
+        data: result
       }
       ctx.body = body
     } else {
-      ctx.throw(404)
+      ctx.body = {
+        code: 1,
+        msg: '参数不正确'
+      }
     }
     await next()
   }

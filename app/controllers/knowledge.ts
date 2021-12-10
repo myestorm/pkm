@@ -1,8 +1,8 @@
 import Knowledge from '../models/knowledge'
-import { IKnowledgeType, IKnowledgeUpdateType } from '../types/knowledge'
+import { IKnowledgeType, IKnowledgeDocType } from '../types/knowledge'
 
 class KnowledgeController {
-  async find (): Promise<IKnowledgeType[]> {
+  async list (): Promise<IKnowledgeType[]> {
     return await Knowledge.find().sort({
       _id: -1
     })
@@ -20,8 +20,16 @@ class KnowledgeController {
     return await Knowledge.findByIdAndRemove(id)
   }
 
-  async findById (id: string): Promise<IKnowledgeType | null> {
-    return await Knowledge.findOne({ id })
+  async info (id: string): Promise<IKnowledgeType | null> {
+    return await Knowledge.findById(id)
+  }
+
+  async addDoc (id: string, data: IKnowledgeDocType): Promise<IKnowledgeDocType | null> {
+    return await Knowledge.findByIdAndUpdate(id, {
+      '$push': {
+        children: data
+      }
+    })
   }
 }
 

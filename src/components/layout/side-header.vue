@@ -79,7 +79,7 @@
   </pkm-drawer>
 </template>
 <script lang="ts">
-import { defineComponent, ref, reactive, computed, getCurrentInstance } from 'vue'
+import { defineComponent, ref, computed, getCurrentInstance } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore  } from '../../store'
 

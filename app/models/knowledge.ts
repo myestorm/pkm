@@ -1,5 +1,5 @@
 import { Schema, model, now } from 'mongoose'
-import { IKnowledgeDocType, IKnowledgeType } from '../types/knowledge'
+import { IKnowledgeType } from '../types/knowledge'
 
 
 const schema = new Schema<IKnowledgeType>({
@@ -18,7 +18,8 @@ const schema = new Schema<IKnowledgeType>({
   thumb: {
     type: String,
     default: ''
-  }
+  },
+  children: []
 })
 
 const KnowledgeModel = model<IKnowledgeType>('Knowledge', schema)
