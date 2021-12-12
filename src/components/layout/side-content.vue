@@ -69,7 +69,7 @@
           回收站
         </div>
         <div class="action">
-          <pkm-button size="mini">
+          <pkm-button size="mini" @click="recycleRemoveAll">
             <template #icon>
               <icon-delete />
             </template>
@@ -78,9 +78,9 @@
       </div>
       <div class="list" v-show="!recyclesFold">
         <ul class="links">
-          <template v-for="item in recycles" :key="item.groupName">
-            <li class="g-title">{{ item.groupName }}</li>
-            <li v-for="sub in item.children" :key="sub.id"><pkm-link href="#link" class="name">{{ sub.title }}</pkm-link></li>
+          <template v-for="item in recycles" :key="item._id">
+            <li class="g-title">{{ item.title }}</li>
+            <li v-for="sub in item.children" :key="sub._id"><pkm-link href="#link" class="name">{{ sub.title }}</pkm-link></li>
           </template>
         </ul>
       </div>
@@ -111,41 +111,20 @@ export default defineComponent({
     }
     getList()
 
-    const recycles = ref<{
-
-    }[]>([])
+    const recycles = computed(() => store.getters['recycle/getList'])
     const recyclesFold = ref(true)
-    recycles.value = [{
-      groupName: '2021-12-06',
-      children: [{
-        id: '1',
-        title: '下拉菜单 Dropdown'
-      }, {
-        id: '2',
-        title: '支持指定 6 种弹出方位'
-      }, {
-        id: '3',
-        title: '可将备选命令收纳到向下展开的浮层容器中'
-      }, {
-        id: '4',
-        title: '交互按钮类图标'
-      }]
-    }, {
-      groupName: '2021-12-06',
-      children: [{
-        id: '1',
-        title: '下拉菜单 Dropdown'
-      }, {
-        id: '2',
-        title: '支持指定 6 种弹出方位'
-      }, {
-        id: '3',
-        title: '可将备选命令收纳到向下展开的浮层容器中'
-      }, {
-        id: '4',
-        title: '交互按钮类图标'
-      }]
-    }]
+    const recycleRemoveAll = () => {
+      modal.warning({
+        title: '系统提示',
+        content: `该操作会清空回收站内所有内容，请确认是否执行此操作？`,
+        hideCancel: false,
+        onOk () {
+          store.dispatch('recycle/removeAll')
+        }
+      })
+    }
+    store.dispatch('recycle/getList')
+
     return {
       collectionsLoading,
       collections,
@@ -169,7 +148,8 @@ export default defineComponent({
             store.dispatch('knowledge/remove', data._id)
           }
         })
-      }
+      },
+      recycleRemoveAll
     }
   }
 })

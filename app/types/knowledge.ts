@@ -13,7 +13,7 @@ export interface IKnowledgeDocType {
 export interface IKnowledgeType {
   _id?: string,
   title: string,
-  isDefault: boolean,
+  isDefault?: boolean,
   desc?: string,
   createdAt?: Date,
   updatedAt?: Date,

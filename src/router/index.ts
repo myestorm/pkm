@@ -9,7 +9,7 @@ const routes: RouteRecordRaw[] = [{
     keepAlive: false
   }
 }, {
-  path: '/document/:cid/:id?',
+  path: '/document/:kid/:did?',
   name: 'Document',
   component: () => import('../views/document/document.vue'),
   meta: {

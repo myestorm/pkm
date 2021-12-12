@@ -57,6 +57,9 @@
           <div>尽量保持10以内的汉字</div>
         </template>
       </pkm-form-item>
+      <pkm-form-item field="desc" label="简介" :rules="[{ required: true, message: '请输入知识库简介' }]">
+        <pkm-textarea v-model="form.desc" placeholder="请输入知识库简介" :max-length="200" show-word-limit />
+      </pkm-form-item>
     </pkm-form>
   </pkm-drawer>
 
@@ -169,7 +172,14 @@ export default defineComponent({
         const id = selected.value
         selected.value = ''
         hideSelectKnowledgeDrawer()
-        router.push(`/document/${id}`)
+        store.dispatch('knowledge/addDoc', {
+          kid: id,
+          title: '新文档'
+        }).then(did => {
+          router.push(`/document/${id}/${did}`)
+        }).catch(err => {
+          msg.error(err.message)
+        })
       }
     }
     

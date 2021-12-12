@@ -6,7 +6,19 @@ import {
   ModuleType
 } from './types'
 
-import { ApiKnowledge, ApiKnowledgeInfoId, ApiKnowledgeAdd, ApiKnowledgeUpdate, ApiKnowledgeRemove } from '../../../apis/index'
+import { 
+  ApiKnowledge,
+  ApiKnowledgeInfoId, 
+  ApiKnowledgeDocumentId, 
+  ApiKnowledgeSetDefaultId, 
+  ApiKnowledgeAdd,
+  ApiKnowledgeUpdate,
+  ApiKnowledgeRemove,
+  ApiDocumentUpdate,
+  ApiDocumentAdd,
+  ApiDocumentRemove
+} from '../../../apis/index'
+import { IKnowledgeDocType } from '../../../../app/types/knowledge'
 
 export const state: State = {
   list: [],
@@ -51,39 +63,75 @@ export const actions: Actions = {
       })
     })
   },
-  [ActionTypes.add] ({ commit, state }, postData) {
+  [ActionTypes.getDocsByid] (_, id: string) {
+    return new Promise((resolve, reject) => {
+      ApiKnowledgeDocumentId(id).then(res => {
+        resolve(res.data)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  [ActionTypes.setDefault] (_, id: string) {
+    return new Promise((resolve, reject) => {
+      ApiKnowledgeSetDefaultId(id).then(res => {
+        resolve(res.data)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  [ActionTypes.add] ({ dispatch }, postData) {
     return new Promise((resolve, reject) => {
       ApiKnowledgeAdd(postData).then(res => {
-        const list = [...state.list]
-        list.unshift(res.data)
-        commit('setList', list)
+        dispatch(ActionTypes.getList)
         resolve(res.data)
       }).catch(err => {
         reject(err)
       })
     })
   },
-  [ActionTypes.update] ({ commit, state }, postData) {
+  [ActionTypes.update] ({ dispatch }, postData) {
     return new Promise((resolve, reject) => {
       ApiKnowledgeUpdate(postData).then(res => {
-        const data = res.data
-        const list = [...state.list]
-        const index = list.findIndex(i => i._id === data._id)
-        list[index] = { ...data }
-        commit('setList', list)
+        dispatch(ActionTypes.getList)
         resolve(res.data)
       }).catch(err => {
         reject(err)
       })
     })
   },
-  [ActionTypes.remove] ({ commit, state }, id) {
+  [ActionTypes.remove] ({ dispatch }, id) {
     return new Promise((resolve, reject) => {
       ApiKnowledgeRemove(id).then(res => {
-        const list = [...state.list]
-        const index = list.findIndex(i => i._id === id)
-        list.splice(index, 1)
-        commit('setList', list)
+        dispatch(ActionTypes.getList)
+        resolve(res.data)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  [ActionTypes.addDoc] (_, postData: IKnowledgeDocType & { kid?: string}) {
+    return new Promise((resolve, reject) => {
+      ApiDocumentAdd(postData).then(res => {
+        resolve(res.data)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  [ActionTypes.updateDoc] (_, postData: IKnowledgeDocType & { kid?: string}) {
+    return new Promise((resolve, reject) => {
+      ApiDocumentUpdate(postData).then(res => {
+        resolve(res.data)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  [ActionTypes.removeDoc] (_, postData: { kid: string, id: string }) {
+    return new Promise((resolve, reject) => {
+      ApiDocumentRemove(postData).then(res => {
         resolve(res.data)
       }).catch(err => {
         reject(err)

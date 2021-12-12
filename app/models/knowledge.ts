@@ -37,6 +37,11 @@ export const docSchema = new Schema<IKnowledgeDocType>({
     default: ''
   },
   tags: []
+}, {
+  timestamps: { 
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  }
 })
 
 const schema = new Schema<IKnowledgeUpdateType>({
@@ -65,6 +70,11 @@ const schema = new Schema<IKnowledgeUpdateType>({
     default: false
   },
   children: [docSchema]
+}, {
+  timestamps: { 
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  }
 })
 
 const KnowledgeModel = model<KnowledgeSchemaType>('Knowledge', schema)

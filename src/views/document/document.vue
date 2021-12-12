@@ -4,7 +4,7 @@
       <pkm-layout class="document-layout-sider-layout">
         <pkm-layout-header class="document-layout-sider-layout-header">
           <div class="title">
-            <h2 class="arco-typography">{{ kInfo.title }}</h2>
+            <h2 class="arco-typography">{{ knowledgeInfo.title }}</h2>
             <pkm-button type="primary" shape="circle" size="small">
               <template #icon>
                 <icon-plus />
@@ -51,9 +51,15 @@
         </pkm-layout-header>
         <pkm-layout-content class="pkm-flex-scroll-container">
           <div class="list scroll-body">
-            <pkm-spin dot />
-            <ul>
-              <li class="item arco-link arco-link-status-normal" v-for="(item, index) in kInfo.children" :key="index" :class="[ i == 1 ? 'current' : '']" @click="setDetail(item)">
+            <div style="padding: 8px 12px;" v-if="loading">
+              <pkm-skeleton :animation="true" v-for="i in 4" :key="i" style="margin: 8px 0;">
+                <pkm-space direction="vertical" :style="{ width:'100%' }">
+                  <pkm-skeleton-line :line-height="12" :line-spacing="8" :rows="3" :widths="[120]" />
+                </pkm-space>
+              </pkm-skeleton>
+            </div>
+            <ul v-else>
+              <li class="item arco-link arco-link-status-normal" v-for="(item, index) in docList" :key="index" :class="[ index == 1 ? 'current' : '']" @click="setDetail(item)">
                 <div class="item-title">
                   <h3>{{ item.title }}</h3>
                   <span class="date">
@@ -148,33 +154,49 @@ export default defineComponent({
     const route = useRoute()
     const app = getCurrentInstance()
     const msg = app?.appContext.config.globalProperties.$message
-    const { cid = '', id = '' } = route.params
+    const { kid = '', did = '' } = route.params
+    const loading = ref(false)
 
-    const kInfo = reactive<IKnowledgeType>({
-      title: '',
-      children: []
+    const knowledgeInfo = reactive<IKnowledgeType>({
+      title: ''
     })
 
-    const getInfo = (kid: any) => {
-      if (kid && typeof kid === 'string') {
-        store.dispatch('knowledge/getInfo', kid).then((res) => {
-          kInfo.title = res.title
-          kInfo.children = res.children || []
-          store.commit('knowledge/setSelected', res)
-        }).catch(err => {
-          msg.error(err.message)
+    const getKnowledgeInfo = (kid: string) => {
+      return store.dispatch('knowledge/getInfo', kid).then((res) => {
+        knowledgeInfo.title = res.title
+        store.commit('knowledge/setSelected', res)
+      }).catch(err => {
+        msg.error(err.message)
+      })
+    }
+
+    const docList = ref<IKnowledgeDocType[]>([])
+    const getDocList = (kid: string) => {
+      return store.dispatch('knowledge/getDocsByid', kid).then((res) => {
+        docList.value = res
+      }).catch(err => {
+        msg.error(err.message)
+      })
+    }
+
+    const init = (_id: string | string[]) => {
+      if (_id && typeof _id === 'string') {
+        loading.value = true
+        Promise.all([getKnowledgeInfo(_id), getDocList(_id)]).finally(() => {
+          loading.value = false
         })
       }
     }
-    getInfo(cid)
+    init(kid)
+
     watch(
       () => route.params,
       (newParams) => {
-        getInfo(newParams.cid)
+        init(newParams.kid)
       }
     )
 
-    const formatDate = (str: Date) => {
+    const formatDate = (str: any) => {
       return dayjs(str).format('MM-DD-YYYY')
     }
 
@@ -191,7 +213,9 @@ export default defineComponent({
     })
     
     return {
-      kInfo,
+      loading,
+      knowledgeInfo,
+      docList,
       formatDate,
       value,
       form,
