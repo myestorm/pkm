@@ -2,11 +2,14 @@ import { Context, Next } from 'koa'
 import { prefix, get, post, put, del } from '../core/router'
 
 import Knowledge from '../controllers/knowledge'
+import Recycle from '../controllers/recycle'
 
 import { IResponeBodyType } from '../types/index'
 import { IKnowledgeType, IKnowledgeDocType } from '../types/knowledge'
+import { IRecycleType } from '../types/recycle'
 
 const knowledge = new Knowledge()
+const recycle = new Recycle()
 
 @prefix('/api')
 export default class Api {
@@ -24,7 +27,7 @@ export default class Api {
   }
 
   @get('/knowledge/info/:id')
-  async KnowledgeInfoId (ctx: Context, next: Next) {
+  async KnowledgeInfo (ctx: Context, next: Next) {
     const { id = '' } = ctx.params
     if (id) {
       const result = await knowledge.info(id)
@@ -43,16 +46,36 @@ export default class Api {
     await next()
   }
 
+  @get('/knowledge/document/:id')
+  async KnowledgeDocument (ctx: Context, next: Next) {
+    const { id = '' } = ctx.params
+    if (id) {
+      const result = await knowledge.info(id, true)
+      const body: IResponeBodyType<IKnowledgeDocType[]> = {
+        code: 0,
+        msg: 'success',
+        data: result?.children || []
+      }
+      ctx.body = body
+    } else {
+      ctx.body = {
+        code: 1,
+        msg: '参数不正确'
+      }
+    }
+    await next()
+  }
+
   @put('/knowledge/update/:id')
-  async KnowledgeUpdateId (ctx: Context, next: Next) {
+  async KnowledgeUpdate (ctx: Context, next: Next) {
     const { id = '' } = ctx.params
     const _body = ctx.request.body as unknown as IKnowledgeType
     if (id) {
-      const result = await knowledge.update(id, _body)
-      const body: IResponeBodyType<IKnowledgeType | null> = {
+      await knowledge.update(id, _body)
+      const body: IResponeBodyType<string> = {
         code: 0,
         msg: 'success',
-        data: result
+        data: id
       }
       ctx.body = body
     } else {
@@ -65,16 +88,24 @@ export default class Api {
   }
 
   @del('/knowledge/remove/:id')
-  async KnowledgeRemoveId (ctx: Context, next: Next) {
+  async KnowledgeRemove (ctx: Context, next: Next) {
     const { id = '' } = ctx.params
     if (id) {
-      const result = await knowledge.remove(id)
-      const body: IResponeBodyType<IKnowledgeType | null> = {
-        code: 0,
-        msg: 'success',
-        data: result
+      const info = await knowledge.info(id)
+      if (info.isDefault) {
+        ctx.body = {
+          code: 2,
+          msg: '默认知识库不能删除'
+        }
+      } else {
+        await knowledge.remove(id)
+        const body: IResponeBodyType<string> = {
+          code: 0,
+          msg: 'success',
+          data: id
+        }
+        ctx.body = body
       }
-      ctx.body = body
     } else {
       ctx.body = {
         code: 1,
@@ -88,16 +119,29 @@ export default class Api {
   async KnowledgeAdd (ctx: Context, next: Next) {
     const _body = ctx.request.body as unknown as IKnowledgeType
     const result = await knowledge.add(_body)
-    const body: IResponeBodyType<IKnowledgeType> = {
+    const body: IResponeBodyType<string> = {
       code: 0,
       msg: 'success',
-      data: result
+      data: result._id || ''
     }
     ctx.body = body
     await next()
   }
 
-  @post('/document/:id/add')
+  @get('/knowledge/set_default/:id')
+  async KnowledgeSetDefault (ctx: Context, next: Next) {
+    const { id = '' } = ctx.params
+    await knowledge.setDefault(id)
+    const body: IResponeBodyType<string> = {
+      code: 0,
+      msg: 'success',
+      data: ''
+    }
+    ctx.body = body
+    await next()
+  }
+
+  @post('/document/add/:id')
   async DocumentAdd (ctx: Context, next: Next) {
     const { id = '' } = ctx.params
     const _body = ctx.request.body as unknown as IKnowledgeDocType
@@ -107,10 +151,102 @@ export default class Api {
         _body.publishAt = new Date()
       }
       const result = await knowledge.addDoc(id, _body)
-      const body: IResponeBodyType<IKnowledgeDocType | null> = {
+      const body: IResponeBodyType<string> = {
         code: 0,
         msg: 'success',
-        data: result
+        data: result?._id || ''
+      }
+      ctx.body = body
+    } else {
+      ctx.body = {
+        code: 1,
+        msg: '参数不正确'
+      }
+    }
+    await next()
+  }
+
+  @put('/document/update/:id/:did')
+  async DocumentUpdate (ctx: Context, next: Next) {
+    const { id = '', did = '' } = ctx.params
+    const _body = ctx.request.body as unknown as IKnowledgeDocType
+    if (id && did) {
+      _body.createdAt = new Date()
+      if (!_body.publishAt) {
+        _body.publishAt = new Date()
+      }
+      const result = await knowledge.updateDoc(id, did, _body)
+      const body: IResponeBodyType<string> = {
+        code: 0,
+        msg: 'success',
+        data: result?._id || ''
+      }
+      ctx.body = body
+    } else {
+      ctx.body = {
+        code: 1,
+        msg: '参数不正确'
+      }
+    }
+    await next()
+  }
+
+  @del('/document/remove/:id/:did')
+  async DocumentRemove (ctx: Context, next: Next) {
+    const { id = '', did = '' } = ctx.params
+    if (id && did) {
+      const result = await knowledge.removeDoc(id, did)
+      const body: IResponeBodyType<string> = {
+        code: 0,
+        msg: 'success',
+        data: result?._id || ''
+      }
+      ctx.body = body
+    } else {
+      ctx.body = {
+        code: 1,
+        msg: '参数不正确'
+      }
+    }
+    await next()
+  }
+
+  // 回收站
+  @get('/recycle/list')
+  async RecycleList (ctx: Context, next: Next) {
+    const result = await recycle.list()
+    const body: IResponeBodyType<IRecycleType[]> = {
+      code: 0,
+      msg: 'success',
+      data: result
+    }
+    ctx.body = body
+    await next()
+  }
+
+  // 清空回收站
+  @del('/recycle/remove_all')
+  async RecycleRemoveAll (ctx: Context, next: Next) {
+    await recycle.removeAll()
+    const body: IResponeBodyType<string> = {
+      code: 0,
+      msg: 'success',
+      data: ''
+    }
+    ctx.body = body
+    await next()
+  }
+
+  // 删除回收站中的一条数据
+  @del('/recycle/remove/:id/:did')
+  async RecycleRemove (ctx: Context, next: Next) {
+    const { id = '', did = '' } = ctx.params
+    if (id && did) {
+      const result = await recycle.remove(id, did)
+      const body: IResponeBodyType<string> = {
+        code: 0,
+        msg: 'success',
+        data: result?._id || ''
       }
       ctx.body = body
     } else {
