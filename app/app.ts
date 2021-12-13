@@ -1,14 +1,17 @@
 import Koa from 'koa'
 import path from 'path'
+import fs from 'fs'
 import { Context, Next } from 'koa'
 import koaStatic from 'koa-static'
 import koaBody from 'koa-body'
 import mongoose from 'mongoose'
+import dayjs from 'dayjs'
 import mongoConfig from './.mongo.config'
 
 import router from './routes/index'
 
 const app = new Koa()
+const uploadDir = '../resource/uploads'
 
 mongoose.connect(mongoConfig)
 mongoose.connection.on('error', console.error)
@@ -27,10 +30,22 @@ app.use(koaStatic(staticDir))
 app.use(koaBody({
   multipart: true,
   formidable: {
-    uploadDir: path.join(__dirname, '../resource/uploads'),
+    uploadDir: path.join(__dirname, uploadDir),
     maxFields: 500,
     keepExtensions: true,
-    maxFieldsSize: 5 * 1024 * 1024
+    maxFieldsSize: 5 * 1024 * 1024,
+    onFileBegin (name, file) {
+      // 设置上传位置
+      const dirName = dayjs(new Date()).format('YYYYMMDD')
+      const dir = path.join(__dirname, `${uploadDir}/${dirName}`)
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir)
+      }
+      let fileName = path.parse(file.path).base
+      fileName = fileName.replace(/^upload_/, '')
+      file.name = fileName
+      file.path = `${dir}/${fileName}`
+    }
   },
   parsedMethods: ['POST', 'PUT', 'PATCH', 'GET', 'HEAD', 'DELETE']
 }))

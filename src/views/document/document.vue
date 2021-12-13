@@ -60,7 +60,7 @@
             </div>
             <ul v-else>
               <li class="item arco-link arco-link-status-normal" v-for="(item, index) in pageInfo.children" :key="item._id" :class="[ (index === current) ? 'current' : '']">
-                <div class="link" @click="linkTo(item._id)">
+                <div class="link" @click="linkTo(item._id || '')">
                   <div class="item-title">
                     <h3>{{ item.title }}</h3>
                     <span class="date">
@@ -102,22 +102,17 @@
               文档信息
             </template>
             <pkm-form ref="formRef" :model="form" label-align="left">
-              <pkm-form-item field="title" label="文档名称" :rules="rules">
+              <pkm-form-item field="title" label="文档名称">
                 <pkm-input v-model="form.title" placeholder="请输入文档名称" />
               </pkm-form-item>
-              <pkm-form-item field="desc" label="文档简介" :rules="rules">
+              <pkm-form-item field="desc" label="文档简介">
                 <pkm-textarea v-model="form.desc" placeholder="请输入文档简介" :max-length="200" show-word-limit />
               </pkm-form-item>
-              <pkm-form-item field="tags" label="文档标签" :rules="rules">
+              <pkm-form-item field="tags" label="文档标签">
                 <pkm-input-tag v-model="form.tags" placeholder="请输入文档标签" :max-tag-count="3" allow-clear/>
               </pkm-form-item>
               <pkm-form-item field="thumb" label="封面图片">
-                <pkm-upload
-                  list-type="picture-card"
-                  action="/"
-                  :default-file-list="fileList"
-                  @preview="onPreview"
-                />
+                <upload-image v-model="form.thumb" />
               </pkm-form-item>
               <pkm-form-item field="post" label="发布时间">
                 <pkm-date-picker
@@ -142,11 +137,13 @@ import dayjs from 'dayjs'
 
 import { useStore  } from '../../store'
 import MarkdownEditor from '../../components/editor/markdown-editor.vue'
+import UploadImage from '../../components/upload/upload-image.vue'
 import { IKnowledgeType, IKnowledgeDocType } from '../../../app/types/knowledge'
 
 export default defineComponent({
   components: {
-    MarkdownEditor
+    MarkdownEditor,
+    UploadImage
   },
   setup () {
     const store = useStore()
@@ -288,7 +285,7 @@ export default defineComponent({
       posting.value = true
       updateDocument(postData).then((res) => {
         if (pageInfo && pageInfo.children) {
-          const index = pageInfo.children.findIndex(item => item._id === postData._id)
+          const index = pageInfo.children.findIndex(item => item._id === res._id)
           if (Number(index) > -1) {
             pageInfo.children[index] = {
               ...res
@@ -311,8 +308,12 @@ export default defineComponent({
 
     const init = (_id: string, _cid?: string) => {
       getKnowledgeInfo(_id).then(() => {
-        if (_cid) {
-          setCurrent(_cid)
+        let cid = _cid
+        if (!_cid && pageInfo && pageInfo?.children && pageInfo?.children[0]) {
+          cid = pageInfo.children[0]._id
+        }
+        if (cid) {
+          setCurrent(cid)
         }
       })
     }

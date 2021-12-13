@@ -12,3 +12,8 @@ export interface IResponePageBodyType<T> {
   pagesize: number,
   total: number
 }
+
+export interface IFileUploadType {
+  domain: string,
+  filepath: string
+}
