@@ -54,9 +54,10 @@ class KnowledgeController extends BaseController {
   }
 
   async info (id: string, hasChildren: boolean = false): Promise<IKnowledgeType | null> {
-    return await Knowledge.findById(id, {
-      children: Number(hasChildren)
-    })
+    const opts = hasChildren ? {} : {
+      children: 0
+    }
+    return await Knowledge.findById(id, opts)
   }
 
   async addDoc (id: string, data: IKnowledgeDocType): Promise<IKnowledgeDocType | null> {
@@ -78,7 +79,7 @@ class KnowledgeController extends BaseController {
     const parent = await Knowledge.findById(id)
     const sub = parent?.children.id(did)
     sub.remove()
-    await parent.save()
+    await parent?.save()
 
     // 加入回收站
     const title = this.dayjs(new Date()).format('YYYY-MM')

@@ -43,14 +43,14 @@ export enum ActionTypes {
 }
 type ActionsMethods = {
   [ActionTypes.getList] (context: GenerateActionAugments<State, Mutations>): Promise<IKnowledgeType[]>
-  [ActionTypes.getInfo] (context: GenerateActionAugments<State, Mutations>, payload: string): Promise<IKnowledgeType>
+  [ActionTypes.getInfo] (context: GenerateActionAugments<State, Mutations>, payload: { id: string, hasChildren?: number }): Promise<IKnowledgeType>
   [ActionTypes.getDocsByid] (context: GenerateActionAugments<State, Mutations>, payload: string): Promise<IKnowledgeDocType[]>
   [ActionTypes.setDefault] (context: GenerateActionAugments<State, Mutations>, payload: string): Promise<string>
   [ActionTypes.add] (context: GenerateActionAugments<State, Mutations>, payload: IKnowledgeType): Promise<string>
   [ActionTypes.update] (context: GenerateActionAugments<State, Mutations>, payload: IKnowledgeType): Promise<string>
   [ActionTypes.remove] (context: GenerateActionAugments<State, Mutations>, payload: string): Promise<string>
-  [ActionTypes.addDoc] (context: GenerateActionAugments<State, Mutations>, payload: IKnowledgeDocType): Promise<string>
-  [ActionTypes.updateDoc] (context: GenerateActionAugments<State, Mutations>, payload: IKnowledgeDocType): Promise<string>
+  [ActionTypes.addDoc] (context: GenerateActionAugments<State, Mutations>, payload: IKnowledgeDocType): Promise<IKnowledgeDocType>
+  [ActionTypes.updateDoc] (context: GenerateActionAugments<State, Mutations>, payload: IKnowledgeDocType): Promise<IKnowledgeDocType>
   [ActionTypes.removeDoc] (context: GenerateActionAugments<State, Mutations>, payload: { kid: string, id: string }): Promise<string>
 }
 export type Actions = ActionTree<State, RootState> & ActionsMethods

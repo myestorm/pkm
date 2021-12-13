@@ -15,8 +15,12 @@ export const ApiKnowledge = (options?: AxiosRequestConfig): Promise<IResponeBody
 }
 
 // 通过id查找知识库信息
-export const ApiKnowledgeInfoId = (id: string, options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeType>> => {
-  return axios.get(`${prefix}/knowledge/info/${id}`, {
+export const ApiKnowledgeInfoId = (data: { id: string, hasChildren?: number }, options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeType>> => {
+  let url = `${prefix}/knowledge/info/${data.id}`
+  if (Number(data.hasChildren) === 1) {
+    url = `${url}/${data.hasChildren}`
+  }
+  return axios.get(url, {
     ...options
   })
 }
@@ -59,7 +63,7 @@ export const ApiKnowledgeRemove = (id: string, options?: AxiosRequestConfig): Pr
 }
 
 // 修改文档
-export const ApiDocumentUpdate = (postData: IKnowledgeDocType & { kid?: string }, options?: AxiosRequestConfig): Promise<IResponeBodyType<string>> => {
+export const ApiDocumentUpdate = (postData: IKnowledgeDocType & { kid?: string }, options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeDocType>> => {
   const id = postData.kid
   const did = postData._id
   delete postData._id
@@ -70,7 +74,7 @@ export const ApiDocumentUpdate = (postData: IKnowledgeDocType & { kid?: string }
 }
 
 // 添加文档
-export const ApiDocumentAdd = (postData: IKnowledgeDocType & { kid?: string }, options?: AxiosRequestConfig): Promise<IResponeBodyType<string>> => {
+export const ApiDocumentAdd = (postData: IKnowledgeDocType & { kid?: string }, options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeDocType>> => {
   const id = postData.kid
   delete postData.kid
   return axios.post(`${prefix}/document/add/${id}`, postData, {

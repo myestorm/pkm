@@ -54,9 +54,9 @@ export const actions: Actions = {
       })
     })
   },
-  [ActionTypes.getInfo] (_, id: string) {
+  [ActionTypes.getInfo] (_, data: { id: string, hasChildren?: number }) {
     return new Promise((resolve, reject) => {
-      ApiKnowledgeInfoId(id).then(res => {
+      ApiKnowledgeInfoId(data).then(res => {
         resolve(res.data)
       }).catch(err => {
         reject(err)

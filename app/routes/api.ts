@@ -26,11 +26,12 @@ export default class Api {
     await next()
   }
 
-  @get('/knowledge/info/:id')
+  @get('/knowledge/info/:id/:hasChildren?')
   async KnowledgeInfo (ctx: Context, next: Next) {
-    const { id = '' } = ctx.params
+    const { id = '', hasChildren = 0 } = ctx.params
+    const _hasChildren = Number(hasChildren)
     if (id) {
-      const result = await knowledge.info(id)
+      const result = await knowledge.info(id, Boolean(_hasChildren))
       const body: IResponeBodyType<IKnowledgeType | null> = {
         code: 0,
         msg: 'success',
@@ -71,6 +72,8 @@ export default class Api {
     const { id = '' } = ctx.params
     const _body = ctx.request.body as unknown as IKnowledgeType
     if (id) {
+      delete _body.createdAt
+      delete _body.updatedAt
       await knowledge.update(id, _body)
       const body: IResponeBodyType<string> = {
         code: 0,
@@ -92,7 +95,7 @@ export default class Api {
     const { id = '' } = ctx.params
     if (id) {
       const info = await knowledge.info(id)
-      if (info.isDefault) {
+      if (info?.isDefault) {
         ctx.body = {
           code: 2,
           msg: '默认知识库不能删除'
@@ -118,6 +121,8 @@ export default class Api {
   @post('/knowledge/add')
   async KnowledgeAdd (ctx: Context, next: Next) {
     const _body = ctx.request.body as unknown as IKnowledgeType
+    delete _body.createdAt
+    delete _body.updatedAt
     const result = await knowledge.add(_body)
     const body: IResponeBodyType<string> = {
       code: 0,
@@ -146,15 +151,14 @@ export default class Api {
     const { id = '' } = ctx.params
     const _body = ctx.request.body as unknown as IKnowledgeDocType
     if (id) {
-      _body.createdAt = new Date()
-      if (!_body.publishAt) {
-        _body.publishAt = new Date()
-      }
+      delete _body._id
+      delete _body.createdAt
+      delete _body.updatedAt
       const result = await knowledge.addDoc(id, _body)
-      const body: IResponeBodyType<string> = {
+      const body: IResponeBodyType<IKnowledgeDocType | null> = {
         code: 0,
         msg: 'success',
-        data: result?._id || ''
+        data: result
       }
       ctx.body = body
     } else {
@@ -171,15 +175,13 @@ export default class Api {
     const { id = '', did = '' } = ctx.params
     const _body = ctx.request.body as unknown as IKnowledgeDocType
     if (id && did) {
-      _body.createdAt = new Date()
-      if (!_body.publishAt) {
-        _body.publishAt = new Date()
-      }
+      delete _body.createdAt
+      delete _body.updatedAt
       const result = await knowledge.updateDoc(id, did, _body)
-      const body: IResponeBodyType<string> = {
+      const body: IResponeBodyType<IKnowledgeDocType | null> = {
         code: 0,
         msg: 'success',
-        data: result?._id || ''
+        data: result
       }
       ctx.body = body
     } else {

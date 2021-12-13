@@ -19,7 +19,7 @@ class RecycleController extends BaseController {
     const parent = await Recycle.findById(id)
     const sub = parent?.children.id(did)
     sub.remove()
-    await parent.save()
+    await parent?.save()
     return sub
   }
 }
