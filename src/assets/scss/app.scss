@@ -39,6 +39,7 @@ html, body, #app {
     left: 0;
     top: 0;
     overflow: auto;
+    z-index: 10;
   }
 }
 // .#{$--prefix}-layout-sidebar, .#{$--prefix}-layout-content {

@@ -89,6 +89,14 @@ export const ApiDocumentRemove = (data: { kid: string, id: string }, options?: A
   })
 }
 
+// 文档转移
+export const ApiDocumentTransfer = (postData: { fid: string, tid: string, id: string }, options?: AxiosRequestConfig): Promise<IResponeBodyType<string>> => {
+  const { fid, tid, id } = postData
+  return axios.put(`${prefix}/document/transfer/${fid}/${tid}/${id}`, {
+    ...options
+  })
+}
+
 // 获取所有回收站内容
 export const ApiRecycle = (options?: AxiosRequestConfig): Promise<IResponeBodyType<IRecycleType[]>> => {
   return axios.get(`${prefix}/recycle/list`, {

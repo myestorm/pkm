@@ -16,7 +16,8 @@ import {
   ApiKnowledgeRemove,
   ApiDocumentUpdate,
   ApiDocumentAdd,
-  ApiDocumentRemove
+  ApiDocumentRemove,
+  ApiDocumentTransfer
 } from '../../../apis/index'
 import { IKnowledgeDocType } from '../../../../app/types/knowledge'
 
@@ -132,6 +133,15 @@ export const actions: Actions = {
   [ActionTypes.removeDoc] (_, postData: { kid: string, id: string }) {
     return new Promise((resolve, reject) => {
       ApiDocumentRemove(postData).then(res => {
+        resolve(res.data)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  [ActionTypes.transferDoc] (_, postData: { fid: string, tid: string, id: string }) {
+    return new Promise((resolve, reject) => {
+      ApiDocumentTransfer(postData).then(res => {
         resolve(res.data)
       }).catch(err => {
         reject(err)

@@ -13,14 +13,12 @@
           </div>
           <div class="toolbar">
             <pkm-space class="l">
-              <pkm-tooltip content="列表视图" position="bottom">
-                <pkm-button size="small">
-                  <template #icon><icon-storage /></template>
-                </pkm-button>
-              </pkm-tooltip>
-              <pkm-tooltip content="目录视图" position="bottom">
-                <pkm-button size="small">
-                  <template #icon><icon-menu /></template>
+              <pkm-tooltip :content="item.text" position="bottom" v-for="item in viewOptions" :key="item.key">
+                <pkm-button size="small" :type="currentView == item.key ? 'outline' : 'secondary'" @click="changeView(item.key)">
+                  <template #icon>
+                    <icon-storage v-if="item.key == 'desc'" />
+                    <icon-menu v-else />
+                  </template>
                 </pkm-button>
               </pkm-tooltip>
             </pkm-space>
@@ -32,18 +30,18 @@
                   </template>
                 </pkm-button>
                 <template #content>
-                  <pkm-doption class="pkm-more-doption">
-                    <template #icon>
-                      <icon-edit />
+                  <pkm-dsubmenu v-for="item in filterOptions" :key="item.key">
+                    {{ item.text }}
+                    <template #content>
+                      <pkm-doption v-for="sub in item.children" :key="sub.key" @click="filter(item.key, sub.key)">
+                        <template #icon>
+                          <icon-sort-descending v-if="sub.key == 'desc'" />
+                          <icon-sort-ascending v-if="sub.key == 'asc'" />
+                        </template>
+                        {{ sub.text }}
+                      </pkm-doption>
                     </template>
-                    编辑
-                  </pkm-doption>
-                  <pkm-doption class="pkm-more-doption">
-                    <template #icon>
-                      <icon-delete />
-                    </template>
-                    删除
-                  </pkm-doption>
+                  </pkm-dsubmenu>
                 </template>
               </pkm-dropdown>
             </pkm-space>
@@ -67,7 +65,7 @@
                       {{ formatDate(item.createdAt) }}
                     </span>
                   </div>
-                  <p class="desc">
+                  <p class="desc" v-show="currentView == 'desc'">
                     {{ item.desc }}...
                   </p>
                 </div>
@@ -79,17 +77,24 @@
                       </template>
                     </pkm-button>
                     <template #content>
-                      <pkm-doption class="pkm-more-doption">
+                      <pkm-doption class="pkm-more-doption" @click="removeDoc(item._id)">
                         <template #icon>
                           <icon-delete />
                         </template>
                         删除
+                      </pkm-doption>
+                      <pkm-doption class="pkm-more-doption" @click="setTransferId(item._id)">
+                        <template #icon>
+                          <icon-rotate-right />
+                        </template>
+                        转移
                       </pkm-doption>
                     </template>
                   </pkm-dropdown>
                 </div>
               </li>
             </ul>
+            <select-knowledge v-model="visibleSelectKnowledge" title="文档转移" desc="请选择目标知识库" @ok="transferDoc" />
           </div>
         </pkm-layout-content>
       </pkm-layout>
@@ -130,7 +135,7 @@
   </pkm-layout>
 </template>
 <script lang="ts">
-import { defineComponent, ref, reactive, getCurrentInstance, watch, nextTick } from 'vue'
+import { defineComponent, ref, reactive, getCurrentInstance, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { FormInstance } from '@arco-design/web-vue/es/form'
 import dayjs from 'dayjs'
@@ -138,12 +143,14 @@ import dayjs from 'dayjs'
 import { useStore  } from '../../store'
 import MarkdownEditor from '../../components/editor/markdown-editor.vue'
 import UploadImage from '../../components/upload/upload-image.vue'
+import SelectKnowledge from '../../components/select-knowledge/index.vue'
 import { IKnowledgeType, IKnowledgeDocType } from '../../../app/types/knowledge'
 
 export default defineComponent({
   components: {
     MarkdownEditor,
-    UploadImage
+    UploadImage,
+    SelectKnowledge
   },
   setup () {
     const store = useStore()
@@ -152,8 +159,8 @@ export default defineComponent({
     const app = getCurrentInstance()
     const msg = app?.appContext.config.globalProperties.$message
     const { kid = '', did = '' } = route.params
-    const _kid = ref(kid)
-    const _did = ref(did)
+    const myKid = ref(kid)
+    const myDid = ref(did)
     const loading = ref(false)
     const current = ref(0)
 
@@ -186,7 +193,7 @@ export default defineComponent({
           return false
         }
         loading.value = true
-        store.dispatch('knowledge/getInfo', { id: kid, hasChildren: 1 }).then((res) => {
+        store.dispatch('knowledge/getInfo', { id, hasChildren: 1 }).then((res) => {
           pageInfo._id = res._id
           pageInfo.title = res.title
           pageInfo.isDefault = res.isDefault
@@ -213,7 +220,7 @@ export default defineComponent({
     type IDocType = IKnowledgeDocType & { kid?: string }
     const form = reactive<IDocType>({
       _id: '',
-      kid: _kid.value.toString(),
+      kid: myKid.value.toString(),
       title: '',
       desc: '',
       publishAt: new Date(),
@@ -225,7 +232,7 @@ export default defineComponent({
     const setForm = (data: IKnowledgeDocType | undefined) => {
       if (data) {
         form._id = data._id
-        form.kid = _kid.value.toString()
+        form.kid = myKid.value.toString()
         form.title = data.title
         form.desc = data.desc
         form.publishAt = data.publishAt
@@ -252,13 +259,13 @@ export default defineComponent({
       return store.dispatch('knowledge/addDoc', _postData)
     }
     // 创建空文档
-    const createEmptyDocument = () => {
-      createDocument({
-        kid: _kid.value.toString(),
+    const createEmptyDocument = async () => {
+      await createDocument({
+        kid: myKid.value.toString(),
         title: '新文档'
       }).then(res => {
         pageInfo.children?.unshift(res)
-        router.push(`/document/${_kid.value}/${res._id}`)
+        router.push(`/document/${myKid.value}/${res._id}`)
       }).catch(err => {
         msg.error(err.message)
       })
@@ -302,50 +309,175 @@ export default defineComponent({
     }
 
     const linkTo = (id: string) => {
-      router.push(`/document/${_kid.value}/${id}`)
+      router.push(`/document/${myKid.value}/${id}`)
+    }
+
+    // 删除文档
+    const removeDoc = (id: string) => {
+      store.dispatch('knowledge/removeDoc', {
+        kid: myKid.value.toString(),
+        id
+      }).then(() => {
+        const index = pageInfo.children?.findIndex(item => item._id === id)
+        if (typeof index !== 'undefined') {
+          pageInfo.children?.splice(index, 1)
+        }
+      }).catch(err => {
+        msg.error(err.message)
+      })
     }
     
 
     const init = (_id: string, _cid?: string) => {
-      getKnowledgeInfo(_id).then(() => {
-        let cid = _cid
-        if (!_cid && pageInfo && pageInfo?.children && pageInfo?.children[0]) {
-          cid = pageInfo.children[0]._id
-        }
-        if (cid) {
-          setCurrent(cid)
+      getKnowledgeInfo(_id).then(async (res) => {
+        if (_cid === 'add') {
+          await createEmptyDocument()
+        } else {
+          let cid = _cid
+          if (!_cid && pageInfo && pageInfo?.children && pageInfo?.children[0]) {
+            cid = pageInfo.children[0]._id || ''
+          }
+          if (cid) {
+            setCurrent(cid)
+          }
         }
       })
     }
-    init(_kid.value.toString(), _did.value.toString())
+    init(myKid.value.toString(), myDid.value.toString())
 
     watch(
       () => route.params,
-      (newParams) => {
+      async (newParams) => {
         const { kid, did } = newParams
-        if (kid && did) {
-          if (kid !== _kid.value) {
-            init(kid.toString(), did.toString())
-            _kid.value = kid
-            _did.value = did
-          } else {
-            if (did !== _did.value) {
-              setCurrent(did.toString())
-              _did.value = did
+        if (did === 'add') {
+          await createEmptyDocument()
+        } else {
+          if (kid && did) {
+            if (kid !== myKid.value) {
+              init(kid.toString(), did.toString())
+              myKid.value = kid
+              myDid.value = did
+            } else {
+              if (did !== myDid.value) {
+                setCurrent(did.toString())
+                myDid.value = did
+              }
             }
-          }
-        } else if (kid) {
-          if (kid !== _kid.value) {
-            init(kid.toString())
-            current.value = 0
-            _kid.value = kid
-            _did.value = ''
+          } else if (kid) {
+            if (kid !== myKid.value) {
+              init(kid.toString())
+              myKid.value = kid
+            }
           }
         }
       }
     )
 
-    
+    // 文档转移
+    const visibleSelectKnowledge = ref(false)
+    const transferId = ref('')
+    const hideSelectKnowledgeDrawer = () => {
+      visibleSelectKnowledge.value = false
+    }
+    const showSelectKnowledgeDrawer = () => {
+      visibleSelectKnowledge.value = true
+    }
+    const transferDoc = (tid: string) => {
+      const fid = myKid.value.toString()
+      if (tid !== fid) {
+        const id = transferId.value
+        store.dispatch('knowledge/transferDoc', {
+          fid,
+          tid,
+          id
+        }).then(() => {
+          const index = pageInfo.children?.findIndex(item => item._id === id)
+          if (typeof index !== 'undefined') {
+            pageInfo.children?.splice(index, 1)
+          }
+        }).catch(err => {
+          msg.error(err.message)
+        })
+        hideSelectKnowledgeDrawer()
+      }
+    }
+    const setTransferId = (id: string) => {
+      showSelectKnowledgeDrawer()
+      transferId.value = id
+    }
+
+    // 视图 过滤
+    const viewOptions = [
+      {
+        key: 'desc',
+        text: '列表'
+      },
+      {
+        key: 'list',
+        text: '目录'
+      }
+    ]
+    const currentView = ref('desc')
+    const changeView = (v: string) => {
+      currentView.value = v
+    }
+    const filterOptions = [
+      {
+        key: 'createdAt',
+        text: '创建时间',
+        children: [{
+          key: 'desc',
+          text: '降序'
+        }, {
+          key: 'asc',
+          text: '升序'
+        }]
+      },
+      {
+        key: 'updatedAt',
+        text: '更新时间',
+        children: [{
+          key: 'desc',
+          text: '降序'
+        }, {
+          key: 'asc',
+          text: '升序'
+        }]
+      },
+      {
+        key: 'publishAt',
+        text: '发布时间',
+        children: [{
+          key: 'desc',
+          text: '降序'
+        }, {
+          key: 'asc',
+          text: '升序'
+        }]
+      }
+    ]
+    enum FilterTypes {
+      createdAt = 'createdAt',
+      updatedAt = 'updatedAt',
+      publishAt = 'publishAt'
+    }
+    enum OrderTypes {
+      desc = 'desc',
+      asc = 'asc'
+    }
+    const filter = (key: FilterTypes, order: OrderTypes) => {
+      const ori = pageInfo.children ? [...pageInfo.children] : []
+      ori.sort((a: IKnowledgeDocType, b: IKnowledgeDocType) => {
+        const aTime = a[key]
+        const bTime = b[key]
+        const at = Number(dayjs(aTime).valueOf())
+        const bt = Number(dayjs(bTime).valueOf())
+        return order === OrderTypes.asc ? at - bt : bt - at
+      })
+      pageInfo.children = [
+        ...ori
+      ]
+    }
     
     return {
       loading,
@@ -361,9 +493,18 @@ export default defineComponent({
       hideDrawer,
       showDrawer,
       setCurrent,
-      _kid,
-      _did,
-      linkTo
+      myKid,
+      myDid,
+      linkTo,
+      removeDoc,
+      visibleSelectKnowledge,
+      transferDoc,
+      setTransferId,
+      viewOptions,
+      currentView,
+      changeView,
+      filterOptions,
+      filter
     }
   },
 })

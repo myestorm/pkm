@@ -40,6 +40,7 @@ export enum ActionTypes {
   addDoc = 'addDoc',
   updateDoc = 'updateDoc',
   removeDoc = 'removeDoc',
+  transferDoc = 'transferDoc',
 }
 type ActionsMethods = {
   [ActionTypes.getList] (context: GenerateActionAugments<State, Mutations>): Promise<IKnowledgeType[]>
@@ -52,6 +53,7 @@ type ActionsMethods = {
   [ActionTypes.addDoc] (context: GenerateActionAugments<State, Mutations>, payload: IKnowledgeDocType): Promise<IKnowledgeDocType>
   [ActionTypes.updateDoc] (context: GenerateActionAugments<State, Mutations>, payload: IKnowledgeDocType): Promise<IKnowledgeDocType>
   [ActionTypes.removeDoc] (context: GenerateActionAugments<State, Mutations>, payload: { kid: string, id: string }): Promise<string>
+  [ActionTypes.transferDoc] (context: GenerateActionAugments<State, Mutations>, payload: { fid: string, tid: string, id: string }): Promise<string>
 }
 export type Actions = ActionTree<State, RootState> & ActionsMethods
 

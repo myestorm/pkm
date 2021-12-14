@@ -44,11 +44,17 @@
                   </template>
                   编辑
                 </pkm-doption>
-                <pkm-doption class="pkm-more-doption" @click.stop="del(item)">
+                <pkm-doption class="pkm-more-doption" @click.stop="del(item)" v-if="!item.isDefault">
                   <template #icon>
                     <icon-delete />
                   </template>
                   删除
+                </pkm-doption>
+                <pkm-doption class="pkm-more-doption" @click.stop="setDefault(item._id)" v-if="!item.isDefault">
+                  <template #icon>
+                    <icon-lock />
+                  </template>
+                  默认
                 </pkm-doption>
               </template>
             </pkm-dropdown>
@@ -69,11 +75,22 @@
           回收站
         </div>
         <div class="action">
-          <pkm-button size="mini" @click="recycleRemoveAll">
-            <template #icon>
-              <icon-delete />
-            </template>
-          </pkm-button>
+          <pkm-space>
+            <pkm-tooltip content="刷新数据">
+              <pkm-button size="mini" @click="recycleReload">
+                <template #icon>
+                  <icon-loop />
+                </template>
+              </pkm-button>
+            </pkm-tooltip>
+            <pkm-tooltip content="清空回收站">
+              <pkm-button size="mini" @click="recycleRemoveAll">
+                <template #icon>
+                  <icon-delete />
+                </template>
+              </pkm-button>
+            </pkm-tooltip>
+          </pkm-space>
         </div>
       </div>
       <div class="list" v-show="!recyclesFold">
@@ -97,6 +114,7 @@ export default defineComponent({
   setup () {
     const app = getCurrentInstance()
     const modal = app?.appContext.config.globalProperties.$modal
+    const msg = app?.appContext.config.globalProperties.$message
     const store = useStore()
 
     const collections = computed(() => store.getters['knowledge/getList'])
@@ -110,6 +128,16 @@ export default defineComponent({
       })
     }
     getList()
+
+    const setDefault = (id: string) => {
+      if (id) {
+        store.dispatch('knowledge/setDefault', id).then(() => {
+          getList()
+        }).catch(err => {
+          msg.error(err.message)
+        })
+      }
+    }
 
     const recycles = computed(() => store.getters['recycle/getList'])
     const recyclesFold = ref(true)
@@ -125,11 +153,16 @@ export default defineComponent({
     }
     store.dispatch('recycle/getList')
 
+    const recycleReload = () => {
+      store.dispatch('recycle/getList')
+    }
+
     return {
       collectionsLoading,
       collections,
       selected,
       collectionsFold,
+      setDefault,
       recycles,
       recyclesFold,
       add () {
@@ -142,14 +175,15 @@ export default defineComponent({
       del (data: IKnowledgeType) {
         modal.warning({
           title: '系统提示',
-          content: `是否确定删除“${data.title}”？该知识库下的文档自动转移到“未分类”目录下。`,
+          content: `是否确定删除“${data.title}”？该知识库下的文档自动转移到“默认分类”目录下。`,
           hideCancel: false,
           onOk () {
             store.dispatch('knowledge/remove', data._id)
           }
         })
       },
-      recycleRemoveAll
+      recycleRemoveAll,
+      recycleReload
     }
   }
 })

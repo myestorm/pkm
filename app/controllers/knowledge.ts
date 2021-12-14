@@ -75,6 +75,18 @@ class KnowledgeController extends BaseController {
     return sub
   }
 
+  async transferDoc (fid: string, tid: string, id: string) {
+    const fromParent = await Knowledge.findById(fid)
+    const sub = fromParent?.children.id(id)
+    sub.remove()
+    await fromParent?.save()
+
+    const toParent = await Knowledge.findById(tid)
+    toParent?.children.unshift(sub)
+    await toParent?.save()
+    return sub
+  }
+
   async removeDoc (id: string, did: string): Promise<IKnowledgeDocType | null> {
     const parent = await Knowledge.findById(id)
     const sub = parent?.children.id(did)

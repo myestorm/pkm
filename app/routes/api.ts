@@ -193,6 +193,26 @@ export default class Api {
     await next()
   }
 
+  @put('/document/transfer/:fid/:tid/:did')
+  async DocumentTransfer (ctx: Context, next: Next) {
+    const { fid = '', tid = '', did = '' } = ctx.params
+    if (fid && tid && did) {
+      await knowledge.transferDoc(fid, tid, did)
+      const body: IResponeBodyType<string> = {
+        code: 0,
+        msg: 'success',
+        data: ''
+      }
+      ctx.body = body
+    } else {
+      ctx.body = {
+        code: 1,
+        msg: '参数不正确'
+      }
+    }
+    await next()
+  }
+
   @del('/document/remove/:id/:did')
   async DocumentRemove (ctx: Context, next: Next) {
     const { id = '', did = '' } = ctx.params

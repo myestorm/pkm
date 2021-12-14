@@ -63,35 +63,24 @@
     </pkm-form>
   </pkm-drawer>
 
-  <pkm-drawer :width="360" :ok-button-props="{
-    disabled: !selected
-  }" placement="left" :visible="visibleSelectKnowledge" @ok="toDocumentLink" @cancel="hideSelectKnowledgeDrawer" unmountOnClose>
-    <template #title>
-      新建文档
-    </template>
-    <div class="pkm-select-knowledge">
-      <p class="tips">请选择目标知识库</p>
-      <div class="pkm-flex-scroll-container list">
-        <div class="scroll-body">
-          <pkm-radio-group direction="vertical" style="width: 100%" v-model="selected">
-            <pkm-radio v-for="item in collections" :key="item.id" :value="item._id">{{ item.title }}</pkm-radio>
-          </pkm-radio-group>
-        </div>
-      </div>
-    </div>
-  </pkm-drawer>
+  <select-knowledge v-model="visibleSelectKnowledge" title="新建文档" desc="请选择目标知识库" @ok="toDocumentLink" />
 </template>
 <script lang="ts">
 import { defineComponent, ref, computed, getCurrentInstance } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore  } from '../../store'
 
-import { IKnowledgeType } from '../../../app/types/knowledge'
+import { IKnowledgeType, IKnowledgeDocType } from '../../../app/types/knowledge'
 import { ValidatedError } from '@arco-design/web-vue/es/form/interface'
 import { FormInstance } from '@arco-design/web-vue/es/form'
 
+import SelectKnowledge from '../../components/select-knowledge/index.vue'
+
 export default defineComponent({
   name: 'SideHeader',
+  components: {
+    SelectKnowledge
+  },
   setup () {
     const store = useStore()
     const router = useRouter()
@@ -157,29 +146,17 @@ export default defineComponent({
     }
 
     // 新建文档
-    const visibleSelectKnowledge = computed(() => store.getters.getVisibleSelectKnowledge)
-    const collections = computed(() => store.getters['knowledge/getList'])
-    const selected = ref('')
-    // 隐藏选择知识库的抽屉
+    const visibleSelectKnowledge = ref(false)
     const hideSelectKnowledgeDrawer = () => {
-      store.commit('setVisibleSelectKnowledge', false)
+      visibleSelectKnowledge.value = false
     }
     const showSelectKnowledgeDrawer = () => {
-      store.commit('setVisibleSelectKnowledge', true)
+      visibleSelectKnowledge.value = true
     }
-    const toDocumentLink = () => {
-      if (selected.value) {
-        const id = selected.value
-        selected.value = ''
+    const toDocumentLink = (id: string) => {
+      if (id) {
         hideSelectKnowledgeDrawer()
-        store.dispatch('knowledge/addDoc', {
-          kid: id,
-          title: '新文档'
-        }).then(did => {
-          router.push(`/document/${id}/${did}`)
-        }).catch(err => {
-          msg.error(err.message)
-        })
+        router.push(`/document/${id}/add`)
       }
     }
     
@@ -198,8 +175,6 @@ export default defineComponent({
       visibleSelectKnowledge,
       hideSelectKnowledgeDrawer,
       showSelectKnowledgeDrawer,
-      selected,
-      collections,
       toDocumentLink
     }
   }
@@ -257,15 +232,6 @@ export default defineComponent({
         width: 60px;
       }
     }
-  }
-}
-.#{$--prefix}-select-knowledge {
-  width: 100%;
-  height: 96%;
-  display: flex;
-  flex-direction: column;
-  .list {
-    flex: 1;
   }
 }
 </style>

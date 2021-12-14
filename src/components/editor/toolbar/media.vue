@@ -53,13 +53,13 @@ export default defineComponent({
         const fileField: HTMLInputElement | null = document.querySelector('input#'+ fileId)
         if (fileField && fileField.files && fileField.files[0]) {
           formData.append('file', fileField.files[0])
-          fetch('/upload/file', {
+          fetch('/file/upload', {
             method: 'post',
             body: formData
           })
           .then(response => response.json())
           .then(result => {
-            url.value = result.data
+            url.value = result.data.domain + result.data.filepath
           })
           .catch(error => {
             console.error('Error:', error)
