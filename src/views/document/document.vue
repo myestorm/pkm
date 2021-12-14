@@ -77,13 +77,13 @@
                       </template>
                     </pkm-button>
                     <template #content>
-                      <pkm-doption class="pkm-more-doption" @click="removeDoc(item._id)">
+                      <pkm-doption class="pkm-more-doption" @click="removeDoc(item._id || '')">
                         <template #icon>
                           <icon-delete />
                         </template>
                         删除
                       </pkm-doption>
-                      <pkm-doption class="pkm-more-doption" @click="setTransferId(item._id)">
+                      <pkm-doption class="pkm-more-doption" @click="setTransferId(item._id || '')">
                         <template #icon>
                           <icon-rotate-right />
                         </template>
@@ -260,15 +260,17 @@ export default defineComponent({
     }
     // 创建空文档
     const createEmptyDocument = async () => {
-      await createDocument({
-        kid: myKid.value.toString(),
-        title: '新文档'
-      }).then(res => {
-        pageInfo.children?.unshift(res)
-        router.push(`/document/${myKid.value}/${res._id}`)
-      }).catch(err => {
-        msg.error(err.message)
-      })
+      if (myKid.value) {
+        await createDocument({
+          kid: myKid.value.toString(),
+          title: '新文档'
+        }).then(res => {
+          pageInfo.children?.unshift(res)
+          router.push(`/document/${myKid.value}/${res._id}`)
+        }).catch(err => {
+          msg.error(err.message)
+        })
+      }
     }
 
     // 修改文档
@@ -289,23 +291,25 @@ export default defineComponent({
       const postData = {
         ...form
       }
-      posting.value = true
-      updateDocument(postData).then((res) => {
-        if (pageInfo && pageInfo.children) {
-          const index = pageInfo.children.findIndex(item => item._id === res._id)
-          if (Number(index) > -1) {
-            pageInfo.children[index] = {
-              ...res
+      if (postData.kid) {
+        posting.value = true
+        updateDocument(postData).then((res) => {
+          if (pageInfo && pageInfo.children) {
+            const index = pageInfo.children.findIndex(item => item._id === res._id)
+            if (Number(index) > -1) {
+              pageInfo.children[index] = {
+                ...res
+              }
             }
           }
-        }
-        hideDrawer()
-        msg.success('操作成功')
-      }).catch(err => {
-        msg.error(err.message)
-      }).finally(() => {
-        posting.value = false
-      })
+          hideDrawer()
+          msg.success('操作成功')
+        }).catch(err => {
+          msg.error(err.message)
+        }).finally(() => {
+          posting.value = false
+        })
+      }
     }
 
     const linkTo = (id: string) => {
@@ -421,41 +425,6 @@ export default defineComponent({
     const changeView = (v: string) => {
       currentView.value = v
     }
-    const filterOptions = [
-      {
-        key: 'createdAt',
-        text: '创建时间',
-        children: [{
-          key: 'desc',
-          text: '降序'
-        }, {
-          key: 'asc',
-          text: '升序'
-        }]
-      },
-      {
-        key: 'updatedAt',
-        text: '更新时间',
-        children: [{
-          key: 'desc',
-          text: '降序'
-        }, {
-          key: 'asc',
-          text: '升序'
-        }]
-      },
-      {
-        key: 'publishAt',
-        text: '发布时间',
-        children: [{
-          key: 'desc',
-          text: '降序'
-        }, {
-          key: 'asc',
-          text: '升序'
-        }]
-      }
-    ]
     enum FilterTypes {
       createdAt = 'createdAt',
       updatedAt = 'updatedAt',
@@ -465,6 +434,41 @@ export default defineComponent({
       desc = 'desc',
       asc = 'asc'
     }
+    const filterOptions = [
+      {
+        key: FilterTypes.createdAt,
+        text: '创建时间',
+        children: [{
+          key: OrderTypes.desc,
+          text: '降序'
+        }, {
+          key: OrderTypes.asc,
+          text: '升序'
+        }]
+      },
+      {
+        key: FilterTypes.updatedAt,
+        text: '更新时间',
+        children: [{
+          key: OrderTypes.desc,
+          text: '降序'
+        }, {
+          key: OrderTypes.asc,
+          text: '升序'
+        }]
+      },
+      {
+        key: FilterTypes.publishAt,
+        text: '发布时间',
+        children: [{
+          key: OrderTypes.desc,
+          text: '降序'
+        }, {
+          key: OrderTypes.asc,
+          text: '升序'
+        }]
+      }
+    ]
     const filter = (key: FilterTypes, order: OrderTypes) => {
       const ori = pageInfo.children ? [...pageInfo.children] : []
       ori.sort((a: IKnowledgeDocType, b: IKnowledgeDocType) => {
