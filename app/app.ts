@@ -7,6 +7,8 @@ import koaBody from 'koa-body'
 import mongoose from 'mongoose'
 import dayjs from 'dayjs'
 import mongoConfig from './.mongo.config'
+import config from './middleware/config'
+import authorization from './middleware/authorization'
 
 import router from './routes/index'
 
@@ -15,6 +17,8 @@ const uploadDir = '../resource/uploads'
 
 mongoose.connect(mongoConfig)
 mongoose.connection.on('error', console.error)
+
+app.keys = ['totonoo-pkm', 'totonoo.com']
 
 app.use(async (ctx: Context, next: Next) => {
   try {
@@ -26,6 +30,17 @@ app.use(async (ctx: Context, next: Next) => {
 
 const staticDir = path.join(__dirname, '../resource')
 app.use(koaStatic(staticDir))
+
+app.use(config({
+  cookieToken: 'token',
+  jwtSecret: 'my_totonoo_secret'
+}))
+
+app.use(authorization({
+  whiteList: [
+    '^\/signin'
+  ]
+}))
 
 app.use(koaBody({
   multipart: true,
