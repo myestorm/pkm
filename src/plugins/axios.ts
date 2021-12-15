@@ -1,6 +1,8 @@
 import { App } from 'vue'
 import Axios, { AxiosResponse, AxiosRequestConfig, AxiosRequestHeaders } from 'axios'
 
+import { localStorageToken } from '../config'
+
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
@@ -21,7 +23,7 @@ request.interceptors.request.use(
     const headers: AxiosRequestHeaders = config?.headers || {}
     headers['Content-Type'] = headers['Content-Type'] || 'application/json;charset=UTF-8'
     config.headers = headers
-    // config.headers.Authorization = `Bearer ${localStorage.getItem(USER_TOKEN) || ''}`
+    config.headers.Authorization = `Bearer ${localStorage.getItem(localStorageToken) || ''}`
     return config
   },
   function (error) {
@@ -39,8 +41,11 @@ request.interceptors.response.use(
       const code = +response.data.code
       if (code === 0) {
         return response.data
+      } else if (code === 401) {
+        window.location.href = '/signin'
       } else {
-        return Promise.reject(new Error(JSON.stringify(response.data)))
+        // return Promise.reject(new Error(JSON.stringify(response.data)))
+        return Promise.reject(new Error(response.data.msg || '未知错误'))
       }
     } else {
       return Promise.reject(new Error(response.statusText))
@@ -48,6 +53,11 @@ request.interceptors.response.use(
   },
   function (error) {
     // Do something with response error
+    let status = error?.response?.status
+    status = Number(status)
+    if (status === 401) {
+      window.location.href = '/signin'
+    }
     return Promise.reject(error)
   }
 )

@@ -27,7 +27,7 @@ const routes: RouteRecordRaw[] = [{
     }
   }]
 }, {
-  path: '/page/signin',
+  path: '/signin',
   name: 'UserSignin',
   component: () => import('../views/Signin.vue'),
   meta: {

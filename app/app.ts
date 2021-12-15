@@ -38,7 +38,7 @@ app.use(config({
 
 app.use(authorization({
   whiteList: [
-    '^\/signin'
+    '^\/user\/signin'
   ]
 }))
 

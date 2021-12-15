@@ -36,6 +36,7 @@ export default (options: IOptionsType = {
                 complete: true
               })
               ctx.state.userinfo = verifyInfo.payload || {}
+              ctx.state.token = token || ''
             } catch (error) {
               ctx.throw(401)
             }

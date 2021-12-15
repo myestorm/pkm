@@ -1,31 +1,64 @@
 <template>
   <div class="pkm-page-signin">
     <div class="pkm-page-signin-bg">
-      <pkm-form :model="form" class="login-form">
-        <pkm-form-item field="username" label="用户">
+      <pkm-form :model="form" class="login-form" ref="signinFormRef" @submit="submit">
+        <pkm-form-item field="username" label="用户" :rules="[{ required: true, message: '请输入用户名/手机/邮箱' }]">
           <pkm-input v-model="form.username" placeholder="用户名/手机/邮箱" />
         </pkm-form-item>
-        <pkm-form-item field="password" label="密码">
+        <pkm-form-item field="password" label="密码" :rules="[{ required: true, message: '请输入密码' }]">
           <pkm-input-password v-model="form.password" placeholder="请输入登录密码" />
         </pkm-form-item>
         <pkm-form-item>
-          <pkm-button long>立 即 登 录</pkm-button>
+          <pkm-button long html-type="submit" :loading="loading" :disabled="loading">立 即 登 录</pkm-button>
         </pkm-form-item>
       </pkm-form>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive } from 'vue'
+import { defineComponent, ref, reactive, getCurrentInstance } from 'vue'
+import { ValidatedError } from '@arco-design/web-vue/es/form/interface'
+import { FormInstance } from '@arco-design/web-vue/es/form'
+import { useRouter, useRoute } from 'vue-router'
+import { useStore  } from '../store'
 
 export default defineComponent({
   setup () {
+    const store = useStore()
+    const router = useRouter()
+    const route = useRoute()
+    const app = getCurrentInstance()
+    const msg = app?.appContext.config.globalProperties.$message
+
+    const refer = <string>route.query.refer || '/'
+
     const form = reactive({
       username: '',
       password: ''
     })
+    const signinFormRef = ref<FormInstance>()
+    const loading = ref(false)
+    const submit = () => {
+      signinFormRef.value?.validate((errors: undefined | Record<string, ValidatedError>) => {
+        if (!errors) {
+          loading.value = true
+          store.dispatch('user/signin', {
+            ...form
+          }).then(() => {
+            router.push(refer)
+          }).catch(err => {
+            msg.error(err.message)
+          }).then(() => {
+            loading.value = false
+          })
+        }
+      })
+    }
     return {
-      form
+      loading,
+      signinFormRef,
+      form,
+      submit
     }
   }
 })

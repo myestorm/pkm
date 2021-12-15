@@ -1,10 +1,10 @@
 import { InjectionKey } from 'vue'
 import { createStore, useStore as baseUseStore, Store } from 'vuex'
+import { State, RootState, GetterTypes, Getter, MutationTypes, Mutations } from './types'
 
 import knowledge from './modules/knowledge/index'
 import recycle from './modules/recycle/index'
-import { State, RootState, GetterTypes, Getter, MutationTypes, Mutations } from './types'
-
+import user from './modules/user/index'
 
 export const key: InjectionKey<Store<RootState>> = Symbol()
 
@@ -44,6 +44,7 @@ export const store = createStore<RootState>({
 
 store.registerModule('knowledge', knowledge)
 store.registerModule('recycle', recycle)
+store.registerModule('user', user)
 
 export function useStore () {
   return baseUseStore(key)
