@@ -20,3 +20,10 @@ export const UserSignin = (postData: ISigninType, options?: AxiosRequestConfig):
   })
 }
 
+// 登出
+export const UserSignout = (options?: AxiosRequestConfig): Promise<IResponeBodyType<string>> => {
+  return axios.get(`${prefix}/signout`, {
+    ...options
+  })
+}
+

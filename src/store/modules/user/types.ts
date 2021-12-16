@@ -31,11 +31,13 @@ export type Mutations = MutationTree<State> & MutationsMethods
 
 export enum ActionTypes {
   signin = 'signin',
-  getUserInfo = 'getUserInfo'
+  getUserInfo = 'getUserInfo',
+  signout = 'signout'
 }
 type ActionsMethods = {
   [ActionTypes.signin] (context: GenerateActionAugments<State, Mutations>, payload: ISigninType): Promise<string>
   [ActionTypes.getUserInfo] (context: GenerateActionAugments<State, Mutations>): Promise<IUserInfoType>
+  [ActionTypes.signout] (context: GenerateActionAugments<State, Mutations>): Promise<string>
 }
 export type Actions = ActionTree<State, RootState> & ActionsMethods
 

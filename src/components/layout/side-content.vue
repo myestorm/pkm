@@ -142,10 +142,12 @@ export default defineComponent({
     const recycles = computed(() => store.getters['recycle/getList'])
     const recyclesFold = ref(true)
     const recycleRemoveAll = () => {
-      modal.warning({
+      modal.open({
         title: '系统提示',
-        content: `该操作会清空回收站内所有内容，请确认是否执行此操作？`,
+        content: `该操作会清空回收站内所有内容，请确认是否继续？`,
         hideCancel: false,
+        simple: true,
+        modalClass: ['pkm-modal-simple'],
         onOk () {
           store.dispatch('recycle/removeAll')
         }
@@ -173,10 +175,12 @@ export default defineComponent({
         store.commit('setVisibleKnowledge', true)
       },
       del (data: IKnowledgeType) {
-        modal.warning({
+        modal.open({
           title: '系统提示',
           content: `是否确定删除“${data.title}”？该知识库下的文档自动转移到“默认分类”目录下。`,
           hideCancel: false,
+          simple: true,
+          modalClass: ['pkm-modal-simple'],
           onOk () {
             store.dispatch('knowledge/remove', data._id)
           }

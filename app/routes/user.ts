@@ -12,7 +12,7 @@ export default class User {
 
   @get('/info')
   async Userinfo (ctx: Context, next: Next) {
-    const { userinfo, token } = ctx.state.userinfo
+    const { userinfo, token } = ctx.state
     const body: IResponeBodyType<IUserInfoType> = {
       code: 0,
       msg: 'success',
@@ -46,6 +46,23 @@ export default class User {
       body.code = 1
       body.msg = '登录失败，请检查登录信息是否正确！'
     }
+    ctx.body = body
+    await next()
+  }
+
+  @get('/signout')
+  async Signout (ctx: Context, next: Next) {
+    const { cookieToken } = ctx.state.config
+    const body: IResponeBodyType<string> = {
+      code: 0,
+      msg: 'success',
+      data: ''
+    }
+    ctx.cookies.set(cookieToken, null, {
+      maxAge: new Date().getTime() - 1000,
+      signed: true,
+      httpOnly: true
+    })
     ctx.body = body
     await next()
   }

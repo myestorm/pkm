@@ -41,9 +41,9 @@ request.interceptors.response.use(
       const code = +response.data.code
       if (code === 0) {
         return response.data
-      } else if (code === 401) {
+      }/* else if (code === 401) {
         window.location.href = '/signin'
-      } else {
+      }*/ else {
         // return Promise.reject(new Error(JSON.stringify(response.data)))
         return Promise.reject(new Error(response.data.msg || '未知错误'))
       }
@@ -54,9 +54,12 @@ request.interceptors.response.use(
   function (error) {
     // Do something with response error
     let status = error?.response?.status
+    const url = error?.response?.config?.url || ''
     status = Number(status)
-    if (status === 401) {
-      window.location.href = '/signin'
+    if (status === 401 && url !== '/user/info') {
+      let fullPath = (window.location.pathname || '/') + window.location.search
+      fullPath = /^\/signin/.test(fullPath) ? '/' : fullPath
+      window.location.href = '/signin?refer=' + encodeURIComponent(fullPath)
     }
     return Promise.reject(error)
   }

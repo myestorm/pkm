@@ -66,7 +66,7 @@
                     </span>
                   </div>
                   <p class="desc" v-show="currentView == 'desc'">
-                    {{ item.desc }}...
+                    {{ subStr(item.desc, 80) }}
                   </p>
                 </div>
                 <div class="action">
@@ -139,6 +139,8 @@ import { defineComponent, ref, reactive, getCurrentInstance, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { FormInstance } from '@arco-design/web-vue/es/form'
 import dayjs from 'dayjs'
+
+import { subStr } from '../../utils/index'
 
 import { useStore  } from '../../store'
 import MarkdownEditor from '../../components/editor/markdown-editor.vue'
@@ -508,7 +510,8 @@ export default defineComponent({
       currentView,
       changeView,
       filterOptions,
-      filter
+      filter,
+      subStr
     }
   },
 })

@@ -16,6 +16,8 @@
     flex: 1;
     display: flex;
     align-items: stretch;
+    padding: 8px 0;
+    box-sizing: border-box;
   }
   &-content {
     flex: 1;

@@ -19,13 +19,12 @@
 import { defineComponent, ref, reactive, getCurrentInstance } from 'vue'
 import { ValidatedError } from '@arco-design/web-vue/es/form/interface'
 import { FormInstance } from '@arco-design/web-vue/es/form'
-import { useRouter, useRoute } from 'vue-router'
-import { useStore  } from '../store'
+import { useRoute } from 'vue-router'
+import { useStore  } from '../../store'
 
 export default defineComponent({
   setup () {
     const store = useStore()
-    const router = useRouter()
     const route = useRoute()
     const app = getCurrentInstance()
     const msg = app?.appContext.config.globalProperties.$message
@@ -45,7 +44,7 @@ export default defineComponent({
           store.dispatch('user/signin', {
             ...form
           }).then(() => {
-            router.push(refer)
+            window.location.href = decodeURIComponent(refer)
           }).catch(err => {
             msg.error(err.message)
           }).then(() => {
