@@ -1,33 +1,40 @@
 <template>
-  <pkm-space>
-    <pkm-descriptions :data="data" title="用户信息" layout="inline-horizontal"/>
-  </pkm-space>
+  <div class="userinfo">
+    <pkm-page-header title="用户信息" subtitle="Totonoo Personal Knowledge Management 1.0" @back="back">
+      <pkm-descriptions :data="data" title="用户信息" layout="vertical" />
+    </pkm-page-header>
+  </div>
 </template>
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
+import { useRouter } from 'vue-router'
 import { useStore  } from '../../store'
 
 export default defineComponent({
   setup () {
     const store = useStore()
-    const userinfo = computed(() => store.getters['user/userinfo'])
+    const router = useRouter()
+    const userinfo = computed(() => store.getters['user/getUserinfo'])
     return {
       data: [{
-        label: 'Name',
-        value: 'Socrates',
+        label: '用户名',
+        value: userinfo.value.username,
       }, {
-        label: 'Mobile',
-        value: '123-1234-1234',
+        label: 'UID',
+        value: userinfo.value._id,
       }, {
-        label: 'Residence',
-        value: 'Beijing'
+        label: '昵称',
+        value: userinfo.value.nickname
       }, {
-        label: 'Hometown',
-        value: 'Beijing',
+        label: '手机',
+        value: userinfo.value.mobile,
       }, {
-        label: 'Address',
-        value: 'Yingdu Building, Zhichun Road, Beijing'
-      }]
+        label: '邮件',
+        value: userinfo.value.email
+      }],
+      back () {
+        router.push('/')
+      }
     }
   }
 })
