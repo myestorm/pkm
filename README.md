@@ -21,6 +21,8 @@ export default mongoConfig
 
 ### 3. 添加初始用户
 
+修改 `app/install.ts` 中对应的信息
+
 ```sh
 npm run app-install
 ```
