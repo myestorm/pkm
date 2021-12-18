@@ -3,7 +3,8 @@ import { IAdminUserType } from '../types/admin'
 
 const schema = new Schema<IAdminUserType>({
   username: {
-    type: String
+    type: String,
+    unique: true
   },
   password: {
     type: String
@@ -11,6 +12,14 @@ const schema = new Schema<IAdminUserType>({
   avatar: {
     type: String,
     default: ''
+  },
+  mobile: {
+    type: String,
+    unique: true
+  },
+  email: {
+    type: String,
+    unique: true
   },
   nickname: {
     type: String,

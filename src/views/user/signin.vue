@@ -17,6 +17,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, reactive, getCurrentInstance } from 'vue'
+import { MD5 } from 'crypto-js'
 import { ValidatedError } from '@arco-design/web-vue/es/form/interface'
 import { FormInstance } from '@arco-design/web-vue/es/form'
 import { useRoute } from 'vue-router'
@@ -41,9 +42,11 @@ export default defineComponent({
       signinFormRef.value?.validate((errors: undefined | Record<string, ValidatedError>) => {
         if (!errors) {
           loading.value = true
-          store.dispatch('user/signin', {
+          const postData = {
             ...form
-          }).then(() => {
+          }
+          postData.password = MD5(postData.password).toString()
+          store.dispatch('user/signin', postData).then(() => {
             window.location.href = decodeURIComponent(refer)
           }).catch(err => {
             msg.error(err.message)
@@ -66,7 +69,7 @@ export default defineComponent({
 .#{$--prefix}-page-signin {
   width: 100%;
   height: 100%;
-  background-image: url(../assets/bg/green.jpg);
+  background-image: url(../../assets/bg/green.jpg);
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;

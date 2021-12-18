@@ -28,6 +28,15 @@ class AdminController extends BaseController {
     }
   }
 
+  async checkUnique (key: string, value: any): Promise<boolean> {
+    const condition: {
+      [key: string]: unknown
+    } = {}
+    condition[key] = value
+    const info = await Admin.findOne(condition)
+    return (info && info._id)
+  }
+
   async add (data: IAdminUserType): Promise<IAdminUserType> {
     data.password = MD5(data.password).toString()
     return await new Admin(data).save()

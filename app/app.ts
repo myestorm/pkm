@@ -6,6 +6,7 @@ import koaStatic from 'koa-static'
 import koaBody from 'koa-body'
 import mongoose from 'mongoose'
 import dayjs from 'dayjs'
+import historyApiFallback from 'koa2-connect-history-api-fallback'
 import mongoConfig from './.mongo.config'
 import config from './middleware/config'
 import authorization from './middleware/authorization'
@@ -28,8 +29,17 @@ app.use(async (ctx: Context, next: Next) => {
   }
 })
 
-const staticDir = path.join(__dirname, '../resource')
-app.use(koaStatic(staticDir))
+app.use(historyApiFallback({
+  whiteList: [
+    '/api/',
+    '/file/',
+    '/user/'
+  ]
+}))
+
+app.use(koaStatic(path.join(__dirname, '../resource')))
+app.use(koaStatic(path.join(__dirname, '../dist')))
+
 
 app.use(config({
   cookieToken: 'token',
@@ -37,8 +47,12 @@ app.use(config({
 }))
 
 app.use(authorization({
-  whiteList: [
-    '^\/user\/signin'
+  blackList: [
+    '^\/api\/',
+    '^\/file\/',
+    '^\/user\/info',
+    '^\/user\/signup',
+    '^\/user\/signout'
   ]
 }))
 

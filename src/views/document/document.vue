@@ -67,7 +67,7 @@
                     </span>
                   </div>
                   <p class="desc" v-show="currentView == 'desc'">
-                    {{ subStr(item.desc, 80) }}
+                    {{ subStr(item.desc || '', 80) }}
                   </p>
                 </div>
                 <div class="action">

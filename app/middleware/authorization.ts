@@ -2,16 +2,16 @@ import { Context, Next } from 'koa'
 import jwt, { Jwt } from 'jsonwebtoken'
 
 export interface IOptionsType {
-  whiteList: string[]
+  blackList: string[]
 }
 
 export default (options: IOptionsType = {
-  whiteList: []
+  blackList: []
 }) => {
-  const checkInWhiteList = (url: string): boolean => {
+  const checkInBlackList = (url: string): boolean => {
     let isIn = false
-    for (let i = 0; i < options.whiteList.length; i++) {
-      const item = options.whiteList[i]
+    for (let i = 0; i < options.blackList.length; i++) {
+      const item = options.blackList[i]
       const reg = new RegExp(item)
       if (reg.test(url)) {
         isIn = true
@@ -21,9 +21,9 @@ export default (options: IOptionsType = {
     return isIn
   }
   return async (ctx: Context, next: Next) => {
-    // 是否在白名单
-    const isInWhiteList = checkInWhiteList(ctx.request.url)
-    if (!isInWhiteList) {
+    // 是否需要验证权限
+    const isInBlackList = checkInBlackList(ctx.request.url)
+    if (isInBlackList) {
       if (ctx.header && ctx.header.authorization) {
         const parts = ctx.header.authorization.split(' ')
         if (parts.length === 2) {
