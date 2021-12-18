@@ -48,7 +48,8 @@
           </div>
         </pkm-layout-header>
         <pkm-layout-content class="pkm-flex-scroll-container">
-          <div class="list scroll-body">
+          <div class="list scroll-body" style="height: 100%;">
+            
             <div style="padding: 8px 12px;" v-if="loading">
               <pkm-skeleton :animation="true" v-for="i in 4" :key="i" style="margin: 8px 0;">
                 <pkm-space direction="vertical" :style="{ width:'100%' }">
@@ -77,6 +78,12 @@
                       </template>
                     </pkm-button>
                     <template #content>
+                      <pkm-doption class="pkm-more-doption" @click="edit(item._id || '')">
+                        <template #icon>
+                          <icon-edit />
+                        </template>
+                        编辑
+                      </pkm-doption>
                       <pkm-doption class="pkm-more-doption" @click="removeDoc(item._id || '')">
                         <template #icon>
                           <icon-delete />
@@ -94,6 +101,7 @@
                 </div>
               </li>
             </ul>
+              
             <select-knowledge v-model="visibleSelectKnowledge" title="文档转移" desc="请选择目标知识库" @ok="transferDoc" />
           </div>
         </pkm-layout-content>
@@ -484,6 +492,11 @@ export default defineComponent({
         ...ori
       ]
     }
+
+    const edit = (id: string) => {
+      linkTo(id)
+      showDrawer()
+    }
     
     return {
       loading,
@@ -511,7 +524,8 @@ export default defineComponent({
       changeView,
       filterOptions,
       filter,
-      subStr
+      subStr,
+      edit
     }
   },
 })
