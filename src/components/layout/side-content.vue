@@ -26,8 +26,12 @@
             <pkm-skeleton-line :line-height="12" :line-spacing="8" :rows="3" />
           </pkm-space>
         </pkm-skeleton>
-        <ul class="links" v-else>
-          <li v-for="item in collections" :key="item._id" :class="[(selected?._id && item._id == selected._id) ? 'current' : '' ]">
+        <ul class="links" @drop="drop" @dragover.prevent v-else>
+          <li
+            draggable="true"
+            @dragstart="dragstart(item)" 
+            v-for="item in collections" :key="item._id" :class="[(selected?._id && item._id == selected._id) ? 'current' : '' ]"
+          >
             <div class="name">
               <router-link :to="`/document/${item._id}`" class="arco-link arco-link-status-normal">{{ item.title }}</router-link>
             </div>
@@ -60,6 +64,40 @@
             </pkm-dropdown>
           </li>
         </ul>
+        <drag-sort :value="collections" :listClass="['links']" @change="sort">
+          <template v-slot:row="{ row }">
+            <div class="name">
+              <router-link :to="`/document/${row._id}`" class="arco-link arco-link-status-normal">{{ row.title }}</router-link>
+            </div>
+            <pkm-dropdown position="br" class="pkm-more-dropdown">
+              <pkm-button size="mini" class="more" draggable="false">
+                <template #icon>
+                  <icon-more-vertical draggable="false" />
+                </template>
+              </pkm-button>
+              <template #content>
+                <pkm-doption class="pkm-more-doption" @click.stop="edit(row)">
+                  <template #icon>
+                    <icon-edit />
+                  </template>
+                  编辑
+                </pkm-doption>
+                <pkm-doption class="pkm-more-doption" @click.stop="del(row)" v-if="!row.isDefault">
+                  <template #icon>
+                    <icon-delete />
+                  </template>
+                  删除
+                </pkm-doption>
+                <pkm-doption class="pkm-more-doption" @click.stop="setDefault(row._id)" v-if="!row.isDefault">
+                  <template #icon>
+                    <icon-lock />
+                  </template>
+                  默认
+                </pkm-doption>
+              </template>
+            </pkm-dropdown>
+          </template>
+        </drag-sort>
       </div>
     </div>
     <div class="pkm-collection-group">
@@ -109,8 +147,13 @@ import { defineComponent, ref, reactive, computed, getCurrentInstance } from 'vu
 import { useStore  } from '../../store'
 import { IKnowledgeType } from '../../../app/types/knowledge'
 
+import DragSort, { IDragSortChangeType } from '../dragsort/index.vue'
+
 export default defineComponent({
   name: 'SideHeader',
+  components: {
+    DragSort
+  },
   setup () {
     const app = getCurrentInstance()
     const modal = app?.appContext.config.globalProperties.$modal
@@ -159,6 +202,10 @@ export default defineComponent({
       store.dispatch('recycle/getList')
     }
 
+    const sort = (data: IDragSortChangeType<IKnowledgeType>) => {
+      console.log(data)
+    }
+
     return {
       collectionsLoading,
       collections,
@@ -187,7 +234,8 @@ export default defineComponent({
         })
       },
       recycleRemoveAll,
-      recycleReload
+      recycleReload,
+      sort
     }
   }
 })

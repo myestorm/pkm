@@ -36,8 +36,8 @@ export const getters: Getters = {
 }
 
 export const mutations: Mutations = {
-  [MutationTypes.setList] (state, list) {
-    state.list = list || []
+  [MutationTypes.setList] (state, list = []) {
+    state.list = [ ...list ]
   },
   [MutationTypes.setSelected] (state, selected) {
     state.selected = selected || null

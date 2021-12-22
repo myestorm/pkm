@@ -32,7 +32,9 @@ const mutations: Mutations = {
     state.visibleKnowledge = visibleKnowledge
   },
   [MutationTypes.setKnowledgeForm] (state, knowledgeForm) {
-    state.knowledgeForm = knowledgeForm
+    state.knowledgeForm = {
+      ...knowledgeForm
+    }
   }
 }
 

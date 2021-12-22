@@ -4,7 +4,7 @@ import { history, historyKeymap } from '@codemirror/history'
 import { foldGutter, foldKeymap } from '@codemirror/fold'
 import { indentOnInput } from '@codemirror/language'
 import { lineNumbers, highlightActiveLineGutter } from '@codemirror/gutter'
-import { defaultKeymap } from '@codemirror/commands'
+import { defaultKeymap, indentWithTab } from '@codemirror/commands'
 import { bracketMatching } from '@codemirror/matchbrackets'
 import { closeBrackets, closeBracketsKeymap } from '@codemirror/closebrackets'
 import { highlightSelectionMatches, searchKeymap } from '@codemirror/search'
@@ -109,6 +109,7 @@ class MarkdownEditor {
       highlightActiveLine(),
       highlightSelectionMatches(),
       keymap.of([
+        indentWithTab,
         ...closeBracketsKeymap,
         ...defaultKeymap,
         ...searchKeymap,

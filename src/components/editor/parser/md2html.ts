@@ -20,8 +20,6 @@ _markdownIt.use(sourcemap)
 export const markdownIt = _markdownIt
 
 export default (md: string): string => {
-  const html = _markdownIt.render(md, (a: any, b: any, c: any) => {
-    console.log(111, a, b, c)
-  })
+  const html = _markdownIt.render(md)
   return html
 }

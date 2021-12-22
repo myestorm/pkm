@@ -11,10 +11,14 @@ import { IUserInfoType, ISigninType } from '../../../../app/types/admin'
 
 import { localStorageToken } from '../../../config'
 
+const emptyUserinfo = {
+  username: ''
+}
+
 export const state: State = {
   token: localStorage.getItem(localStorageToken) || '',
   userinfo: {
-    username: ''
+    ...emptyUserinfo
   }
 }
 
@@ -32,9 +36,9 @@ export const mutations: Mutations = {
     localStorage.setItem(localStorageToken, token || '')
     state.token = token || ''
   },
-  [MutationTypes.setUserinfo] (state, userinfo) {
-    state.userinfo = userinfo || {
-      username: ''
+  [MutationTypes.setUserinfo] (state, userinfo = { ...emptyUserinfo }) {
+    state.userinfo = {
+      ...userinfo
     }
   }
 }
