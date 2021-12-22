@@ -7,7 +7,8 @@ export interface IKnowledgeDocType {
   publishAt?: Date,
   thumb?: string,
   content?: string,
-  tags?: string[]
+  tags?: string[],
+  order?: number
 }
 
 export interface IKnowledgeType {
@@ -18,7 +19,8 @@ export interface IKnowledgeType {
   createdAt?: Date,
   updatedAt?: Date,
   thumb?: string,
-  children?: IKnowledgeDocType[]
+  children?: IKnowledgeDocType[],
+  order?: number
 }
 
 export type IKnowledgeUpdateType = Omit<IKnowledgeType, '_id'>

@@ -47,6 +47,26 @@ export default class Api {
     await next()
   }
 
+  @put('/knowledge/order/:id/:order')
+  async KnowledgeOrder (ctx: Context, next: Next) {
+    const { id = '', order = 99 } = ctx.params
+    if (id) {
+      await knowledge.setOrder(id, order)
+      const body: IResponeBodyType<string> = {
+        code: 0,
+        msg: 'success',
+        data: ''
+      }
+      ctx.body = body
+    } else {
+      ctx.body = {
+        code: 1,
+        msg: '参数不正确'
+      }
+    }
+    await next()
+  }
+
   @get('/knowledge/document/:id')
   async KnowledgeDocument (ctx: Context, next: Next) {
     const { id = '' } = ctx.params
@@ -222,6 +242,26 @@ export default class Api {
         code: 0,
         msg: 'success',
         data: result?._id || ''
+      }
+      ctx.body = body
+    } else {
+      ctx.body = {
+        code: 1,
+        msg: '参数不正确'
+      }
+    }
+    await next()
+  }
+
+  @put('/document/order/:id/:did/:order')
+  async DocumentOrder (ctx: Context, next: Next) {
+    const { id = '', did = '', order = 99 } = ctx.params
+    if (id && did) {
+      await knowledge.setOrderDoc(id, did, order)
+      const body: IResponeBodyType<string> = {
+        code: 0,
+        msg: 'success',
+        data: ''
       }
       ctx.body = body
     } else {

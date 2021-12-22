@@ -36,7 +36,11 @@ export const docSchema = new Schema<IKnowledgeDocType>({
     type: String,
     default: ''
   },
-  tags: []
+  tags: [],
+  order: {
+    type: Number,
+    default: 99
+  }
 }, {
   timestamps: { 
     createdAt: 'createdAt',
@@ -69,7 +73,11 @@ const schema = new Schema<IKnowledgeUpdateType>({
     type: Boolean,
     default: false
   },
-  children: [docSchema]
+  children: [docSchema],
+  order: {
+    type: Number,
+    default: 99
+  }
 }, {
   timestamps: { 
     createdAt: 'createdAt',

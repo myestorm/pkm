@@ -17,7 +17,10 @@ class KnowledgeController extends BaseController {
     return await Knowledge.find({}, {
       children: 0
     }).sort({
-      _id: -1
+      order: 1,
+      updatedAt: -1,
+      _id: -1,
+      createdAt: -1
     })
   }
 
@@ -27,6 +30,12 @@ class KnowledgeController extends BaseController {
     } }, { isDefault: false })
     await Knowledge.findByIdAndUpdate(id, {
       isDefault: true
+    })
+  }
+
+  async setOrder (id: string, order: number): Promise<void> {
+    await Knowledge.findByIdAndUpdate(id, {
+      order
     })
   }
 
@@ -71,6 +80,14 @@ class KnowledgeController extends BaseController {
     const parent = await Knowledge.findById(id)
     let sub = parent?.children.id(did)
     sub = Object.assign(sub, data)
+    await parent?.save()
+    return sub
+  }
+
+  async setOrderDoc (id: string, did: string, order: number): Promise<IKnowledgeDocType | null> {
+    const parent = await Knowledge.findById(id)
+    let sub = parent?.children.id(did)
+    sub = Object.assign(sub, { order })
     await parent?.save()
     return sub
   }
