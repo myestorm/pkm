@@ -64,7 +64,7 @@
             </pkm-dropdown>
           </li>
         </ul>
-        <drag-sort :value="collections" :listClass="['links']" @change="sort">
+        <drag-sort :value="collections" :options="{ ulClass: ['links'] }" @change="sort">
           <template v-slot:row="{ row }">
             <div class="name">
               <router-link :to="`/document/${row._id}`" class="arco-link arco-link-status-normal">{{ row.title }}</router-link>
@@ -147,7 +147,7 @@ import { defineComponent, ref, reactive, computed, getCurrentInstance } from 'vu
 import { useStore  } from '../../store'
 import { IKnowledgeType } from '../../../app/types/knowledge'
 
-import DragSort, { IDragSortChangeType } from '../dragsort/index.vue'
+import DragSort from '../dragsort/index.vue'
 
 export default defineComponent({
   name: 'SideHeader',
@@ -202,7 +202,7 @@ export default defineComponent({
       store.dispatch('recycle/getList')
     }
 
-    const sort = (data: IDragSortChangeType<IKnowledgeType>) => {
+    const sort = (data: any) => {
       console.log(data)
     }
 

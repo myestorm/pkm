@@ -32,6 +32,13 @@ export default class Api {
     const _hasChildren = Number(hasChildren)
     if (id) {
       const result = await knowledge.info(id, Boolean(_hasChildren))
+      if (result && result.children && result.children.length > 0) {
+        result.children.sort((a, b) => {
+          const aOrder = a.order
+          const bOrder = b.order
+          return aOrder - bOrder
+        })
+      }
       const body: IResponeBodyType<IKnowledgeType | null> = {
         code: 0,
         msg: 'success',

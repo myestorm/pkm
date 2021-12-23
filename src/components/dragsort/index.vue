@@ -2,43 +2,86 @@
   <div
     :id="id"
     class="pkm-drag-sort"
-    @mousedown="mousedown($event)"
+    @mousedown="mousedownEvent($event)"
   >
     <ul
-      class="pkm-drag-sort-drag-container"
-      :class="listClass"
+      class="pkm-drag-sort-ul"
+      :class="[options.ulClass]"
     >
-      <li v-for="(item, index) in list" :key="index" class="sort-item" :data-index="index">
+      <li v-for="(item, index) in list" :key="index" class="sort-item" :data-index="index" :class="[options.liClass]">
         <slot name="row" :row="item">
-          {{ item.title }}
+          {{ item }}
         </slot>
       </li>
     </ul>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 
-interface IItemType {
-  target: HTMLElement | null,
-  animating: boolean,
-  animateTimer: number
+const dragItemClassName = 'sort-item'
+
+const $ = (selector: string) => {
+  return document.querySelector(selector)
 }
 
-interface IDataType {
-  id: string,
-  list: any[]
+// 拖拽对象是否是 li.sort-item
+const isDragItem = (target: HTMLElement): boolean => {
+  return (target && target.nodeName === 'LI' && target.classList.contains(dragItemClassName))
 }
 
-export interface IDragSortChangeType<T> {
-  old: number,
-  index: number,
-  data: T,
-  list: T[]
+// 是否不允许拖拽
+const notAllowed = (target: HTMLElement): boolean => {
+  return target.getAttribute('draggable') === 'false'
 }
 
-let dragItems: IItemType[] = []
+// 获取data-index
+const dataIndex = (target: HTMLElement): number => {
+  const index = target.dataset.index
+  return index ? Number(index) : -1
+}
+
+// 获取最近的 li.sort-item
+const closestLi = (target: HTMLElement): HTMLElement | null => {
+  return target.closest(`li.${dragItemClassName}`)
+}
+
+// 查找节点在父节点中的索引值
+const findIndex = (target: HTMLElement): number => {
+  let index = 0
+  if (!target || !target.parentNode) {
+    index = -1
+  } else {
+    const nodes = Array.prototype.slice.call(target.parentNode.children)
+    index = nodes.indexOf(target)
+  }
+  return index
+}
+
+// 动画
+const duration = 260
+const animate = (target: HTMLElement, translateY: number) => {
+  return new Promise<void>((reslove) => {
+    if (target) {
+      target.style.transition = `all ${duration}ms ease`
+      target.style.transform = `translateY(${translateY}px)`
+      window.setTimeout(() => {
+        if (target) {
+          target.style.transition = ''
+          target.style.transform = 'translateY(0px)'
+        }
+        reslove()
+      }, duration)
+    } else {
+      reslove()
+    }
+  })
+}
+
+const deepClone = (data: any[] = []) => {
+  return JSON.parse(JSON.stringify(data))
+}
 
 export default defineComponent({
   props: {
@@ -46,201 +89,135 @@ export default defineComponent({
       type: Array,
       default: () => []
     },
-    listClass: {
-      type: Array,
-      default: () => []
-    },
-    dragClassName: {
-      type: String,
-      default: 'drag'
-    },
-    dragItemClassName: {
-      type: String,
-      default: 'sort-item'
+    options: {
+      type: Object,
+      default: () => {
+        return {
+          ulClass: [],
+          liClass: []
+        }
+      }
     }
   },
-  data () {
-    const id = uuidv4()
-    return {
-      id: `pkm-sort-${id}`,
-      list: this.value || []
-    } as IDataType
-  },
-  watch: {
-    value: async function (val) {
-      this.list = [...val]
-      await this.$nextTick()
-      this.setItems()
-    }
-  },
-  mounted () {
-    this.setItems()
-  },
-  methods: {
-    getItems () {
-      const box = document.querySelector(`#${this.id}`)
-      const items = box?.querySelectorAll('.sort-item')
+  setup (props, ctx) {
+    const uid = uuidv4()
+    const id = `pkm-sort-${uid}`
+    const list = ref(deepClone(props.value))
+
+    watch(
+      () => props.value,
+      (val) => {
+        list.value = deepClone(val)
+      }
+    )
+
+    const getItems = () => {
+      const box = $(`#${id}`)
+      const items = box?.querySelectorAll(`.${dragItemClassName}`)
       return items
-    },
-    setItems () {
-      const list = []
-      const items = this.getItems()
-      if (items) {
-        for (let i = 0; i < items.length; i++) {
-          const item = items[i] as HTMLElement
-          list.push({
-            target: item,
-            animating: false,
-            animateTimer: 0
-          })
-        }
-      }
-      dragItems = [ ... list ]
-    },
-    // 查找节点在父节点中的索引值
-    findIndex (target: HTMLElement): number {
-      let index = 0
-      if (!target || !target.parentNode) {
-        index = -1
-      } else {
-        const nodes = Array.prototype.slice.call(target.parentNode.children)
-        index = nodes.indexOf(target)
-      }
-      return index
-    },
-    animate (target: IItemType, translateY: number) {
-      return new Promise<void>((reslove) => {
-        if (target && target.target) {
-          const duration = 260
-          target.target.style.transition = `all ${duration}ms ease`
-          target.target.style.transform = `translateY(${translateY}px)`
-          if (target.animateTimer) {
-            clearTimeout(target.animateTimer)
-          }
-          target.animating = true
-          target.animateTimer = window.setTimeout(() => {
-            if (target && target.target) {
-              target.target.style.transition = ''
-              target.target.style.transform = 'translateY(0px)'
-            }
-            target.animating = false
-            reslove()
-          }, duration)
-        } else {
-          reslove()
-        }
-      })
-    },
-    getValue () {
-      const list = []
-      const children = this.getItems()
+    }
+
+    const getValue = () => {
+      const _list = []
+      const children = getItems()
       if (children) {
         for (let i = 0; i < children.length; i++) {
           const child = children[i] as HTMLElement
           const index = Number(child.dataset.index)
           if (index > -1) {
-            const val = this.list[index]
+            const val = list.value[index]
             if (typeof val === 'object') {
               const _val = JSON.parse(JSON.stringify(val))
-              list.push(_val)
+              _list.push(_val)
             } else {
-              list.push(val)
+              _list.push(val)
             }
           }
         }
       }
-      return list
-    },
-    // 拖拽对象是否是 li.sort-item
-    isDragItem (target: HTMLElement) {
-      return (target && target.nodeName === 'LI' && target.classList.contains(this.dragItemClassName))
-    },
-    // 不允许拖拽
-    notAllowed (target: HTMLElement) {
-      return target.getAttribute('draggable') === 'false'
-    },
-    mousedown (event: MouseEvent) {
-      const _target = event.target as HTMLElement
-      if (this.notAllowed(_target)) {
+      return _list
+    }
+
+    const changeEvent = (drag: HTMLElement) => {
+      setTimeout(() => {
+        const oldIndex = dataIndex(drag)
+        const index = findIndex(drag)
+        const curr = list.value[oldIndex]
+        const res = getValue()
+        if (oldIndex !== index) {
+          ctx.emit('change', {
+            old: oldIndex,
+            index: index,
+            data: curr,
+            list: res
+          })
+        }
+      }, 300)
+    }
+
+    const mousedownEvent = (event: MouseEvent) => {
+      const mouseTarget = event.target as HTMLElement
+      if (notAllowed(mouseTarget)) {
         return
       }
+      event.preventDefault()
 
-      const drag = (!this.isDragItem(_target) ? _target.closest(`li.${this.dragItemClassName}`) : _target) as HTMLElement
-      const box = document.querySelector(`#${this.id}`)
+      // 开始拖拽
+      const drag = closestLi(mouseTarget)
+      const box = $(`#${id}`)
+
       let isMoving = false
       if (drag && box) {
 
-        let dragBar = document.createElement('div')
+        // 创建拖拽样子
+        const dragBar = document.createElement('div')
         dragBar.classList.add('select')
         dragBar.style.left = drag.offsetLeft + 'px'
         dragBar.style.top = drag.offsetTop + 'px'
         dragBar.style.height = drag.clientHeight + 'px'
-
+        dragBar.style.display = 'none'
+        dragBar.style.transition = `all ${duration}ms ease`
         box.appendChild(dragBar)
 
-        const mousemoveHandler = async (event: MouseEvent) => {
-            const _moveTarget = event.target as HTMLElement
-            const target = (this.isDragItem(_moveTarget) ?  _moveTarget : _moveTarget.closest(`li.${this.dragItemClassName}`)) as HTMLElement
-            if (!target) {
-              return false
-            }
+        // 鼠标移动事件
+        const mousemoveEvent = async (event: MouseEvent) => {
+          if (isMoving) {
+            return
+          }
+          isMoving = true
+          const moveTarget = event.target as HTMLElement
+          const target = closestLi(moveTarget)
+          if (target && isDragItem(target)) {
+            dragBar.style.display = 'block'
+            dragBar.style.left = target.offsetLeft + 'px'
+            dragBar.style.top = target.offsetTop + 'px'
 
-            isMoving = true
-
-            if (this.isDragItem(target)) {
-
-              dragBar.style.left = target.offsetLeft + 'px'
-              dragBar.style.top = target.offsetTop + 'px'
-
-              const dragIndex = this.findIndex(drag)
-              const overIndex = this.findIndex(target)
-              const _dragIndex = Number(drag.dataset.index)
-              const _overIndex = Number(target.dataset.index)
-
-              if (target.parentNode && dragIndex > -1 && overIndex > -1 && dragIndex !== overIndex) {
-                if (dragItems[_dragIndex] && dragItems[_dragIndex].animating) {
-                  return
-                }
-                const referenceNode = (dragIndex < overIndex ? target.nextSibling : target) as HTMLElement
-                const dragRect = drag.getBoundingClientRect()
-                const targetRect = target.getBoundingClientRect()
-                const translateY = dragRect.top - targetRect.top
-
-                await Promise.all([this.animate(dragItems[_dragIndex], translateY * -1), this.animate(dragItems[_overIndex], translateY)])
-
-                target.parentNode.insertBefore(drag, referenceNode)
-              }
-
+            const dragIndex = findIndex(drag)
+            const overIndex = findIndex(target)
+            if (target.parentNode && dragIndex > -1 && overIndex > -1 && dragIndex !== overIndex) {
+              const referenceNode = (dragIndex < overIndex ? target.nextSibling : target) as HTMLElement
+              const translateY = drag.offsetTop - target.offsetTop
+              await Promise.all([animate(drag, translateY * -1), animate(target, translateY)])
+              target.parentNode.insertBefore(drag, referenceNode)
             }
           }
-          document.addEventListener('mousemove', mousemoveHandler, false)
-
-          const mouseupHandler = () => {
-            const oldIndex = Number(drag.dataset.index)
-            const index = this.findIndex(drag)
-            const curr = this.list[oldIndex]
-            const list = this.getValue()
-            // this.list = [ ...list ]
-
-            document.removeEventListener('mousemove', mousemoveHandler)
-            document.removeEventListener('mouseup', mouseupHandler)
-
-            if (oldIndex !== index) {
-              this.$emit('change', {
-                old: oldIndex,
-                index: index,
-                data: curr,
-                list
-              })
-            }
-            if (isMoving === false) {
-              _target.click()
-            }
-            box.removeChild(dragBar)
-            isMoving = false
-          }
-          document.addEventListener('mouseup', mouseupHandler, false)
+          isMoving = false
+        }
+        document.addEventListener('mousemove', mousemoveEvent, false)
+        const mouseupEvent = () => {
+          box.removeChild(dragBar)
+          document.removeEventListener('mousemove', mousemoveEvent)
+          document.removeEventListener('mouseup', mouseupEvent)
+          changeEvent(drag)
+        }
+        document.addEventListener('mouseup', mouseupEvent, false)
       }
+    }
+
+    return {
+      id,
+      list,
+      mousedownEvent
     }
   }
 })
@@ -248,17 +225,16 @@ export default defineComponent({
 <style lang="scss">
 .pkm-drag-sort {
   position: relative;
+  user-select: none;
   .select {
     position: absolute;
     width: 100%;
     display: block;
     border: 1px rgb(var(--primary-6)) dashed;
-    background-color: rgba(0,0,0, 0.01);
+    background-color: rgba(0,0,0, 0.1);
     cursor: pointer;
     color: #ffffff;
     box-sizing: border-box;
-    opacity: 0.8;
-    transition: all 260ms ease;
   }
 }
 </style>
