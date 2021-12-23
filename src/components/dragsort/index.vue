@@ -17,7 +17,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue'
+import { defineComponent, ref, watch, nextTick } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 
 const dragItemClassName = 'sort-item'
@@ -79,8 +79,18 @@ const animate = (target: HTMLElement, translateY: number) => {
   })
 }
 
-const deepClone = (data: any[] = []) => {
-  return JSON.parse(JSON.stringify(data))
+export interface IChangeDataType<T> {
+  drag: {
+    old: number,
+    index: number,
+    data: T
+  },
+  target: {
+    old: number,
+    index: number,
+    data: T
+  },
+  list: T[]
 }
 
 export default defineComponent({
@@ -102,12 +112,14 @@ export default defineComponent({
   setup (props, ctx) {
     const uid = uuidv4()
     const id = `pkm-sort-${uid}`
-    const list = ref(deepClone(props.value))
+    const list = ref<any[]>(props.value)
 
     watch(
       () => props.value,
-      (val) => {
-        list.value = deepClone(val)
+      async (val) => {
+        list.value = []
+        await nextTick()
+        list.value = val
       }
     )
 
@@ -138,17 +150,29 @@ export default defineComponent({
       return _list
     }
 
-    const changeEvent = (drag: HTMLElement) => {
+    const changeEvent = (drag: HTMLElement, target: HTMLElement) => {
       setTimeout(() => {
         const oldIndex = dataIndex(drag)
         const index = findIndex(drag)
         const curr = list.value[oldIndex]
+
+        const tarOldIndex = dataIndex(target)
+        const tarIndex = findIndex(target)
+        const tarCurr = list.value[tarOldIndex]
+
         const res = getValue()
         if (oldIndex !== index) {
           ctx.emit('change', {
-            old: oldIndex,
-            index: index,
-            data: curr,
+            drag: {
+              old: oldIndex,
+              index: index,
+              data: curr
+            },
+            target: {
+              old: tarOldIndex,
+              index: tarIndex,
+              data: tarCurr
+            },
             list: res
           })
         }
@@ -165,6 +189,8 @@ export default defineComponent({
       // 开始拖拽
       const drag = closestLi(mouseTarget)
       const box = $(`#${id}`)
+
+      let movingTarget: HTMLElement
 
       let isMoving = false
       if (drag && box) {
@@ -188,6 +214,7 @@ export default defineComponent({
           const moveTarget = event.target as HTMLElement
           const target = closestLi(moveTarget)
           if (target && isDragItem(target)) {
+            movingTarget = target
             dragBar.style.display = 'block'
             dragBar.style.left = target.offsetLeft + 'px'
             dragBar.style.top = target.offsetTop + 'px'
@@ -204,11 +231,12 @@ export default defineComponent({
           isMoving = false
         }
         document.addEventListener('mousemove', mousemoveEvent, false)
+        
         const mouseupEvent = () => {
           box.removeChild(dragBar)
           document.removeEventListener('mousemove', mousemoveEvent)
           document.removeEventListener('mouseup', mouseupEvent)
-          changeEvent(drag)
+          changeEvent(drag, movingTarget)
         }
         document.addEventListener('mouseup', mouseupEvent, false)
       }

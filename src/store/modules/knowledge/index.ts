@@ -17,7 +17,9 @@ import {
   ApiDocumentUpdate,
   ApiDocumentAdd,
   ApiDocumentRemove,
-  ApiDocumentTransfer
+  ApiDocumentTransfer,
+  ApiKnowledgeOrder,
+  ApiDocumentOrder
 } from '../../../apis/index'
 import { IKnowledgeDocType } from '../../../../app/types/knowledge'
 
@@ -142,6 +144,24 @@ export const actions: Actions = {
   [ActionTypes.transferDoc] (_, postData: { fid: string, tid: string, id: string }) {
     return new Promise((resolve, reject) => {
       ApiDocumentTransfer(postData).then(res => {
+        resolve(res.data)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  [ActionTypes.setOrder] (_, postData: { id: string, order: number }) {
+    return new Promise((resolve, reject) => {
+      ApiKnowledgeOrder(postData).then(res => {
+        resolve(res.data)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  [ActionTypes.setOrderDoc] (_, postData: { id: string, did: string, order: number }) {
+    return new Promise((resolve, reject) => {
+      ApiDocumentOrder(postData).then(res => {
         resolve(res.data)
       }).catch(err => {
         reject(err)

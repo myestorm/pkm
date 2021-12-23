@@ -12,18 +12,13 @@ const updateOption = {
   findByIdAndUpdate: 'after' 
 }
 
-const sortOption = {
-  order: 1,
-  updatedAt: 1,
-  _id: -1,
-  createdAt: -1
-}
-
 class KnowledgeController extends BaseController {
   async list (): Promise<IKnowledgeType[]> {
     return await Knowledge.find({}, {
       children: 0
-    }).sort(sortOption)
+    }).sort({
+      order: 1
+    })
   }
 
   async setDefault (id: string): Promise<void> {

@@ -26,45 +26,7 @@
             <pkm-skeleton-line :line-height="12" :line-spacing="8" :rows="3" />
           </pkm-space>
         </pkm-skeleton>
-        <ul class="links" @drop="drop" @dragover.prevent v-else>
-          <li
-            draggable="true"
-            @dragstart="dragstart(item)" 
-            v-for="item in collections" :key="item._id" :class="[(selected?._id && item._id == selected._id) ? 'current' : '' ]"
-          >
-            <div class="name">
-              <router-link :to="`/document/${item._id}`" class="arco-link arco-link-status-normal">{{ item.title }}</router-link>
-            </div>
-            <pkm-dropdown position="br" class="pkm-more-dropdown">
-              <pkm-button size="mini" class="more">
-                <template #icon>
-                  <icon-more-vertical />
-                </template>
-              </pkm-button>
-              <template #content>
-                <pkm-doption class="pkm-more-doption" @click.stop="edit(item)">
-                  <template #icon>
-                    <icon-edit />
-                  </template>
-                  编辑
-                </pkm-doption>
-                <pkm-doption class="pkm-more-doption" @click.stop="del(item)" v-if="!item.isDefault">
-                  <template #icon>
-                    <icon-delete />
-                  </template>
-                  删除
-                </pkm-doption>
-                <pkm-doption class="pkm-more-doption" @click.stop="setDefault(item._id)" v-if="!item.isDefault">
-                  <template #icon>
-                    <icon-lock />
-                  </template>
-                  默认
-                </pkm-doption>
-              </template>
-            </pkm-dropdown>
-          </li>
-        </ul>
-        <drag-sort :value="collections" :options="{ ulClass: ['links'] }" @change="sort">
+        <drag-sort :value="collections" :options="{ ulClass: ['links'] }" @change="sort" v-else>
           <template v-slot:row="{ row }">
             <div class="name">
               <router-link :to="`/document/${row._id}`" class="arco-link arco-link-status-normal">{{ row.title }}</router-link>
@@ -147,7 +109,7 @@ import { defineComponent, ref, reactive, computed, getCurrentInstance } from 'vu
 import { useStore  } from '../../store'
 import { IKnowledgeType } from '../../../app/types/knowledge'
 
-import DragSort from '../dragsort/index.vue'
+import DragSort, { IChangeDataType } from '../dragsort/index.vue'
 
 export default defineComponent({
   name: 'SideHeader',
@@ -202,8 +164,19 @@ export default defineComponent({
       store.dispatch('recycle/getList')
     }
 
-    const sort = (data: any) => {
-      console.log(data)
+    const sort = (event: any) => {
+      const data = event as IChangeDataType<IKnowledgeType>
+      let targetOrder = data.target.data.order
+      targetOrder = typeof targetOrder !== 'undefined' ? targetOrder : 99
+
+      const order = data.drag.index > data.target.index ? targetOrder + 1 : targetOrder - 1
+      if (data.drag.data._id) {
+        store.dispatch('knowledge/setOrder', { id: data.drag.data._id, order }).then(() => {
+          getList()
+        }).catch(err => {
+          msg.error(err.message)
+        })
+      }
     }
 
     return {

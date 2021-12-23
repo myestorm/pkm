@@ -62,6 +62,13 @@ export const ApiKnowledgeRemove = (id: string, options?: AxiosRequestConfig): Pr
   })
 }
 
+// 知识库排序
+export const ApiKnowledgeOrder = (data: { id: string, order: number }, options?: AxiosRequestConfig): Promise<IResponeBodyType<string>> => {
+  return axios.put(`${prefix}/knowledge/order/${data.id}/${data.order}`, {}, {
+    ...options
+  })
+}
+
 // 修改文档
 export const ApiDocumentUpdate = (postData: IKnowledgeDocType & { kid?: string }, options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeDocType>> => {
   const id = postData.kid
@@ -85,6 +92,13 @@ export const ApiDocumentAdd = (postData: IKnowledgeDocType & { kid?: string }, o
 // 删除文档
 export const ApiDocumentRemove = (data: { kid: string, id: string }, options?: AxiosRequestConfig): Promise<IResponeBodyType<string>> => {
   return axios.delete(`${prefix}/document/remove/${data.kid}/${data.id}`, {
+    ...options
+  })
+}
+
+// 文档排序
+export const ApiDocumentOrder = (data: { id: string, did: string, order: number }, options?: AxiosRequestConfig): Promise<IResponeBodyType<string>> => {
+  return axios.put(`${prefix}/document/order/${data.id}/${data.did}/${data.order}`, {}, {
     ...options
   })
 }

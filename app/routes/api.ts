@@ -34,8 +34,8 @@ export default class Api {
       const result = await knowledge.info(id, Boolean(_hasChildren))
       if (result && result.children && result.children.length > 0) {
         result.children.sort((a, b) => {
-          const aOrder = a.order
-          const bOrder = b.order
+          const aOrder = <number>a.order
+          const bOrder = <number>b.order
           return aOrder - bOrder
         })
       }
