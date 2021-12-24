@@ -652,7 +652,7 @@
 }
 
 .markdown-body hr {
-  height: .25em;
+  height: 1px;
   padding: 0;
   margin: 24px 0;
   background-color: #e1e4e8;
@@ -660,9 +660,10 @@
 }
 
 .markdown-body blockquote {
-  padding: 0 1em;
-  color: #6a737d;
-  border-left: .25em solid #dfe2e5;
+  padding: 0.5em 1em;
+  color: rgba(255, 255, 255, 0.9);
+  border-left: .25em solid rgba(146, 146, 147);
+  background-color: #232324;
 }
 
 .markdown-body blockquote>:first-child {
@@ -692,7 +693,6 @@
 .markdown-body h1,
 .markdown-body h2 {
   padding-bottom: .3em;
-  border-bottom: 1px solid #eaecef;
 }
 
 .markdown-body h2 {
@@ -759,9 +759,10 @@
 }
 
 .markdown-body table {
-  display: block;
   width: 100%;
-  overflow: auto;
+  min-width: 100%;
+  margin: 0;
+  border-collapse: collapse;
 }
 
 .markdown-body table th {
@@ -771,16 +772,21 @@
 .markdown-body table td,
 .markdown-body table th {
   padding: 6px 13px;
-  border: 1px solid #dfe2e5;
+  border: 1px solid rgb(72, 72, 73);
+  font-size: 16px;
+}
+
+.markdown-body table th {
+  background-color: rgb(46, 46, 48);
 }
 
 .markdown-body table tr {
-  background-color: #fff;
-  border-top: 1px solid #c6cbd1;
+  background-color: #232324;
+  border-top: 1px solid rgb(72, 72, 73);
 }
 
 .markdown-body table tr:nth-child(2n) {
-  background-color: #f6f8fa;
+  background-color: rgba(51, 51, 51, 0.6);
 }
 
 .markdown-body img {

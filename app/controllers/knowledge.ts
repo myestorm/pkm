@@ -17,7 +17,8 @@ class KnowledgeController extends BaseController {
     return await Knowledge.find({}, {
       children: 0
     }).sort({
-      order: 1
+      order: 1,
+      _id: -1
     })
   }
 

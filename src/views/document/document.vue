@@ -57,51 +57,52 @@
                 </pkm-space>
               </pkm-skeleton>
             </div>
-            <ul v-else>
-              <li class="item arco-link arco-link-status-normal" v-for="(item, index) in pageInfo.children" :key="item._id" :class="[ (index === current) ? 'current' : '']">
-                <div class="link" @click="linkTo(item._id || '')">
-                  <div class="item-title">
-                    <h3>{{ item.title }}</h3>
-                    <span class="date">
-                      {{ formatDate(item.createdAt) }}
-                    </span>
+            <drag-sort :value="pageInfo.children" @change="sort" v-else>
+              <template v-slot:row="{ row, index }">
+                <div class="item arco-link arco-link-status-normal" :class="[ (index === current) ? 'current' : '']">
+                  <div class="link" @click="linkTo(row._id || '')">
+                    <div class="item-title">
+                      <h3>{{ row.title }}</h3>
+                      <span class="date">
+                        {{ formatDate(row.createdAt) }}
+                      </span>
+                    </div>
+                    <p class="desc" v-show="currentView == 'desc'">
+                      {{ subStr(row.desc || '', 80) }}
+                    </p>
                   </div>
-                  <p class="desc" v-show="currentView == 'desc'">
-                    {{ subStr(item.desc || '', 80) }}
-                  </p>
-                </div>
-                <div class="action">
-                  <pkm-dropdown position="br" class="pkm-more-dropdown">
-                    <pkm-button size="mini" class="more">
-                      <template #icon>
-                        <icon-more-vertical />
+                  <div class="action" draggable="false">
+                    <pkm-dropdown position="br" class="pkm-more-dropdown">
+                      <pkm-button size="mini" class="more" draggable="false">
+                        <template #icon>
+                          <icon-more-vertical draggable="false" />
+                        </template>
+                      </pkm-button>
+                      <template #content>
+                        <pkm-doption class="pkm-more-doption" @click="edit(row._id || '')">
+                          <template #icon>
+                            <icon-edit />
+                          </template>
+                          编辑
+                        </pkm-doption>
+                        <pkm-doption class="pkm-more-doption" @click="removeDoc(row._id || '')">
+                          <template #icon>
+                            <icon-delete />
+                          </template>
+                          删除
+                        </pkm-doption>
+                        <pkm-doption class="pkm-more-doption" @click="setTransferId(row._id || '')">
+                          <template #icon>
+                            <icon-rotate-right />
+                          </template>
+                          转移
+                        </pkm-doption>
                       </template>
-                    </pkm-button>
-                    <template #content>
-                      <pkm-doption class="pkm-more-doption" @click="edit(item._id || '')">
-                        <template #icon>
-                          <icon-edit />
-                        </template>
-                        编辑
-                      </pkm-doption>
-                      <pkm-doption class="pkm-more-doption" @click="removeDoc(item._id || '')">
-                        <template #icon>
-                          <icon-delete />
-                        </template>
-                        删除
-                      </pkm-doption>
-                      <pkm-doption class="pkm-more-doption" @click="setTransferId(item._id || '')">
-                        <template #icon>
-                          <icon-rotate-right />
-                        </template>
-                        转移
-                      </pkm-doption>
-                    </template>
-                  </pkm-dropdown>
+                    </pkm-dropdown>
+                  </div>
                 </div>
-              </li>
-            </ul>
-              
+              </template>
+            </drag-sort>
             <select-knowledge v-model="visibleSelectKnowledge" title="文档转移" desc="请选择目标知识库" @ok="transferDoc" />
           </div>
         </pkm-layout-content>
@@ -154,13 +155,15 @@ import { useStore  } from '../../store'
 import MarkdownEditor from '../../components/editor/markdown-editor.vue'
 import UploadImage from '../../components/upload/upload-image.vue'
 import SelectKnowledge from '../../components/select-knowledge/index.vue'
+import DragSort, { IChangeDataType } from '../../components/dragsort/index.vue'
 import { IKnowledgeType, IKnowledgeDocType } from '../../../app/types/knowledge'
 
 export default defineComponent({
   components: {
     MarkdownEditor,
     UploadImage,
-    SelectKnowledge
+    SelectKnowledge,
+    DragSort
   },
   setup () {
     const store = useStore()
@@ -497,6 +500,19 @@ export default defineComponent({
       linkTo(id)
       showDrawer()
     }
+
+    const sort = (event: any) => {
+      const data = event as IChangeDataType<IKnowledgeDocType>
+      let targetOrder = data.target.data.order
+      targetOrder = typeof targetOrder !== 'undefined' ? targetOrder : 99
+
+      const order = data.drag.index > data.target.index ? targetOrder + 1 : targetOrder - 1
+      if (data.drag.data._id) {
+        store.dispatch('knowledge/setOrderDoc', { id: myKid.value.toString(), did: data.drag.data._id, order }).catch(err => {
+          msg.error(err.message)
+        })
+      }
+    }
     
     return {
       loading,
@@ -525,7 +541,8 @@ export default defineComponent({
       filterOptions,
       filter,
       subStr,
-      edit
+      edit,
+      sort
     }
   },
 })
@@ -568,7 +585,7 @@ export default defineComponent({
       width: 100%;
       box-sizing: border-box;
       color: var(--color-text-3);
-      padding: 8px 12px;
+      padding: 12px 12px;
       border-left: 2px transparent solid;
       position: relative;
       &-title {
@@ -578,15 +595,16 @@ export default defineComponent({
         padding-right: 40px;
         h3 {
           flex: 1;
-          color: var(--color-text-2)
+          color: var(--color-text-2);
+          font-size: 14px;
         }
         .date {
           font-size: 12px;
-          color: var(--color-fill-4)
+          color: var(--color-fill-4);
         }
       }
       .desc {
-        color: var(--color-text-3)
+        color: var(--color-text-3);
       }
       .action {
         position: absolute;
