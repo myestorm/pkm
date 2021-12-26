@@ -9,7 +9,7 @@
       :class="[options.ulClass]"
     >
       <li v-for="(item, index) in list" :key="index" class="sort-item" :data-index="index" :class="[options.liClass]">
-        <slot name="row" :row="item">
+        <slot name="row" :row="item" :index="index">
           {{ item }}
         </slot>
       </li>
@@ -38,7 +38,7 @@ const notAllowed = (target: HTMLElement): boolean => {
 
 // 获取data-index
 const dataIndex = (target: HTMLElement): number => {
-  const index = target.dataset.index
+  const index = (target && target.dataset) ? target.dataset.index : -1
   return index ? Number(index) : -1
 }
 
@@ -254,6 +254,9 @@ export default defineComponent({
 .pkm-drag-sort {
   position: relative;
   user-select: none;
+  ul, li {
+    @include reset();
+  }
   .select {
     position: absolute;
     width: 100%;
