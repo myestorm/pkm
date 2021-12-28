@@ -24,7 +24,7 @@ class BookrackController extends BaseController {
     })
   }
 
-  async add (data: IBookrackGroupUpdateType): Promise<IBookrackGroupUpdateReturnType> {
+  async add (data: IBookrackGroupUpdateType): Promise<Omit<IBookrackGroupType, 'children'>> {
     return await new Bookrack(data).save()
   }
 
@@ -43,7 +43,7 @@ class BookrackController extends BaseController {
     return await Bookrack.findById(id, opts)
   }
 
-  async addBook (id: string, data: IBookrackType): Promise<IBookrackType> {
+  async addBook (id: string, data: IBookrackType): Promise<IBookrackType | null> {
     const parent = await Bookrack.findById(id)
     parent?.children.unshift(data)
     await parent?.save()

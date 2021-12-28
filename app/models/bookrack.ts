@@ -28,6 +28,10 @@ export const bookrackSchema = new Schema<Omit<IBookrackType, '_id'>>({
     type: Boolean,
     default: false
   },
+  heard: { // 已听
+    type: Boolean,
+    default: false
+  },
   purchased: { // 已买
     type: Boolean,
     default: false

@@ -14,6 +14,7 @@ export interface IBookrackType {
   cover: string,
   desc: string,
   readed: boolean,
+  heard: boolean,
   purchased: boolean,
   ISBN: string,
   tags: [],

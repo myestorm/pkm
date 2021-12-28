@@ -33,7 +33,8 @@ app.use(historyApiFallback({
   whiteList: [
     '/api/',
     '/file/',
-    '/user/'
+    '/user/',
+    '/bookrack/'
   ]
 }))
 
