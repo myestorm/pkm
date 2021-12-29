@@ -63,6 +63,20 @@
       </div>
     </div>
     <div class="pkm-collection-group">
+      <div class="title" @click="goto('/book')">
+        <div class="fold">
+          <pkm-button size="mini" shape="circle">
+            <template #icon>
+              <icon-right />
+            </template>
+          </pkm-button>
+        </div>
+        <div class="name">
+          书架
+        </div>
+      </div>
+    </div>
+    <div class="pkm-collection-group">
       <div class="title">
         <div class="fold">
           <pkm-button size="mini" shape="circle" @click="recyclesFold = !recyclesFold" :class="[recyclesFold ? '' : 'fold-icon']">
@@ -106,6 +120,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, reactive, computed, getCurrentInstance } from 'vue'
+import { useRouter } from 'vue-router'
 import { useStore  } from '../../store'
 import { IKnowledgeType } from '../../../app/types/knowledge'
 
@@ -121,6 +136,7 @@ export default defineComponent({
     const modal = app?.appContext.config.globalProperties.$modal
     const msg = app?.appContext.config.globalProperties.$message
     const store = useStore()
+    const router = useRouter()
 
     const collections = computed(() => store.getters['knowledge/getList'])
     const selected = computed(() => store.getters['knowledge/getSelected'])
@@ -208,7 +224,12 @@ export default defineComponent({
       },
       recycleRemoveAll,
       recycleReload,
-      sort
+      sort,
+      goto (path: string) {
+        if (path) {
+          router.push(path)
+        }
+      }
     }
   }
 })

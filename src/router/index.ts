@@ -31,11 +31,19 @@ export const authorizeRoutes: RouteRecordRaw[] = [
         keepAlive: false
       }
     }, {
+      path: '/book',
+      name: 'Book',
+      component: () => import('../views/book/index.vue'),
+      meta: {
+        icon: 'book',
+        keepAlive: false
+      }
+    }, {
       path: '/userinfo',
       name: 'Userinfo',
       component: () => import('../views/user/userinfo.vue'),
       meta: {
-        icon: 'document',
+        icon: 'userinfo',
         keepAlive: false
       }
     }]
