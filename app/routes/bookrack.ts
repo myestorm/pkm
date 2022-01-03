@@ -13,7 +13,7 @@ import {
 
 const bookrack = new Bookrack()
 
-@prefix('/api/bookrack')
+@prefix('/bookrack')
 export default class BookrackRouter {
 
   @get('/list')

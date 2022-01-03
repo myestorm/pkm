@@ -7,7 +7,7 @@
     </pkm-page-header>
     <div class="tabs">
       <pkm-spin :loading="loading" style="width: 100%">
-        <pkm-tabs default-active-key="1">
+        <pkm-tabs default-active-key="" v-model="activeKey">
           <template #extra>
             <pkm-button type="primary" size="mini" @click="addGroupHandler">
               <template #icon>
@@ -45,23 +45,22 @@
                 </pkm-button>
               </pkm-col>
               <template v-if="item.children && item.children.length > 0">
-              <pkm-col :xs="24" :sm="12" :md="6" :lg="4" :xl="4" :xxl="4" v-for="i in 10" :key="i">
+              <pkm-col :xs="24" :sm="12" :md="6" :lg="4" :xl="4" :xxl="4" v-for="(book, subIndex) in item.children" :key="subIndex">
                 <pkm-image
                   src='https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp'
-                  title='A user’s avatar'
-                  description='Present by Arco Design'
+                  :title="book.title"
+                  :description="book.desc"
+                  :preview="false"
                   width="100%"
-                  style="vertical-align: top;"
-                  :preview-visible="visible1"
-                  @preview-visible-change="() => { visible1= false }"
+                  style="vertical-align: top"
                 >
                   <template #extra>
                     <div class="actions">
-                      <span class="action" @click="() => { visible1 = true }"><icon-eye /></span>
+                      <!-- <span class="action" @click="() => { visible1 = true }"><icon-eye /></span>
                       <span class="action" @click="onDownLoad"><icon-download /></span>
                       <a-tooltip content="A user’s avatar">
                         <span class="action"><icon-info-circle /></span>
-                      </a-tooltip>
+                      </a-tooltip> -->
                     </div>
                   </template>
                 </pkm-image>
@@ -91,7 +90,7 @@
       </pkm-form>
     </pkm-drawer>
 
-    <pkm-drawer :width="600" :visible="drawerFormVisible" :ok-loading="posting" @ok="saveBookHandler" @cancel="hidFormDrawer" unmountOnClose>
+    <pkm-drawer :width="600" :visible="drawerFormVisible" :ok-loading="posting" @ok="saveBookHandler" @cancel="hideFormDrawer" unmountOnClose>
       <template #title>
         书籍信息
       </template>
@@ -100,7 +99,7 @@
           <pkm-input v-model="form.title" placeholder="请填写名称" />
         </pkm-form-item>
         <pkm-form-item field="author" label="作者">
-          <pkm-input v-model="form.title" placeholder="请填写作者" />
+          <pkm-input v-model="form.author" placeholder="请填写作者" />
         </pkm-form-item>
         <pkm-form-item field="desc" label="简介">
           <pkm-textarea v-model="form.desc" placeholder="请填写简介" :max-length="800" show-word-limit />
@@ -111,8 +110,8 @@
         <pkm-form-item field="cover" label="封面">
           <upload-image v-model="form.cover" />
         </pkm-form-item>
-        <pkm-form-item field="tags" label="标签" class="pkm-long">
-          <pkm-input-tag :class="['pkm-long']" v-model="form.tags" placeholder="请填写标签" :max-tag-count="3" allow-clear/>
+        <pkm-form-item field="tags" label="标签">
+          <pkm-input-tag v-model="form.tags" placeholder="请填写标签" :max-tag-count="3" allow-clear/>
         </pkm-form-item>
         <pkm-form-item field="readed" label="状态">
           <pkm-space>
@@ -139,6 +138,7 @@ import { useStore  } from '../../store'
 import UploadImage from '../../components/upload/upload-image.vue'
 
 import {
+  IBookrackGroupType,
   IApisBookrackGroupUpdateType,
   IApisBookUpdateType
 } from '../../../types/bookrack'
@@ -156,7 +156,8 @@ export default defineComponent({
     const msg = app?.appContext.config.globalProperties.$message
 
     // list
-    const list = ref<IApisBookrackGroupUpdateType[]>([])
+    const activeKey = ref('')
+    const list = ref<IBookrackGroupType[]>([])
     const loading = ref<boolean>(false)
     const getList = () => {
       loading.value = true
@@ -240,7 +241,7 @@ export default defineComponent({
     }
 
     // add book
-    const posting = ref(true)
+    const posting = ref(false)
     const formRef = ref<FormInstance | null>(null)
     const drawerFormVisible = ref(false)
     const formDefault = {
@@ -260,45 +261,47 @@ export default defineComponent({
     let form = reactive<IApisBookUpdateType>({
       ...formDefault
     })
-    const hidFormDrawer = () => {
+    const hideFormDrawer = () => {
       drawerFormVisible.value = false
     }
     const showFormDrawer = () => {
       drawerFormVisible.value = true
     }
     const addBookHandler = (id: string) => {
-      form._id = formDefault._id
-      form.groupId = id
-      form.title = formDefault.title
-      form.author = formDefault.author
-      form.cover = formDefault.cover
-      form.desc = formDefault.desc
-      form.readed = formDefault.readed
-      form.heard = formDefault.heard
-      form.purchased = formDefault.purchased
-      form.ISBN = formDefault.ISBN
-      form.tags = formDefault.tags
-      form.rating = formDefault.rating
-      showFormDrawer()
+      if (id) {
+        form._id = formDefault._id
+        form.groupId = id
+        form.title = formDefault.title
+        form.author = formDefault.author
+        form.cover = formDefault.cover
+        form.desc = formDefault.desc
+        form.readed = formDefault.readed
+        form.heard = formDefault.heard
+        form.purchased = formDefault.purchased
+        form.ISBN = formDefault.ISBN
+        form.tags = formDefault.tags
+        form.rating = formDefault.rating
+        showFormDrawer()
+      }
     }
     const saveBookHandler = () => {
       formRef.value?.validate((errors: undefined | Record<string, ValidatedError>) => {
         if (!errors) {
-          groupPosting.value = true
-          const url = formGroup?._id ? 'bookrack/bookUpdate' : 'bookrack/bookAdd'
+          posting.value = true
+          const url = form?._id ? 'bookrack/bookUpdate' : 'bookrack/bookAdd'
           const postData = {
-            ...formGroup
+            ...form
           }
           if (!postData._id) {
             delete postData._id
           }
           store.dispatch(url, postData).then(() => {
-            hideGroupDrawer()
+            hideFormDrawer()
             getList()
           }).catch(err => {
             msg.error(err.message)
           }).then(() => {
-            groupPosting.value = false
+            posting.value = false
           })
         }
       })
@@ -307,6 +310,7 @@ export default defineComponent({
     return {
       list,
       loading,
+      activeKey,
 
       groupPosting,
       formGroupRef,
@@ -323,7 +327,7 @@ export default defineComponent({
       form,
       drawerFormVisible,
       posting,
-      hidFormDrawer,
+      hideFormDrawer,
       showFormDrawer,
       saveBookHandler,
       addBookHandler,      

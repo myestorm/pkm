@@ -11,9 +11,7 @@ import BaseController from '../core/controller'
 class BookrackController extends BaseController {
 
   async list (): Promise<IBookrackGroupType[]> {
-    const list = await Bookrack.find({}, {
-      children: 0
-    }).sort({
+    const list = await Bookrack.find({}).sort({
       _id: -1
     })
     return list

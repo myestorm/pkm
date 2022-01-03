@@ -12,7 +12,7 @@ import {
   IApisBookRemoveType
 } from '../../types/bookrack'
 
-const prefix = '/api/bookrack'
+const prefix = '/bookrack'
 
 // 获取所有分类
 export const BookrackList = (options?: AxiosRequestConfig): Promise<IResponeBodyType<IBookrackGroupType[]>> => {
@@ -56,7 +56,7 @@ export const BookList = (id: string, options?: AxiosRequestConfig): Promise<IRes
 export const BookAdd = (postData: IApisBookAddType, options?: AxiosRequestConfig): Promise<IResponeBodyType<string>> => {
   const groupId = postData.groupId
   delete postData.groupId
-  return axios.post(`${prefix}/book/${groupId}`, postData, {
+  return axios.post(`${prefix}/book/add/${groupId}`, postData, {
     ...options
   })
 }
@@ -67,7 +67,7 @@ export const BookUpdate = (postData: IApisBookUpdateType, options?: AxiosRequest
   const groupId = postData.groupId
   delete postData.groupId
   delete postData._id
-  return axios.put(`${prefix}/book/${groupId}/${id}`, postData, {
+  return axios.put(`${prefix}/book/update/${groupId}/${id}`, postData, {
     ...options
   })
 }
