@@ -4,12 +4,17 @@ import { prefix, get, post, put, del } from '../core/router'
 import Bookrack from '../controllers/bookrack'
 
 import { IResponeBodyType } from '../types/index'
-import { IBookrackGroupType, IBookrackType } from '../types/bookrack'
+import { 
+  IBookrackGroupType,
+  IBookType,
+  IControllerBookrackGroupAddType,
+  IControllerBookAddType,
+ } from '../../types/bookrack'
 
 const bookrack = new Bookrack()
 
-@prefix('/bookrack')
-export default class Api {
+@prefix('/api/bookrack')
+export default class BookrackRouter {
 
   @get('/list')
   async BookrackList (ctx: Context, next: Next) {
@@ -54,7 +59,7 @@ export default class Api {
   @put('/update/:id')
   async BookrackUpdate (ctx: Context, next: Next) {
     const { id = '' } = ctx.params
-    const _body = ctx.request.body as unknown as IBookrackGroupType
+    const _body = ctx.request.body as unknown as IControllerBookrackGroupAddType
     if (id) {
       await bookrack.update(id, _body)
       const body: IResponeBodyType<string> = {
@@ -97,7 +102,7 @@ export default class Api {
 
   @post('/add')
   async BookrackAdd (ctx: Context, next: Next) {
-    const _body = ctx.request.body as unknown as IBookrackGroupType
+    const _body = ctx.request.body as unknown as IControllerBookrackGroupAddType
     const result = await bookrack.add(_body)
     const body: IResponeBodyType<string> = {
       code: 0,
@@ -113,7 +118,7 @@ export default class Api {
     const { id = '' } = ctx.params
     if (id) {
       const result = await bookrack.info(id, true)
-      const body: IResponeBodyType<IBookrackType[]> = {
+      const body: IResponeBodyType<IBookType[]> = {
         code: 0,
         msg: 'success',
         data: result?.children || []
@@ -128,13 +133,13 @@ export default class Api {
     await next()
   }
 
-  @post('/book/add/:id')
+  @post('/book/add/:gid')
   async BookAdd (ctx: Context, next: Next) {
-    const { id = '' } = ctx.params
-    const _body = ctx.request.body as unknown as IBookrackType
-    if (id) {
-      const result = await bookrack.addBook(id, _body)
-      const body: IResponeBodyType<IBookrackType | null> = {
+    const { gid = '' } = ctx.params
+    const _body = ctx.request.body as unknown as IControllerBookAddType
+    if (gid) {
+      const result = await bookrack.addBook(gid, _body)
+      const body: IResponeBodyType<IBookType | null> = {
         code: 0,
         msg: 'success',
         data: result
@@ -149,13 +154,13 @@ export default class Api {
     await next()
   }
 
-  @put('/book/update/:id/:bid')
+  @put('/book/update/:gid/:id')
   async BookUpdate (ctx: Context, next: Next) {
-    const { id = '', bid = '' } = ctx.params
-    const _body = ctx.request.body as unknown as IBookrackType
-    if (id && bid) {
-      const result = await bookrack.updateBook(id, bid, _body)
-      const body: IResponeBodyType<IBookrackType | null> = {
+    const { gid = '', id = '' } = ctx.params
+    const _body = ctx.request.body as unknown as IControllerBookAddType
+    if (gid && id) {
+      const result = await bookrack.updateBook(gid, id, _body)
+      const body: IResponeBodyType<IBookType | null> = {
         code: 0,
         msg: 'success',
         data: result
@@ -170,11 +175,11 @@ export default class Api {
     await next()
   }
 
-  @del('/book/remove/:id/:bid')
+  @del('/book/remove/:gid/:id')
   async BookRemove (ctx: Context, next: Next) {
-    const { id = '', bid = '' } = ctx.params
-    if (id && bid) {
-      const result = await bookrack.removeBook(id, bid)
+    const { gid = '', id = '' } = ctx.params
+    if (gid && id) {
+      const result = await bookrack.removeBook(gid, id)
       const body: IResponeBodyType<string> = {
         code: 0,
         msg: 'success',

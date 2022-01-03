@@ -138,14 +138,10 @@ import { useStore  } from '../../store'
 
 import UploadImage from '../../components/upload/upload-image.vue'
 
-import { IBookrackGroupType, IBookrackType } from '../../../types/bookrack'
-
-type AddFormType = Omit<IBookrackType, 'createdAt' | 'updatedAt'> & {
-  groupId: string
-}
-type AddGroupType = Pick<IBookrackGroupType, 'title' | 'desc'> & {
-  _id?: string
-}
+import {
+  IApisBookrackGroupUpdateType,
+  IApisBookUpdateType
+} from '../../../types/bookrack'
 
 export default defineComponent({
   name: 'Book',
@@ -160,7 +156,7 @@ export default defineComponent({
     const msg = app?.appContext.config.globalProperties.$message
 
     // list
-    const list = ref<IBookrackGroupType[]>([])
+    const list = ref<IApisBookrackGroupUpdateType[]>([])
     const loading = ref<boolean>(false)
     const getList = () => {
       loading.value = true
@@ -183,7 +179,7 @@ export default defineComponent({
       title: '',
       desc: ''
     }
-    let formGroup = reactive<AddGroupType>({
+    let formGroup = reactive<IApisBookrackGroupUpdateType>({
       ...formGroupDefault
     })
     const hideGroupDrawer = () => {
@@ -220,7 +216,7 @@ export default defineComponent({
       formGroup.desc = formGroupDefault.desc
       showGroupDrawer()
     }
-    const editGroupHandler = (index: number, data: IBookrackGroupType) => {
+    const editGroupHandler = (index: number, data: IApisBookrackGroupUpdateType) => {
       formGroup._id = data._id
       formGroup.title = data.title
       formGroup.desc = data.desc
@@ -261,7 +257,7 @@ export default defineComponent({
       tags: [],
       rating: 3
     }
-    let form = reactive<AddFormType>({
+    let form = reactive<IApisBookUpdateType>({
       ...formDefault
     })
     const hidFormDrawer = () => {
@@ -289,7 +285,7 @@ export default defineComponent({
       formRef.value?.validate((errors: undefined | Record<string, ValidatedError>) => {
         if (!errors) {
           groupPosting.value = true
-          const url = formGroup?._id ? 'bookrack/bookrackUpdate' : 'bookrack/bookrackAdd'
+          const url = formGroup?._id ? 'bookrack/bookUpdate' : 'bookrack/bookAdd'
           const postData = {
             ...formGroup
           }

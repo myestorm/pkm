@@ -10,9 +10,11 @@ import {
   BookrackList,
   BookrackAdd,
   BookrackUpdate,
-  BookrackDelete,
-  IBookrackGroupAddType,
-  IBookrackGroupUpdateType
+  BookrackRemove,
+  BookList,
+  BookAdd,
+  BookUpdate,
+  BookRemove
 } from '../../../apis/bookrack'
 
 export const state: State = {
@@ -36,7 +38,7 @@ export const actions: Actions = {
       })
     })
   },
-  [ActionTypes.bookrackAdd] (_, postData: IBookrackGroupAddType) {
+  [ActionTypes.bookrackAdd] (_, postData) {
     return new Promise((resolve, reject) => {
       BookrackAdd(postData).then(res => {
         resolve(res.data)
@@ -45,7 +47,7 @@ export const actions: Actions = {
       })
     })
   },
-  [ActionTypes.bookrackUpdate] (_, postData: IBookrackGroupUpdateType) {
+  [ActionTypes.bookrackUpdate] (_, postData) {
     return new Promise((resolve, reject) => {
       BookrackUpdate(postData).then(res => {
         resolve(res.data)
@@ -54,9 +56,45 @@ export const actions: Actions = {
       })
     })
   },
-  [ActionTypes.bookrackDelete] (_, id: string) {
+  [ActionTypes.bookrackRemove] (_, id: string) {
     return new Promise((resolve, reject) => {
-      BookrackDelete(id).then(res => {
+      BookrackRemove(id).then(res => {
+        resolve(res.data)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  [ActionTypes.bookList] (_, gid: string) {
+    return new Promise((resolve, reject) => {
+      BookList(gid).then(res => {
+        resolve(res.data)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  [ActionTypes.bookAdd] (_, postData) {
+    return new Promise((resolve, reject) => {
+      BookAdd(postData).then(res => {
+        resolve(res.data)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  [ActionTypes.bookUpdate] (_, postData) {
+    return new Promise((resolve, reject) => {
+      BookUpdate(postData).then(res => {
+        resolve(res.data)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  [ActionTypes.bookRemove] (_, data) {
+    return new Promise((resolve, reject) => {
+      BookRemove(data).then(res => {
         resolve(res.data)
       }).catch(err => {
         reject(err)

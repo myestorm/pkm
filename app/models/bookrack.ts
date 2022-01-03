@@ -1,13 +1,7 @@
-import { Schema, HydratedDocument, Types, model, now } from 'mongoose'
-import { IBookrackGroupType, IBookrackType } from '../types/bookrack'
+import { Schema, model, now } from 'mongoose'
+import { ISchemaBookType, ISchemaBookrackGroupType, IBookrackModelType } from '../../types/bookrack'
 
-type BookrackGroupSchemaType = HydratedDocument<
-  Omit<IBookrackGroupType, '_id'> & {
-    children: Types.Subdocument
-  }
->
-
-export const bookrackSchema = new Schema<Omit<IBookrackType, '_id'>>({
+export const bookrackSchema = new Schema<ISchemaBookType>({
   title: {
     type: String,
     required: true
@@ -60,7 +54,7 @@ export const bookrackSchema = new Schema<Omit<IBookrackType, '_id'>>({
   }
 })
 
-const schema = new Schema<Omit<IBookrackGroupType, '_id'>>({
+const schema = new Schema<ISchemaBookrackGroupType>({
   title: {
     type: String,
     required: true
@@ -85,6 +79,6 @@ const schema = new Schema<Omit<IBookrackGroupType, '_id'>>({
   }
 })
 
-const BookrackModel = model<BookrackGroupSchemaType>('Bookrack', schema)
+const BookrackModel = model<IBookrackModelType>('Bookrack', schema)
 
 export default BookrackModel

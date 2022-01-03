@@ -2,8 +2,15 @@ import { MutationTree, GetterTree, ActionTree, Module } from 'vuex'
 import { GenerateActionAugments } from '../../util'
 import { RootState } from '../../types'
 
-import { IBookrackGroupType, IBookrackType } from '../../../../types/bookrack'
-import { IBookrackGroupAddType, IBookrackGroupUpdateType } from '../../../apis/bookrack'
+import {
+  IBookrackGroupType,
+  IBookType,
+  IApisBookrackGroupAddType,
+  IApisBookrackGroupUpdateType,
+  IApisBookAddType,
+  IApisBookUpdateType,
+  IApisBookRemoveType
+} from '../../../../types/bookrack'
 
 export type State = {
 }
@@ -24,21 +31,22 @@ export enum ActionTypes {
   bookrackList = 'bookrackList',
   bookrackAdd = 'bookrackAdd',
   bookrackUpdate = 'bookrackUpdate',
-  bookrackDelete = 'bookrackDelete',
+  bookrackRemove = 'bookrackRemove',
   bookList = 'bookList',
   bookAdd = 'bookAdd',
   bookUpdate = 'bookUpdate',
-  bookDelete = 'bookDelete',
+  bookRemove = 'bookRemove',
 }
 type ActionsMethods = {
   [ActionTypes.bookrackList] (context: GenerateActionAugments<State, Mutations>): Promise<IBookrackGroupType[]>,
-  [ActionTypes.bookrackAdd] (context: GenerateActionAugments<State, Mutations>, payload: IBookrackGroupAddType): Promise<string>,
-  [ActionTypes.bookrackUpdate] (context: GenerateActionAugments<State, Mutations>, payload: IBookrackGroupUpdateType): Promise<string>,
-  [ActionTypes.bookrackDelete] (context: GenerateActionAugments<State, Mutations>, payload: string): Promise<string>,
-  [ActionTypes.bookList] (context: GenerateActionAugments<State, Mutations>, payload: string): Promise<string>,
-  [ActionTypes.bookAdd] (context: GenerateActionAugments<State, Mutations>, payload: string): Promise<string>,
-  [ActionTypes.bookUpdate] (context: GenerateActionAugments<State, Mutations>, payload: string): Promise<string>,
-  [ActionTypes.bookDelete] (context: GenerateActionAugments<State, Mutations>, payload: string): Promise<string>,
+  [ActionTypes.bookrackAdd] (context: GenerateActionAugments<State, Mutations>, payload: IApisBookrackGroupAddType): Promise<string>,
+  [ActionTypes.bookrackUpdate] (context: GenerateActionAugments<State, Mutations>, payload: IApisBookrackGroupUpdateType): Promise<string>,
+  [ActionTypes.bookrackRemove] (context: GenerateActionAugments<State, Mutations>, payload: string): Promise<string>,
+
+  [ActionTypes.bookList] (context: GenerateActionAugments<State, Mutations>, payload: string): Promise<IBookType[]>,
+  [ActionTypes.bookAdd] (context: GenerateActionAugments<State, Mutations>, payload: IApisBookAddType): Promise<string>,
+  [ActionTypes.bookUpdate] (context: GenerateActionAugments<State, Mutations>, payload: IApisBookUpdateType): Promise<string>,
+  [ActionTypes.bookRemove] (context: GenerateActionAugments<State, Mutations>, payload: IApisBookRemoveType): Promise<string>,
 }
 export type Actions = ActionTree<State, RootState> & ActionsMethods
 

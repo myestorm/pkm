@@ -1,38 +1,39 @@
 import Bookrack from '../models/bookrack'
-import { IBookrackGroupType, IBookrackType } from '../types/bookrack'
+import {
+  IBookrackGroupType,
+  IBookType,
+  IControllerBookrackGroupAddType,
+  IControllerBookAddType
+} from '../../types/bookrack'
 
 import BaseController from '../core/controller'
-
-type IBookrackGroupUpdateType = Omit<IBookrackGroupType, '_id' | 'children'>
-type IBookrackGroupUpdateReturnType = Omit<IBookrackGroupType, '_id'>
-
-const updateOption = { 
-  new: true, 
-  upsert: true,
-  setDefaultsOnInsert: true,
-  runValidators: true, 
-  findByIdAndUpdate: 'after' 
-}
 
 class BookrackController extends BaseController {
 
   async list (): Promise<IBookrackGroupType[]> {
-    return await Bookrack.find({}, {
+    const list = await Bookrack.find({}, {
       children: 0
     }).sort({
       _id: -1
     })
+    return list
   }
 
-  async add (data: IBookrackGroupUpdateType): Promise<Omit<IBookrackGroupType, 'children'>> {
+  async add (data: IControllerBookrackGroupAddType): Promise<IBookrackGroupType> {
     return await new Bookrack(data).save()
   }
 
-  async update (id: string, data: IBookrackGroupUpdateType): Promise<IBookrackGroupUpdateReturnType | null> {
-    return await Bookrack.findByIdAndUpdate(id, data, updateOption)
+  async update (id: string, data: IControllerBookrackGroupAddType): Promise<IBookrackGroupType | null> {
+    return await Bookrack.findByIdAndUpdate(id, data, { 
+      new: true, 
+      upsert: true,
+      setDefaultsOnInsert: true,
+      runValidators: true, 
+      findByIdAndUpdate: 'after' 
+    })
   }
 
-  async remove (id: string): Promise<IBookrackGroupUpdateReturnType | null> {
+  async remove (id: string): Promise<IBookrackGroupType | null> {
     return await Bookrack.findByIdAndRemove(id)
   }
 
@@ -43,24 +44,24 @@ class BookrackController extends BaseController {
     return await Bookrack.findById(id, opts)
   }
 
-  async addBook (id: string, data: IBookrackType): Promise<IBookrackType | null> {
-    const parent = await Bookrack.findById(id)
+  async addBook (gid: string, data: IControllerBookAddType): Promise<IBookType | null> {
+    const parent = await Bookrack.findById(gid)
     parent?.children.unshift(data)
     await parent?.save()
     return parent?.children[0] || null
   }
 
-  async updateBook (id: string, did: string, data: IBookrackType): Promise<IBookrackType | null> {
-    const parent = await Bookrack.findById(id)
-    let sub = parent?.children.id(did)
+  async updateBook (gid: string, id: string, data: IControllerBookAddType): Promise<IBookType | null> {
+    const parent = await Bookrack.findById(gid)
+    let sub = parent?.children.id(id)
     sub = Object.assign(sub, data)
     await parent?.save()
     return sub
   }
 
-  async removeBook (id: string, did: string): Promise<IBookrackType | null> {
-    const parent = await Bookrack.findById(id)
-    const sub = parent?.children.id(did)
+  async removeBook (gid: string, id: string): Promise<IBookType | null> {
+    const parent = await Bookrack.findById(gid)
+    const sub = parent?.children.id(id)
     sub.remove()
     await parent?.save()
     return sub
