@@ -40,7 +40,8 @@ export default defineConfig({
       '/api/': 'http://localhost:4000',
       '/user/': 'http://localhost:4000',
       '/file/': 'http://localhost:4000',
-      '/uploads/': 'http://localhost:4000'
+      '/uploads/': 'http://localhost:4000',
+      '/bookrack/': 'http://localhost:4000',
     }
   }
 })

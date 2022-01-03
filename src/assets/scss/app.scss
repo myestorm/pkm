@@ -51,3 +51,8 @@ html, body, #app {
     padding: 0 8px;
   }
 }
+.#{$--prefix}-long {
+  input {
+    width: 100% !important;
+  }
+}
