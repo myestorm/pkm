@@ -1,8 +1,8 @@
 import { Context, Next } from 'koa'
 import { prefix, get, post } from '../core/router'
 
-import { ISigninType, IAdminUserType, IUserInfoType } from '../types/admin'
-import { IResponeBodyType } from '../types/index'
+import { ISigninType, IAdminUserType, IUserInfoType } from '../../types/admin'
+import { IResponeBodyType } from '../../types/index'
 import Admin from '../controllers/admin'
 
 const admin = new Admin()

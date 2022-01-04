@@ -1,13 +1,11 @@
-import { Schema, HydratedDocument, Types, model, now } from 'mongoose'
-import { IKnowledgeUpdateType, IKnowledgeDocType } from '../types/knowledge'
+import { Schema, model, now } from 'mongoose'
+import {
+  ISchemaDocType,
+  ISchemaKnowledgeType,
+  IBookrackModelType
+} from '../../types/knowledge'
 
-type KnowledgeSchemaType = HydratedDocument<
-  IKnowledgeUpdateType & {
-    children: Types.Subdocument
-  }
->
-
-export const docSchema = new Schema<IKnowledgeDocType>({
+export const docSchema = new Schema<ISchemaDocType>({
   title: {
     type: String,
     required: true
@@ -48,7 +46,7 @@ export const docSchema = new Schema<IKnowledgeDocType>({
   }
 })
 
-const schema = new Schema<IKnowledgeUpdateType>({
+const schema = new Schema<ISchemaKnowledgeType>({
   title: {
     type: String,
     required: true
@@ -85,6 +83,6 @@ const schema = new Schema<IKnowledgeUpdateType>({
   }
 })
 
-const KnowledgeModel = model<KnowledgeSchemaType>('Knowledge', schema)
+const KnowledgeModel = model<IBookrackModelType>('Knowledge', schema)
 
 export default KnowledgeModel

@@ -1,7 +1,7 @@
 import { Schema, model, now } from 'mongoose'
-import { IAdminUserType } from '../types/admin'
+import { IAdminUserType, IAdminUserAddType } from '../../types/admin'
 
-const schema = new Schema<IAdminUserType>({
+const schema = new Schema<IAdminUserAddType>({
   username: {
     type: String,
     unique: true

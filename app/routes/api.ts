@@ -4,9 +4,9 @@ import { prefix, get, post, put, del } from '../core/router'
 import Knowledge from '../controllers/knowledge'
 import Recycle from '../controllers/recycle'
 
-import { IResponeBodyType } from '../types/index'
-import { IKnowledgeType, IKnowledgeDocType } from '../types/knowledge'
-import { IRecycleType } from '../types/recycle'
+import { IResponeBodyType } from '../../types/index'
+import { IKnowledgeType, IKnowledgeDocType } from '../../types/knowledge'
+import { IRecycleType } from '../../types/recycle'
 
 const knowledge = new Knowledge()
 const recycle = new Recycle()

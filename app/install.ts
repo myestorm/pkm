@@ -37,7 +37,7 @@ import mongoConfig from './.mongo.config'
     isDefault: true,
     desc: '我的文档',
     thumb: '',
-    children: []
+    order: 99
   }).then(() => {
     console.log('成功创建默认知识库')
     process.exit()

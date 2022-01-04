@@ -1,6 +1,11 @@
 import Knowledge from '../models/knowledge'
 import Recycle from '../models/recycle'
-import { IKnowledgeType, IKnowledgeDocType, IKnowledgeUpdateType, IKnowledgeDocUpdateType } from '../types/knowledge'
+import {
+  IKnowledgeType,
+  IKnowledgeDocType,
+  IControllerKnowledgeAddType,
+  IControllerKnowledgeDocAddType
+} from '../../types/knowledge'
 
 import BaseController from '../core/controller'
 
@@ -37,11 +42,11 @@ class KnowledgeController extends BaseController {
     })
   }
 
-  async add (data: IKnowledgeType): Promise<IKnowledgeType> {
+  async add (data: IControllerKnowledgeAddType): Promise<IKnowledgeType> {
     return await new Knowledge(data).save()
   }
 
-  async update (id: string, data: IKnowledgeUpdateType): Promise<IKnowledgeType | null> {
+  async update (id: string, data: IControllerKnowledgeAddType): Promise<IKnowledgeType | null> {
     return await Knowledge.findByIdAndUpdate(id, data, updateOption)
   }
 
@@ -67,14 +72,14 @@ class KnowledgeController extends BaseController {
     return await Knowledge.findById(id, opts)
   }
 
-  async addDoc (id: string, data: IKnowledgeDocType): Promise<IKnowledgeDocType | null> {
+  async addDoc (id: string, data: IControllerKnowledgeDocAddType): Promise<IKnowledgeDocType | null> {
     const parent = await Knowledge.findById(id)
     parent?.children.unshift(data)
     await parent?.save()
     return parent?.children[0] || null
   }
 
-  async updateDoc (id: string, did: string, data: IKnowledgeDocUpdateType): Promise<IKnowledgeDocType | null> {
+  async updateDoc (id: string, did: string, data: IControllerKnowledgeDocAddType): Promise<IKnowledgeDocType | null> {
     const parent = await Knowledge.findById(id)
     let sub = parent?.children.id(did)
     sub = Object.assign(sub, data)
