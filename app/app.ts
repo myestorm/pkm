@@ -32,9 +32,7 @@ app.use(async (ctx: Context, next: Next) => {
 app.use(historyApiFallback({
   whiteList: [
     '/api/',
-    '/file/',
-    '/user/',
-    '/bookrack/'
+    '/admin/',
   ]
 }))
 
@@ -50,10 +48,9 @@ app.use(config({
 app.use(authorization({
   blackList: [
     '^\/api\/',
-    '^\/file\/',
-    '^\/user\/info',
-    '^\/user\/signup',
-    '^\/user\/signout'
+    '^\/admin\/info',
+    '^\/admin\/signup',
+    '^\/admin\/signout'
   ]
 }))
 

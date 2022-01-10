@@ -18,7 +18,7 @@ class BookrackController extends BaseController {
   }
 
   async add (data: IControllerBookrackGroupAddType): Promise<IBookrackGroupType> {
-    return await new Bookrack(data).save()
+    return await Bookrack.create(data)
   }
 
   async update (id: string, data: IControllerBookrackGroupAddType): Promise<IBookrackGroupType | null> {

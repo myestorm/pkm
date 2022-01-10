@@ -3,7 +3,7 @@ import { prefix, get, post, put, del } from '../core/router'
 
 import Bookrack from '../controllers/bookrack'
 
-import { IResponeBodyType } from '../types/index'
+import { IResponeBodyType } from '../../types/index'
 import { 
   IBookrackGroupType,
   IBookType,
@@ -13,7 +13,7 @@ import {
 
 const bookrack = new Bookrack()
 
-@prefix('/bookrack')
+@prefix('/api/bookrack')
 export default class BookrackRouter {
 
   @get('/list')

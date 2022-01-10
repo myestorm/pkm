@@ -1,7 +1,7 @@
 import { axios } from '../plugins/axios'
 import { AxiosRequestConfig } from 'axios'
 
-import { IResponeBodyType } from '../../app/types/index'
+import { IResponeBodyType } from '../../types/index'
 import { 
   IBookrackGroupType,
   IBookType,

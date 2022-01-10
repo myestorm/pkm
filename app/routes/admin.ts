@@ -7,7 +7,7 @@ import Admin from '../controllers/admin'
 
 const admin = new Admin()
 
-@prefix('/user')
+@prefix('/admin')
 export default class User {
 
   @get('/info')

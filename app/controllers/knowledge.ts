@@ -43,7 +43,7 @@ class KnowledgeController extends BaseController {
   }
 
   async add (data: IControllerKnowledgeAddType): Promise<IKnowledgeType> {
-    return await new Knowledge(data).save()
+    return await Knowledge.create(data)
   }
 
   async update (id: string, data: IControllerKnowledgeAddType): Promise<IKnowledgeType | null> {

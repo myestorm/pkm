@@ -2,19 +2,16 @@ import { Context, Next } from 'koa'
 import { prefix, get, post, put, del } from '../core/router'
 
 import Knowledge from '../controllers/knowledge'
-import Recycle from '../controllers/recycle'
 
 import { IResponeBodyType } from '../../types/index'
 import { IKnowledgeType, IKnowledgeDocType } from '../../types/knowledge'
-import { IRecycleType } from '../../types/recycle'
 
 const knowledge = new Knowledge()
-const recycle = new Recycle()
 
-@prefix('/api')
+@prefix('/api/knowledge')
 export default class Api {
 
-  @get('/knowledge/list')
+  @get('/list')
   async KnowledgeList (ctx: Context, next: Next) {
     const result = await knowledge.list()
     const body: IResponeBodyType<IKnowledgeType[]> = {
@@ -26,7 +23,7 @@ export default class Api {
     await next()
   }
 
-  @get('/knowledge/info/:id/:hasChildren?')
+  @get('/info/:id/:hasChildren?')
   async KnowledgeInfo (ctx: Context, next: Next) {
     const { id = '', hasChildren = 0 } = ctx.params
     const _hasChildren = Number(hasChildren)
@@ -54,7 +51,7 @@ export default class Api {
     await next()
   }
 
-  @put('/knowledge/order/:id/:order')
+  @put('/order/:id/:order')
   async KnowledgeOrder (ctx: Context, next: Next) {
     const { id = '', order = 99 } = ctx.params
     if (id) {
@@ -74,7 +71,7 @@ export default class Api {
     await next()
   }
 
-  @get('/knowledge/document/:id')
+  @get('/document/:id')
   async KnowledgeDocument (ctx: Context, next: Next) {
     const { id = '' } = ctx.params
     if (id) {
@@ -94,7 +91,7 @@ export default class Api {
     await next()
   }
 
-  @put('/knowledge/update/:id')
+  @put('/update/:id')
   async KnowledgeUpdate (ctx: Context, next: Next) {
     const { id = '' } = ctx.params
     const _body = ctx.request.body as unknown as IKnowledgeType
@@ -117,7 +114,7 @@ export default class Api {
     await next()
   }
 
-  @del('/knowledge/remove/:id')
+  @del('/remove/:id')
   async KnowledgeRemove (ctx: Context, next: Next) {
     const { id = '' } = ctx.params
     if (id) {
@@ -145,7 +142,7 @@ export default class Api {
     await next()
   }
 
-  @post('/knowledge/add')
+  @post('/add')
   async KnowledgeAdd (ctx: Context, next: Next) {
     const _body = ctx.request.body as unknown as IKnowledgeType
     delete _body.createdAt
@@ -160,7 +157,7 @@ export default class Api {
     await next()
   }
 
-  @get('/knowledge/set_default/:id')
+  @get('/set_default/:id')
   async KnowledgeSetDefault (ctx: Context, next: Next) {
     const { id = '' } = ctx.params
     await knowledge.setDefault(id)
@@ -280,50 +277,4 @@ export default class Api {
     await next()
   }
 
-  // 回收站
-  @get('/recycle/list')
-  async RecycleList (ctx: Context, next: Next) {
-    const result = await recycle.list()
-    const body: IResponeBodyType<IRecycleType[]> = {
-      code: 0,
-      msg: 'success',
-      data: result
-    }
-    ctx.body = body
-    await next()
-  }
-
-  // 清空回收站
-  @del('/recycle/remove_all')
-  async RecycleRemoveAll (ctx: Context, next: Next) {
-    await recycle.removeAll()
-    const body: IResponeBodyType<string> = {
-      code: 0,
-      msg: 'success',
-      data: ''
-    }
-    ctx.body = body
-    await next()
-  }
-
-  // 删除回收站中的一条数据
-  @del('/recycle/remove/:id/:did')
-  async RecycleRemove (ctx: Context, next: Next) {
-    const { id = '', did = '' } = ctx.params
-    if (id && did) {
-      const result = await recycle.remove(id, did)
-      const body: IResponeBodyType<string> = {
-        code: 0,
-        msg: 'success',
-        data: result?._id || ''
-      }
-      ctx.body = body
-    } else {
-      ctx.body = {
-        code: 1,
-        msg: '参数不正确'
-      }
-    }
-    await next()
-  }
 }

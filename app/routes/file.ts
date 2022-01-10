@@ -1,11 +1,11 @@
 import { Context, Next } from 'koa'
-import { prefix, get, post } from '../core/router'
+import { prefix, post } from '../core/router'
 import path from 'path'
 import { File as FileType } from 'formidable'
-import { IResponeBodyType, IFileUploadType } from '../types/index'
+import { IResponeBodyType, IFileUploadType } from '../../types/index'
 
 
-@prefix('/file')
+@prefix('/api/file')
 export default class File {
 
   @post('/upload')
