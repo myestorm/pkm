@@ -27,7 +27,7 @@ export default defineComponent({
     }
 
     // 获取用户信息
-    store.dispatch('user/getUserInfo').then(() => {
+    store.dispatch('admin/getUserInfo').then(() => {
       addRoute()
       router.push(fullPath)
     }).catch(() => {

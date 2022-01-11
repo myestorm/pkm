@@ -6,7 +6,7 @@ import {
   ModuleType
 } from './types'
 
-import { ApiRecycle, ApiRecycleRemoveAll, ApiRecycleRemove } from '../../../apis/index'
+import { RecycleList, RecycleRemoveAll, RecycleRemove } from '../../../apis/recycle'
 
 export const state: State = {
   list: []
@@ -27,7 +27,7 @@ export const mutations: Mutations = {
 export const actions: Actions = {
   [ActionTypes.getList] ({ commit }) {
     return new Promise((resolve, reject) => {
-      ApiRecycle().then(res => {
+      RecycleList().then(res => {
         commit('setList', res.data)
         resolve(res.data)
       }).catch(err => {
@@ -37,7 +37,7 @@ export const actions: Actions = {
   },
   [ActionTypes.removeAll] ({ commit }) {
     return new Promise((resolve, reject) => {
-      ApiRecycleRemoveAll().then(res => {
+      RecycleRemoveAll().then(res => {
         commit('setList', [])
         resolve(res.data)
       }).catch(err => {
@@ -47,7 +47,7 @@ export const actions: Actions = {
   },
   [ActionTypes.remove] ({ dispatch }, data) {
     return new Promise((resolve, reject) => {
-      ApiRecycleRemove(data).then(res => {
+      RecycleRemove(data).then(res => {
         dispatch(ActionTypes.getList)
         resolve(res.data)
       }).catch(err => {

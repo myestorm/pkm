@@ -53,7 +53,7 @@ export default defineComponent({
         const fileField: HTMLInputElement | null = document.querySelector('input#'+ fileId)
         if (fileField && fileField.files && fileField.files[0]) {
           formData.append('file', fileField.files[0])
-          fetch('/file/upload', {
+          fetch('/api/file/upload', {
             method: 'post',
             body: formData
           })

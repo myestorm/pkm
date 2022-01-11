@@ -6,8 +6,8 @@ import {
   ModuleType
 } from './types'
 
-import { UserSignin, UserInfo, UserSignout } from '../../../apis/user'
-import { IUserInfoType, ISigninType } from '../../../../app/types/admin'
+import { AdminInfo, AdminSignin, AdminSignout } from '../../../apis/admin'
+import { IUserInfoType, ISigninType } from '../../../../types/admin'
 
 import { localStorageToken } from '../../../config'
 
@@ -46,7 +46,7 @@ export const mutations: Mutations = {
 export const actions: Actions = {
   [ActionTypes.signin] ({ commit }, postData: ISigninType) {
     return new Promise((resolve, reject) => {
-      UserSignin(postData).then(res => {
+      AdminSignin(postData).then(res => {
         commit(MutationTypes.setToken, res.data)
         resolve(res.data)
       }).catch(err => {
@@ -56,7 +56,7 @@ export const actions: Actions = {
   },
   [ActionTypes.getUserInfo] ({ commit }) {
     return new Promise((resolve, reject) => {
-      UserInfo().then(res => {
+      AdminInfo().then(res => {
         commit(MutationTypes.setToken, res.data.token)
         commit(MutationTypes.setUserinfo, res.data.userinfo)
         resolve(res.data)
@@ -67,7 +67,7 @@ export const actions: Actions = {
   },
   [ActionTypes.signout] ({ commit }) {
     return new Promise((resolve, reject) => {
-      UserSignout().then(res => {
+      AdminSignout().then(res => {
         commit(MutationTypes.setToken, '')
         commit(MutationTypes.setUserinfo, { username: '' })
         resolve(res.data)

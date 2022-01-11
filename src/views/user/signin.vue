@@ -46,7 +46,7 @@ export default defineComponent({
             ...form
           }
           postData.password = MD5(postData.password).toString()
-          store.dispatch('user/signin', postData).then(() => {
+          store.dispatch('admin/signin', postData).then(() => {
             window.location.href = decodeURIComponent(refer)
           }).catch(err => {
             msg.error(err.message)

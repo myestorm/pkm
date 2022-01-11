@@ -6,13 +6,14 @@ import {
   IKnowledgeDocType,
   IKnowledgeType,
   IControllerKnowledgeAddType,
-  IControllerKnowledgeDocAddType
+  IStoreKnowledgeDocAddType,
+  IStoreKnowledgeDocUpdateType
 } from '../../types/knowledge'
 
 const prefix = '/api/knowledge'
 
 // 获取所有知识库
-export const ApiKnowledge = (options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeType[]>> => {
+export const KnowledgeList = (options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeType[]>> => {
   return axios.get(`${prefix}/list`, {
     ...options
   })
@@ -74,7 +75,7 @@ export const KnowledgeOrder = (data: { id: string, order: number }, options?: Ax
 }
 
 // 修改文档
-export const DocumentUpdate = (postData: IControllerKnowledgeDocAddType & { kid?: string, _id?: string }, options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeDocType>> => {
+export const DocumentUpdate = (postData: IStoreKnowledgeDocUpdateType, options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeDocType>> => {
   const id = postData.kid
   const did = postData._id
   delete postData._id
@@ -85,7 +86,7 @@ export const DocumentUpdate = (postData: IControllerKnowledgeDocAddType & { kid?
 }
 
 // 添加文档
-export const DocumentAdd = (postData: IControllerKnowledgeDocAddType & { kid?: string }, options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeDocType>> => {
+export const DocumentAdd = (postData: IStoreKnowledgeDocAddType, options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeDocType>> => {
   const id = postData.kid
   delete postData.kid
   return axios.post(`${prefix}/document/add/${id}`, postData, {

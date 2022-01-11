@@ -10,11 +10,12 @@ import historyApiFallback from 'koa2-connect-history-api-fallback'
 import mongoConfig from './.mongo.config'
 import config from './middleware/config'
 import authorization from './middleware/authorization'
-
 import router from './routes/index'
+import getRootDir from './utils/getRootDir'
 
 const app = new Koa()
-const uploadDir = '../resource/uploads'
+const rootDir = getRootDir()
+const uploadDir = `${rootDir}/resource/uploads`
 
 mongoose.connect(mongoConfig)
 mongoose.connection.on('error', console.error)
@@ -36,8 +37,8 @@ app.use(historyApiFallback({
   ]
 }))
 
-app.use(koaStatic(path.join(__dirname, '../resource')))
-app.use(koaStatic(path.join(__dirname, '../dist')))
+app.use(koaStatic(path.join(rootDir, 'resource')))
+app.use(koaStatic(path.join(rootDir, 'dist')))
 
 
 app.use(config({
@@ -53,18 +54,17 @@ app.use(authorization({
     '^\/admin\/signout'
   ]
 }))
-
 app.use(koaBody({
   multipart: true,
   formidable: {
-    uploadDir: path.join(__dirname, uploadDir),
+    uploadDir: uploadDir,
     maxFields: 500,
     keepExtensions: true,
     maxFieldsSize: 5 * 1024 * 1024,
     onFileBegin (name, file) {
       // 设置上传位置
       const dirName = dayjs(new Date()).format('YYYYMMDD')
-      const dir = path.join(__dirname, `${uploadDir}/${dirName}`)
+      const dir = `${uploadDir}/${dirName}`
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir)
       }

@@ -1,4 +1,4 @@
 export default {
-  action: '/file/upload',
+  action: '/api/file/upload',
   headers: {}
 }

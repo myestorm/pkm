@@ -1,9 +1,9 @@
 import { MutationTree, GetterTree } from 'vuex'
-import { IKnowledgeType } from '../../app/types/knowledge'
+import { IControllerKnowledgeAddType } from '../../types/knowledge'
 
 export type State = {
   visibleKnowledge: boolean,
-  knowledgeForm: IKnowledgeType
+  knowledgeForm: IControllerKnowledgeAddType
 }
 
 export type RootState = State
@@ -14,7 +14,7 @@ export enum GetterTypes {
 }
 type GetterFuns = {
   [GetterTypes.getVisibleKnowledge] (state: State): boolean;
-  [GetterTypes.getKnowledgeForm] (state: State): IKnowledgeType;
+  [GetterTypes.getKnowledgeForm] (state: State): IControllerKnowledgeAddType;
 }
 export type Getter = GetterTree<State, RootState> & GetterFuns
 
@@ -24,6 +24,6 @@ export enum MutationTypes {
 }
 type MutationsFuns = {
   [MutationTypes.setVisibleKnowledge] (state: State, value: boolean): void;
-  [MutationTypes.setKnowledgeForm] (state: State, value: IKnowledgeType): void;
+  [MutationTypes.setKnowledgeForm] (state: State, value: IControllerKnowledgeAddType): void;
 }
 export type Mutations = MutationTree<State> & MutationsFuns

@@ -1,7 +1,7 @@
 import { Schema, model, now } from 'mongoose'
-import { IAdminUserType, IAdminUserAddType } from '../../types/admin'
+import { ISchemaAdminType, IAdminModelType } from '../../types/admin'
 
-const schema = new Schema<IAdminUserAddType>({
+const schema = new Schema<ISchemaAdminType>({
   username: {
     type: String,
     unique: true
@@ -33,8 +33,13 @@ const schema = new Schema<IAdminUserAddType>({
     type: Date,
     default: now()
   }
+}, {
+  timestamps: { 
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  }
 })
 
-const AdminModel = model<IAdminUserType>('Admin', schema)
+const AdminModel = model<IAdminModelType>('Admin', schema)
 
 export default AdminModel

@@ -3,7 +3,7 @@ const info = require('./package.json')
 module.exports = {
   apps: [{
     name: info.name,
-    script: './www/app.js',
+    script: './www/app/app.js',
     env: {
       COMMON_VARIABLE: true
     },

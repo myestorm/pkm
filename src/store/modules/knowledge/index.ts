@@ -7,21 +7,21 @@ import {
 } from './types'
 
 import { 
-  ApiKnowledge,
-  ApiKnowledgeInfoId, 
-  ApiKnowledgeDocumentId, 
-  ApiKnowledgeSetDefaultId, 
-  ApiKnowledgeAdd,
-  ApiKnowledgeUpdate,
-  ApiKnowledgeRemove,
-  ApiDocumentUpdate,
-  ApiDocumentAdd,
-  ApiDocumentRemove,
-  ApiDocumentTransfer,
-  ApiKnowledgeOrder,
-  ApiDocumentOrder
-} from '../../../apis/index'
-import { IKnowledgeDocType } from '../../../../app/types/knowledge'
+  KnowledgeList,
+  KnowledgeInfoId, 
+  KnowledgeDocumentId, 
+  KnowledgeSetDefaultId, 
+  KnowledgeAdd,
+  KnowledgeUpdate,
+  KnowledgeRemove,
+  DocumentUpdate,
+  DocumentAdd,
+  DocumentRemove,
+  DocumentTransfer,
+  KnowledgeOrder,
+  DocumentOrder
+} from '../../../apis/knowledge'
+import { IKnowledgeDocType, IStoreKnowledgeDocAddType, IStoreKnowledgeDocUpdateType } from '../../../../types/knowledge'
 
 export const state: State = {
   list: [],
@@ -49,7 +49,7 @@ export const mutations: Mutations = {
 export const actions: Actions = {
   [ActionTypes.getList] ({ commit }) {
     return new Promise((resolve, reject) => {
-      ApiKnowledge().then(res => {
+      KnowledgeList().then(res => {
         commit('setList', res.data)
         resolve(res.data)
       }).catch(err => {
@@ -59,7 +59,7 @@ export const actions: Actions = {
   },
   [ActionTypes.getInfo] (_, data: { id: string, hasChildren?: number }) {
     return new Promise((resolve, reject) => {
-      ApiKnowledgeInfoId(data).then(res => {
+      KnowledgeInfoId(data).then(res => {
         resolve(res.data)
       }).catch(err => {
         reject(err)
@@ -68,7 +68,7 @@ export const actions: Actions = {
   },
   [ActionTypes.getDocsByid] (_, id: string) {
     return new Promise((resolve, reject) => {
-      ApiKnowledgeDocumentId(id).then(res => {
+      KnowledgeDocumentId(id).then(res => {
         resolve(res.data)
       }).catch(err => {
         reject(err)
@@ -77,7 +77,7 @@ export const actions: Actions = {
   },
   [ActionTypes.setDefault] (_, id: string) {
     return new Promise((resolve, reject) => {
-      ApiKnowledgeSetDefaultId(id).then(res => {
+      KnowledgeSetDefaultId(id).then(res => {
         resolve(res.data)
       }).catch(err => {
         reject(err)
@@ -86,7 +86,7 @@ export const actions: Actions = {
   },
   [ActionTypes.add] ({ dispatch }, postData) {
     return new Promise((resolve, reject) => {
-      ApiKnowledgeAdd(postData).then(res => {
+      KnowledgeAdd(postData).then(res => {
         dispatch(ActionTypes.getList)
         resolve(res.data)
       }).catch(err => {
@@ -96,7 +96,7 @@ export const actions: Actions = {
   },
   [ActionTypes.update] ({ dispatch }, postData) {
     return new Promise((resolve, reject) => {
-      ApiKnowledgeUpdate(postData).then(res => {
+      KnowledgeUpdate(postData).then(res => {
         dispatch(ActionTypes.getList)
         resolve(res.data)
       }).catch(err => {
@@ -106,7 +106,7 @@ export const actions: Actions = {
   },
   [ActionTypes.remove] ({ dispatch }, id) {
     return new Promise((resolve, reject) => {
-      ApiKnowledgeRemove(id).then(res => {
+      KnowledgeRemove(id).then(res => {
         dispatch(ActionTypes.getList)
         resolve(res.data)
       }).catch(err => {
@@ -114,18 +114,18 @@ export const actions: Actions = {
       })
     })
   },
-  [ActionTypes.addDoc] (_, postData: IKnowledgeDocType & { kid?: string}) {
+  [ActionTypes.addDoc] (_, postData: IStoreKnowledgeDocAddType) {
     return new Promise((resolve, reject) => {
-      ApiDocumentAdd(postData).then(res => {
+      DocumentAdd(postData).then(res => {
         resolve(res.data)
       }).catch(err => {
         reject(err)
       })
     })
   },
-  [ActionTypes.updateDoc] (_, postData: IKnowledgeDocType & { kid?: string}) {
+  [ActionTypes.updateDoc] (_, postData: IStoreKnowledgeDocUpdateType) {
     return new Promise((resolve, reject) => {
-      ApiDocumentUpdate(postData).then(res => {
+      DocumentUpdate(postData).then(res => {
         resolve(res.data)
       }).catch(err => {
         reject(err)
@@ -134,7 +134,7 @@ export const actions: Actions = {
   },
   [ActionTypes.removeDoc] (_, postData: { kid: string, id: string }) {
     return new Promise((resolve, reject) => {
-      ApiDocumentRemove(postData).then(res => {
+      DocumentRemove(postData).then(res => {
         resolve(res.data)
       }).catch(err => {
         reject(err)
@@ -143,7 +143,7 @@ export const actions: Actions = {
   },
   [ActionTypes.transferDoc] (_, postData: { fid: string, tid: string, id: string }) {
     return new Promise((resolve, reject) => {
-      ApiDocumentTransfer(postData).then(res => {
+      DocumentTransfer(postData).then(res => {
         resolve(res.data)
       }).catch(err => {
         reject(err)
@@ -152,7 +152,7 @@ export const actions: Actions = {
   },
   [ActionTypes.setOrder] (_, postData: { id: string, order: number }) {
     return new Promise((resolve, reject) => {
-      ApiKnowledgeOrder(postData).then(res => {
+      KnowledgeOrder(postData).then(res => {
         resolve(res.data)
       }).catch(err => {
         reject(err)
@@ -161,7 +161,7 @@ export const actions: Actions = {
   },
   [ActionTypes.setOrderDoc] (_, postData: { id: string, did: string, order: number }) {
     return new Promise((resolve, reject) => {
-      ApiDocumentOrder(postData).then(res => {
+      DocumentOrder(postData).then(res => {
         resolve(res.data)
       }).catch(err => {
         reject(err)

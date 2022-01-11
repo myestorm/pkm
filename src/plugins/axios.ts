@@ -56,7 +56,7 @@ request.interceptors.response.use(
     let status = error?.response?.status
     const url = error?.response?.config?.url || ''
     status = Number(status)
-    if (status === 401 && url !== '/user/info') {
+    if (status === 401 && url !== '/admin/info') {
       let fullPath = (window.location.pathname || '/') + window.location.search
       fullPath = /^\/signin/.test(fullPath) ? '/' : fullPath
       window.location.href = '/signin?refer=' + encodeURIComponent(fullPath)

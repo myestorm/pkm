@@ -38,10 +38,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api/': 'http://localhost:4000',
-      '/user/': 'http://localhost:4000',
-      '/file/': 'http://localhost:4000',
-      '/uploads/': 'http://localhost:4000',
-      '/bookrack/': 'http://localhost:4000',
+      '/admin/': 'http://localhost:4000'
     }
   }
 })

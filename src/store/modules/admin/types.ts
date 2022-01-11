@@ -2,7 +2,7 @@ import { MutationTree, GetterTree, ActionTree, Module } from 'vuex'
 import { GenerateActionAugments } from '../../util'
 import { RootState } from '../../types'
 
-import { IFeAdminUserType, ISigninType, IUserInfoType } from '../../../../app/types/admin'
+import { IFeAdminUserType, ISigninType, IUserInfoType } from '../../../../types/admin'
 
 export type State = {
   token: string,

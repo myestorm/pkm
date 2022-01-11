@@ -4,7 +4,7 @@ import { State, RootState, GetterTypes, Getter, MutationTypes, Mutations } from 
 
 import knowledge from './modules/knowledge/index'
 import recycle from './modules/recycle/index'
-import user from './modules/user/index'
+import admin from './modules/admin/index'
 import bookrack from './modules/bookrack/index'
 
 export const key: InjectionKey<Store<RootState>> = Symbol()
@@ -15,7 +15,8 @@ const state: State = {
     title: '',
     desc: '',
     thumb: '',
-    isDefault: false
+    isDefault: false,
+    order: 99
   }
 }
 
@@ -47,7 +48,7 @@ export const store = createStore<RootState>({
 
 store.registerModule('knowledge', knowledge)
 store.registerModule('recycle', recycle)
-store.registerModule('user', user)
+store.registerModule('admin', admin)
 store.registerModule('bookrack', bookrack)
 
 export function useStore () {

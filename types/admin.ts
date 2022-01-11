@@ -1,3 +1,4 @@
+import { HydratedDocument, Types } from 'mongoose'
 export interface IAdminUserType {
   _id: string,
   username: string,
@@ -10,11 +11,16 @@ export interface IAdminUserType {
   updatedAt: Date
 }
 
-export type IAdminUserAddType = Omit<IAdminUserType, '_id'>
+export type ISchemaAdminType = Omit<IAdminUserType, '_id'>
+export type IAdminModelType = HydratedDocument<
+  ISchemaAdminType
+>
+
+export type IAdminUserAddType = Omit<IAdminUserType, '_id' | 'createdAt' | 'updatedAt'>
 
 export type ISigninType = Pick<IAdminUserType, 'username' | 'password'>
 
-export type IFeAdminUserType = Omit<IAdminUserType, 'password'>
+export type IFeAdminUserType = Partial<IAdminUserType>
 
 export type IUserInfoType = {
   userinfo: IFeAdminUserType,

@@ -11,7 +11,7 @@ const admin = new Admin()
 export default class User {
 
   @get('/info')
-  async Userinfo (ctx: Context, next: Next) {
+  async Admininfo (ctx: Context, next: Next) {
     const { userinfo, token } = ctx.state
     const body: IResponeBodyType<IUserInfoType> = {
       code: 0,

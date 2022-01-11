@@ -35,4 +35,10 @@ export type IBookrackModelType = HydratedDocument<
 
 // controller
 export type IControllerKnowledgeAddType = Omit<IKnowledgeType, '_id' | 'children' | 'createdAt' | 'updatedAt'>
-export type IControllerKnowledgeDocAddType = Omit<IKnowledgeDocType, '_id'>
+export type IControllerKnowledgeDocAddType = Omit<IKnowledgeDocType, '_id' | 'createdAt' | 'updatedAt'>
+
+// store
+
+export type IStoreKnowledgeUpdateType =  IControllerKnowledgeAddType & { _id?: string }
+export type IStoreKnowledgeDocAddType =  IControllerKnowledgeAddType & { kid?: string }
+export type IStoreKnowledgeDocUpdateType =  IControllerKnowledgeAddType & { kid?: string, _id?: string }

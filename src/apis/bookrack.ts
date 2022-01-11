@@ -12,7 +12,7 @@ import {
   IApisBookRemoveType
 } from '../../types/bookrack'
 
-const prefix = '/bookrack'
+const prefix = '/api/bookrack'
 
 // 获取所有分类
 export const BookrackList = (options?: AxiosRequestConfig): Promise<IResponeBodyType<IBookrackGroupType[]>> => {

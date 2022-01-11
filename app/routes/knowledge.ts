@@ -4,7 +4,7 @@ import { prefix, get, post, put, del } from '../core/router'
 import Knowledge from '../controllers/knowledge'
 
 import { IResponeBodyType } from '../../types/index'
-import { IKnowledgeType, IKnowledgeDocType } from '../../types/knowledge'
+import { IKnowledgeType, IKnowledgeDocType, IControllerKnowledgeAddType, IControllerKnowledgeDocAddType } from '../../types/knowledge'
 
 const knowledge = new Knowledge()
 
@@ -94,10 +94,8 @@ export default class Api {
   @put('/update/:id')
   async KnowledgeUpdate (ctx: Context, next: Next) {
     const { id = '' } = ctx.params
-    const _body = ctx.request.body as unknown as IKnowledgeType
+    const _body = ctx.request.body as unknown as IControllerKnowledgeAddType
     if (id) {
-      delete _body.createdAt
-      delete _body.updatedAt
       await knowledge.update(id, _body)
       const body: IResponeBodyType<string> = {
         code: 0,
@@ -144,9 +142,7 @@ export default class Api {
 
   @post('/add')
   async KnowledgeAdd (ctx: Context, next: Next) {
-    const _body = ctx.request.body as unknown as IKnowledgeType
-    delete _body.createdAt
-    delete _body.updatedAt
+    const _body = ctx.request.body as unknown as IControllerKnowledgeAddType
     const result = await knowledge.add(_body)
     const body: IResponeBodyType<string> = {
       code: 0,
@@ -173,11 +169,8 @@ export default class Api {
   @post('/document/add/:id')
   async DocumentAdd (ctx: Context, next: Next) {
     const { id = '' } = ctx.params
-    const _body = ctx.request.body as unknown as IKnowledgeDocType
+    const _body = ctx.request.body as unknown as IControllerKnowledgeDocAddType
     if (id) {
-      delete _body._id
-      delete _body.createdAt
-      delete _body.updatedAt
       const result = await knowledge.addDoc(id, _body)
       const body: IResponeBodyType<IKnowledgeDocType | null> = {
         code: 0,
@@ -197,10 +190,8 @@ export default class Api {
   @put('/document/update/:id/:did')
   async DocumentUpdate (ctx: Context, next: Next) {
     const { id = '', did = '' } = ctx.params
-    const _body = ctx.request.body as unknown as IKnowledgeDocType
+    const _body = ctx.request.body as unknown as IControllerKnowledgeDocAddType
     if (id && did) {
-      delete _body.createdAt
-      delete _body.updatedAt
       const result = await knowledge.updateDoc(id, did, _body)
       const body: IResponeBodyType<IKnowledgeDocType | null> = {
         code: 0,
