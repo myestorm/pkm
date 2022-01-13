@@ -2,12 +2,12 @@
   <div class="book">
     <pkm-page-header title="书架" subtitle="存放已买已读已听的书，省得每次买重复了">
       <template #extra>
-        <pkm-input-search :style="{width:'320px'}" placeholder="Please enter something" loading />
+        <pkm-input-search :style="{ width: '320px' }" placeholder="搜索" @press-enter="handleSearch" searchLoading />
       </template>
     </pkm-page-header>
     <div class="tabs">
       <pkm-spin :loading="loading" style="width: 100%">
-        <pkm-tabs default-active-key="" v-model="activeKey">
+        <pkm-tabs default-active-key="" v-model="activeKey" class="pkm-page-tabs">
           <template #extra>
             <pkm-button type="primary" size="mini" @click="addGroupHandler">
               <template #icon>
@@ -20,9 +20,9 @@
 
             <template #title>
               <div class="pkm-tabs-title">
-                {{ item.title }}
+                {{ item.title }} ({{ item.children.length }})
                 <pkm-dropdown position="br" class="pkm-more-dropdown">
-                  <pkm-button size="mini" @click.stop>
+                  <pkm-button size="mini" class="no-bg" @click.stop>
                     <template #icon>
                       <icon-more-vertical />
                     </template>
@@ -44,7 +44,6 @@
                   <template #default>新增书籍</template>
                 </pkm-button>
               </pkm-col>
-              <template v-if="item.children && item.children.length > 0">
               <pkm-col :xs="24" :sm="12" :md="6" :lg="4" :xl="4" :xxl="4" v-for="(book, subIndex) in item.children" :key="subIndex">
                 <pkm-image
                   src='https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp'
@@ -64,10 +63,6 @@
                     </div>
                   </template>
                 </pkm-image>
-              </pkm-col>
-              </template>
-              <pkm-col :span="24" v-else>
-                <pkm-empty />
               </pkm-col>
             </pkm-row>
             
@@ -306,6 +301,17 @@ export default defineComponent({
         }
       })
     }
+
+    // 搜索
+    const searchData = ref([])
+    const searchLoading = ref<Boolean>(false)
+    const handleSearch = (keyword: string) => {
+      if (keyword) {
+        const res = []
+      } else {
+        searchData.value = []
+      }
+    }
     
     return {
       list,
@@ -330,7 +336,11 @@ export default defineComponent({
       hideFormDrawer,
       showFormDrawer,
       saveBookHandler,
-      addBookHandler,      
+      addBookHandler,
+      
+      searchLoading,
+      searchData,
+      handleSearch
     }
   }
 })
@@ -348,6 +358,13 @@ export default defineComponent({
 .add-btn {
   button {
     height: 100%;
+    min-height: 168px;
+  }
+}
+.no-bg {
+  background-color: transparent;
+  &:hover {
+    color: #ffffff;
   }
 }
 </style>
