@@ -2,7 +2,7 @@
   <div class="book">
     <pkm-page-header title="书架" subtitle="存放已买已读已听的书，省得每次买重复了">
       <template #extra>
-        <pkm-input-search :style="{ width: '320px' }" placeholder="搜索" @press-enter="handleSearch" searchLoading />
+        <pkm-input-search v-model="keyword" :style="{ width: '320px' }" placeholder="搜索" @press-enter="handleSearch" @clear="handleClear" allow-clear searchLoading />
       </template>
     </pkm-page-header>
     <div class="tabs">
@@ -153,11 +153,13 @@ export default defineComponent({
     // list
     const activeKey = ref('')
     const list = ref<IBookrackGroupType[]>([])
+    const allList = ref<IBookrackGroupType[]>([])
     const loading = ref<boolean>(false)
     const getList = () => {
       loading.value = true
       store.dispatch('bookrack/bookrackList').then(res => {
-        list.value = res || []
+        list.value = [...res] || []
+        allList.value = [...res] || []
       }).catch(err => {
         msg.error(err.message)
       }).then(() => {
@@ -303,14 +305,28 @@ export default defineComponent({
     }
 
     // 搜索
-    const searchData = ref([])
+    const keyword = ref<string>('')
     const searchLoading = ref<Boolean>(false)
-    const handleSearch = (keyword: string) => {
-      if (keyword) {
-        const res = []
+    const handleSearch = () => {
+      if (keyword.value) {
+        const _allList: IBookrackGroupType[] = JSON.parse(JSON.stringify(allList.value))
+        searchLoading.value = true
+        const res: IBookrackGroupType[] = []
+        _allList.forEach(item => {
+          let children = [...item.children]
+          children = children.filter(sub => new RegExp(keyword.value, 'gmi').test(sub.title))
+          item.children = [...children]
+          res.push(item)
+        })
+        list.value = [...res]
       } else {
-        searchData.value = []
+        list.value = JSON.parse(JSON.stringify(allList.value))
       }
+      searchLoading.value = false
+    }
+
+    const handleClear = () => {
+      list.value = JSON.parse(JSON.stringify(allList.value))
     }
     
     return {
@@ -338,9 +354,10 @@ export default defineComponent({
       saveBookHandler,
       addBookHandler,
       
+      keyword,
       searchLoading,
-      searchData,
-      handleSearch
+      handleSearch,
+      handleClear
     }
   }
 })
