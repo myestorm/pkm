@@ -49,6 +49,12 @@ class BookrackController extends BaseController {
     return parent?.children[0] || null
   }
 
+  async infoBook (gid: string, id: string): Promise<IBookType | null> {
+    const parent = await Bookrack.findById(gid)
+    const sub = parent?.children.id(id)
+    return sub
+  }
+
   async updateBook (gid: string, id: string, data: IControllerBookAddType): Promise<IBookType | null> {
     const parent = await Bookrack.findById(gid)
     let sub = parent?.children.id(id)

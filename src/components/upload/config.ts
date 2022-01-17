@@ -1,4 +1,8 @@
+import { localStorageToken } from '../../config'
+
 export default {
   action: '/api/file/upload',
-  headers: {}
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem(localStorageToken) || ''}`
+  }
 }

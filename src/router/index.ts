@@ -39,6 +39,14 @@ export const authorizeRoutes: RouteRecordRaw[] = [
         keepAlive: false
       }
     }, {
+      path: '/book/info/:groupId/:id',
+      name: 'BookInfo',
+      component: () => import('../views/book/info.vue'),
+      meta: {
+        icon: 'book-info',
+        keepAlive: false
+      }
+    }, {
       path: '/userinfo',
       name: 'Userinfo',
       component: () => import('../views/user/userinfo.vue'),

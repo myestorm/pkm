@@ -6,15 +6,17 @@
       </template>
     </pkm-page-header>
     <div class="tabs">
-      <pkm-spin :loading="loading" style="width: 100%">
-        <pkm-tabs default-active-key="" v-model="activeKey" class="pkm-page-tabs">
+      <pkm-spin :loading="loading" style="width: 100%; min-height: 50vh;">
+        <pkm-tabs default-active-key="" v-model="activeKey" activeTab class="pkm-page-tabs">
           <template #extra>
-            <pkm-button type="primary" size="mini" @click="addGroupHandler">
-              <template #icon>
-                <icon-plus />
-              </template>
-              <template #default>新增分类</template>
-            </pkm-button>
+            <div class="pkm-tabs-extra-btn-group">
+              <pkm-button type="primary" @click="addGroupHandler">
+                <template #icon>
+                  <icon-plus />
+                </template>
+                <template #default>新增分类</template>
+              </pkm-button>
+            </div>
           </template>
           <pkm-tab-pane v-for="(item, index) in list" :key="item._id" :title="item.title">
 
@@ -36,33 +38,42 @@
             </template>
             
             <pkm-row class="grid" :gutter="[24, 24]">
-              <pkm-col :xs="24" :sm="12" :md="6" :lg="4" :xl="4" :xxl="4" class="add-btn">
-                <pkm-button type="dashed" long  @click="addBookHandler(item._id)">
-                  <template #icon>
-                    <icon-plus />
-                  </template>
-                  <template #default>新增书籍</template>
-                </pkm-button>
+              <pkm-col :xs="24" :sm="12" :md="8" :lg="8" :xl="6" :xxl="4">
+                <div class="pkm-book-list-item">
+                  <pkm-button type="dashed" long  @click="addBookHandler(item._id)" class="add-btn">
+                    <template #icon>
+                      <icon-plus />
+                    </template>
+                    <template #default>新增书籍</template>
+                  </pkm-button>
+                </div>
               </pkm-col>
-              <pkm-col :xs="24" :sm="12" :md="6" :lg="4" :xl="4" :xxl="4" v-for="(book, subIndex) in item.children" :key="subIndex">
-                <pkm-image
-                  src='https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp'
-                  :title="book.title"
-                  :description="book.desc"
-                  :preview="false"
-                  width="100%"
-                  style="vertical-align: top"
-                >
-                  <template #extra>
-                    <div class="actions">
-                      <!-- <span class="action" @click="() => { visible1 = true }"><icon-eye /></span>
-                      <span class="action" @click="onDownLoad"><icon-download /></span>
-                      <a-tooltip content="A user’s avatar">
-                        <span class="action"><icon-info-circle /></span>
-                      </a-tooltip> -->
-                    </div>
-                  </template>
-                </pkm-image>
+              <pkm-col :xs="24" :sm="12" :md="8" :lg="8" :xl="6" :xxl="4" v-for="(book, subIndex) in item.children" :key="subIndex">
+                <div class="pkm-book-list-item">
+                  <div class="image" :style="{
+                    backgroundImage: `url(${book.cover || 'some-error.png'})`
+                  }"></div>
+                  <h4>{{book.title}}</h4>
+                  <div class="actions">
+                    <pkm-button type="text" @click="infoBookHandler(item._id, book._id)">
+                      <template #icon>
+                        <icon-eye />
+                      </template>
+                    </pkm-button>
+                    <pkm-button type="text" @click="eidtBookHandler(item._id, book)">
+                      <template #icon>
+                        <icon-edit />
+                      </template>
+                    </pkm-button>
+                    <pkm-popconfirm content="确定要删除这条数据?" @ok="deleteBookHandler(item._id, book._id)">
+                      <pkm-button type="text">
+                        <template #icon>
+                          <icon-delete />
+                        </template>
+                      </pkm-button>
+                    </pkm-popconfirm>
+                  </div>
+                </div>
               </pkm-col>
             </pkm-row>
             
@@ -129,11 +140,13 @@ import { FormInstance, } from '@arco-design/web-vue/es/form'
 import { ValidatedError } from '@arco-design/web-vue/es/form/interface'
 
 import { useStore  } from '../../store'
+import { useRouter } from 'vue-router'
 
 import UploadImage from '../../components/upload/upload-image.vue'
 
 import {
   IBookrackGroupType,
+  IBookType,
   IApisBookrackGroupUpdateType,
   IApisBookUpdateType
 } from '../../../types/bookrack'
@@ -146,12 +159,13 @@ export default defineComponent({
   setup () {
     // global
     const store = useStore()
+    const router = useRouter()
     const app = getCurrentInstance()
     const modal = app?.appContext.config.globalProperties.$modal
     const msg = app?.appContext.config.globalProperties.$message
 
     // list
-    const activeKey = ref('')
+    const activeKey = ref<string>('')
     const list = ref<IBookrackGroupType[]>([])
     const allList = ref<IBookrackGroupType[]>([])
     const loading = ref<boolean>(false)
@@ -264,21 +278,47 @@ export default defineComponent({
     const showFormDrawer = () => {
       drawerFormVisible.value = true
     }
-    const addBookHandler = (id: string) => {
-      if (id) {
-        form._id = formDefault._id
-        form.groupId = id
-        form.title = formDefault.title
-        form.author = formDefault.author
-        form.cover = formDefault.cover
-        form.desc = formDefault.desc
-        form.readed = formDefault.readed
-        form.heard = formDefault.heard
-        form.purchased = formDefault.purchased
-        form.ISBN = formDefault.ISBN
-        form.tags = formDefault.tags
-        form.rating = formDefault.rating
+    const assignBook = (groupId: string, data: IApisBookUpdateType) => {
+      form._id = data._id
+      form.groupId = groupId
+      form.title = data.title
+      form.author = data.author
+      form.cover = data.cover
+      form.desc = data.desc
+      form.readed = data.readed
+      form.heard = data.heard
+      form.purchased = data.purchased
+      form.ISBN = data.ISBN
+      form.tags = data.tags
+      form.rating = data.rating
+    }
+    const addBookHandler = (groupId: string) => {
+      if (groupId) {
+        assignBook(groupId, formDefault)
         showFormDrawer()
+      }
+    }
+    const eidtBookHandler = (groupId: string, data: IBookType) => {
+      if (groupId) {
+        assignBook(groupId, data)
+        showFormDrawer()
+      }
+    }
+    const deleteBookHandler = (groupId: string, id: string) => {
+      if (groupId && id) {
+        store.dispatch('bookrack/bookRemove', {
+          groupId: groupId,
+          id: id
+        }).then(() => {
+          getList()
+        }).catch(err => {
+          msg.error(err.message)
+        })
+      }
+    }
+    const infoBookHandler = (groupId: string, id: string) => {
+      if (groupId && id) {
+        router.push(`/book/info/${groupId}/${id}`)
       }
     }
     const saveBookHandler = () => {
@@ -353,6 +393,9 @@ export default defineComponent({
       showFormDrawer,
       saveBookHandler,
       addBookHandler,
+      eidtBookHandler,
+      deleteBookHandler,
+      infoBookHandler,
       
       keyword,
       searchLoading,
@@ -372,16 +415,14 @@ export default defineComponent({
 .grid {
   align-items: stretch;
 }
-.add-btn {
-  button {
-    height: 100%;
-    min-height: 168px;
-  }
-}
 .no-bg {
   background-color: transparent;
   &:hover {
     color: #ffffff;
   }
+}
+.pkm-tabs-extra-btn-group {
+  height: 32px;
+  padding-bottom: 12px;
 }
 </style>

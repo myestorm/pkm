@@ -195,4 +195,24 @@ export default class BookrackRouter {
     await next()
   }
 
+  @get('/book/info/:gid/:id')
+  async BookInfo (ctx: Context, next: Next) {
+    const { gid = '', id = '' } = ctx.params
+    if (gid && id) {
+      const result = await bookrack.infoBook(gid, id)
+      const body: IResponeBodyType<IBookType | null> = {
+        code: 0,
+        msg: 'success',
+        data: result
+      }
+      ctx.body = body
+    } else {
+      ctx.body = {
+        code: 1,
+        msg: '参数不正确'
+      }
+    }
+    await next()
+  }
+
 }

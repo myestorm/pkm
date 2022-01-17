@@ -78,3 +78,10 @@ export const BookRemove = (data: IApisBookRemoveType, options?: AxiosRequestConf
     ...options
   })
 }
+
+// 书本信息
+export const BookInfo = (data: IApisBookRemoveType, options?: AxiosRequestConfig): Promise<IResponeBodyType<IBookType | null>> => {
+  return axios.get(`${prefix}/book/info/${data.groupId}/${data.id}`, {
+    ...options
+  })
+}

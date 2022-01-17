@@ -14,7 +14,8 @@ import {
   BookList,
   BookAdd,
   BookUpdate,
-  BookRemove
+  BookRemove,
+  BookInfo
 } from '../../../apis/bookrack'
 
 export const state: State = {
@@ -95,6 +96,15 @@ export const actions: Actions = {
   [ActionTypes.bookRemove] (_, data) {
     return new Promise((resolve, reject) => {
       BookRemove(data).then(res => {
+        resolve(res.data)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  [ActionTypes.bookInfo] (_, data) {
+    return new Promise((resolve, reject) => {
+      BookInfo(data).then(res => {
         resolve(res.data)
       }).catch(err => {
         reject(err)
