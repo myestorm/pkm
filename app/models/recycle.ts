@@ -1,9 +1,9 @@
 import { Schema, model } from 'mongoose'
-import { ISchemaRecycleType, IRecycleModelType } from '../../types/recycle'
+import { IRecycleModelType } from '../../types/recycle'
 import { docSchema } from './knowledge'
 import dayjs from 'dayjs'
 
-const schema = new Schema<ISchemaRecycleType>({
+const schema = new Schema({
   title: {
     type: String,
     default: dayjs(new Date()).format('YYYY-MM')

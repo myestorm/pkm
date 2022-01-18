@@ -34,7 +34,7 @@ class AdminController extends BaseController {
     } = {}
     condition[key] = value
     const info = await Admin.findOne(condition)
-    return (info && info._id)
+    return Boolean(info && info._id)
   }
 
   async add (data: IAdminUserAddType): Promise<IAdminUserType> {

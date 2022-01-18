@@ -1,7 +1,31 @@
 import { Schema, model, now } from 'mongoose'
-import { ISchemaBookType, ISchemaBookrackGroupType, IBookrackModelType } from '../../types/bookrack'
+import { IBookrackModelType } from '../../types/bookrack'
 
-export const bookrackSchema = new Schema<ISchemaBookType>({
+export const noteSchema = new Schema({
+  content: {
+    type: String,
+    default: ''
+  },
+  order: {
+    type: Number,
+    default: 99
+  },
+  createdAt: {
+    type: Date,
+    default: now()
+  },
+  updatedAt: {
+    type: Date,
+    default: now()
+  }
+}, {
+  timestamps: { 
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  }
+})
+
+export const bookrackSchema = new Schema({
   title: {
     type: String,
     required: true
@@ -39,6 +63,11 @@ export const bookrackSchema = new Schema<ISchemaBookType>({
     type: Number,
     default: 3
   },
+  order: {
+    type: Number,
+    default: 99
+  },
+  children: [noteSchema],
   createdAt: {
     type: Date,
     default: now()
@@ -54,7 +83,7 @@ export const bookrackSchema = new Schema<ISchemaBookType>({
   }
 })
 
-const schema = new Schema<ISchemaBookrackGroupType>({
+const schema = new Schema({
   title: {
     type: String,
     required: true
@@ -62,6 +91,10 @@ const schema = new Schema<ISchemaBookrackGroupType>({
   desc: {
     type: String,
     default: ''
+  },
+  order: {
+    type: Number,
+    default: 99
   },
   createdAt: {
     type: Date,

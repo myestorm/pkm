@@ -9,7 +9,10 @@ import {
   IApisBookrackGroupUpdateType,
   IApisBookAddType,
   IApisBookUpdateType,
-  IApisBookRemoveType
+  IApisBookRemoveType,
+  IApisNoteAddType,
+  IApisNoteUpdateType,
+  IApisNoteRemoveType
 } from '../../types/bookrack'
 
 const prefix = '/api/bookrack'
@@ -82,6 +85,37 @@ export const BookRemove = (data: IApisBookRemoveType, options?: AxiosRequestConf
 // 书本信息
 export const BookInfo = (data: IApisBookRemoveType, options?: AxiosRequestConfig): Promise<IResponeBodyType<IBookType | null>> => {
   return axios.get(`${prefix}/book/info/${data.groupId}/${data.id}`, {
+    ...options
+  })
+}
+
+// 添加笔记
+export const NoteAdd = (postData: IApisNoteAddType, options?: AxiosRequestConfig): Promise<IResponeBodyType<string>> => {
+  const groupId = postData.groupId
+  const bookId = postData.bookId
+  delete postData.groupId
+  delete postData.bookId
+  return axios.post(`${prefix}/note/add/${groupId}/${bookId}`, postData, {
+    ...options
+  })
+}
+
+// 编辑笔记
+export const NoteUpdate = (postData: IApisNoteUpdateType, options?: AxiosRequestConfig): Promise<IResponeBodyType<string>> => {
+  const id = postData._id
+  const groupId = postData.groupId
+  const bookId = postData.bookId
+  delete postData.groupId
+  delete postData.bookId
+  delete postData._id
+  return axios.put(`${prefix}/note/update/${groupId}/${bookId}/${id}`, postData, {
+    ...options
+  })
+}
+
+// 删除笔记
+export const NoteRemove = (data: IApisNoteRemoveType, options?: AxiosRequestConfig): Promise<IResponeBodyType<string>> => {
+  return axios.delete(`${prefix}/note/remove/${data.groupId}/${data.bookId}/${data.id}`, {
     ...options
   })
 }

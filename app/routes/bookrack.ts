@@ -9,6 +9,8 @@ import {
   IBookType,
   IControllerBookrackGroupAddType,
   IControllerBookAddType,
+  IControllerNoteAddType,
+  INoteType
  } from '../../types/bookrack'
 
 const bookrack = new Bookrack()
@@ -107,7 +109,7 @@ export default class BookrackRouter {
     const body: IResponeBodyType<string> = {
       code: 0,
       msg: 'success',
-      data: result._id || ''
+      data: result?._id ? result?._id.toString() : ''
     }
     ctx.body = body
     await next()
@@ -183,7 +185,7 @@ export default class BookrackRouter {
       const body: IResponeBodyType<string> = {
         code: 0,
         msg: 'success',
-        data: result?._id || ''
+        data: result?._id ? result?._id.toString() : ''
       }
       ctx.body = body
     } else {
@@ -204,6 +206,68 @@ export default class BookrackRouter {
         code: 0,
         msg: 'success',
         data: result
+      }
+      ctx.body = body
+    } else {
+      ctx.body = {
+        code: 1,
+        msg: '参数不正确'
+      }
+    }
+    await next()
+  }
+
+  @post('/note/add/:gid/:bid')
+  async NoteAdd (ctx: Context, next: Next) {
+    const { gid = '', bid = '' } = ctx.params
+    const _body = ctx.request.body as unknown as IControllerNoteAddType
+    if (gid && bid) {
+      const result = await bookrack.addNote(gid, bid, _body)
+      const body: IResponeBodyType<INoteType | null> = {
+        code: 0,
+        msg: 'success',
+        data: result
+      }
+      ctx.body = body
+    } else {
+      ctx.body = {
+        code: 1,
+        msg: '参数不正确'
+      }
+    }
+    await next()
+  }
+
+  @put('/note/update/:gid/:bid/:id')
+  async NoteUpdate (ctx: Context, next: Next) {
+    const { gid = '', bid = '', id = '' } = ctx.params
+    const _body = ctx.request.body as unknown as IControllerNoteAddType
+    if (gid && bid && id) {
+      const result = await bookrack.updateNote(gid, bid, id, _body)
+      const body: IResponeBodyType<INoteType | null> = {
+        code: 0,
+        msg: 'success',
+        data: result
+      }
+      ctx.body = body
+    } else {
+      ctx.body = {
+        code: 1,
+        msg: '参数不正确'
+      }
+    }
+    await next()
+  }
+
+  @del('/note/remove/:gid/:bid/:id')
+  async NoteRemove (ctx: Context, next: Next) {
+    const { gid = '', bid = '', id = '' } = ctx.params
+    if (gid && bid && id) {
+      const result = await bookrack.removeNote(gid, bid, id)
+      const body: IResponeBodyType<string> = {
+        code: 0,
+        msg: 'success',
+        data: result?._id ? result?._id.toString() : ''
       }
       ctx.body = body
     } else {

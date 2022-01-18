@@ -1,6 +1,6 @@
 import { HydratedDocument, Types } from 'mongoose'
 export interface IKnowledgeDocType {
-  _id: string,
+  _id: Types.ObjectId,
   title: string,
   desc: string,
   publishAt: Date,
@@ -13,7 +13,7 @@ export interface IKnowledgeDocType {
 }
 
 export interface IKnowledgeType {
-  _id: string,
+  _id: Types.ObjectId,
   title: string,
   isDefault: boolean,
   desc: string,

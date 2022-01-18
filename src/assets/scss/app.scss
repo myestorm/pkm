@@ -15,6 +15,11 @@ html, body, #app {
   background: rgba(255, 255, 255, 0.2);
 }
 
+::selection {
+  background: $--primary-color; 
+  color: var(--color-white);
+}
+
 #app {
   background-color: var(--color-bg-1);
 }
@@ -106,5 +111,22 @@ html, body, #app {
     transition: $--transition;
     transform: scale(0);
     opacity: 0;
+  }
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  [flex=auto] {
+    flex: 1
+  }
+}
+
+.md-drawer {
+  .arco-drawer-body {
+    padding: 0;
+  }
+  .pkm-md-editor-main {
+    padding: 0;
   }
 }

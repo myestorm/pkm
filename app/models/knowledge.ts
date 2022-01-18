@@ -1,11 +1,9 @@
 import { Schema, model, now } from 'mongoose'
 import {
-  ISchemaDocType,
-  ISchemaKnowledgeType,
   IBookrackModelType
 } from '../../types/knowledge'
 
-export const docSchema = new Schema<ISchemaDocType>({
+export const docSchema = new Schema({
   title: {
     type: String,
     required: true
@@ -46,7 +44,7 @@ export const docSchema = new Schema<ISchemaDocType>({
   }
 })
 
-const schema = new Schema<ISchemaKnowledgeType>({
+const schema = new Schema({
   title: {
     type: String,
     required: true

@@ -7,9 +7,14 @@ import {
   IBookType,
   IApisBookrackGroupAddType,
   IApisBookrackGroupUpdateType,
+  
   IApisBookAddType,
   IApisBookUpdateType,
-  IApisBookRemoveType
+  IApisBookRemoveType,
+
+  IApisNoteAddType,
+  IApisNoteUpdateType,
+  IApisNoteRemoveType
 } from '../../../../types/bookrack'
 
 export type State = {
@@ -36,7 +41,11 @@ export enum ActionTypes {
   bookAdd = 'bookAdd',
   bookUpdate = 'bookUpdate',
   bookRemove = 'bookRemove',
-  bookInfo = 'bookInfo'
+  bookInfo = 'bookInfo',
+
+  noteAdd = 'noteAdd',
+  noteUpdate = 'noteUpdate',
+  noteRemove = 'noteRemove',
 }
 type ActionsMethods = {
   [ActionTypes.bookrackList] (context: GenerateActionAugments<State, Mutations>): Promise<IBookrackGroupType[]>,
@@ -48,7 +57,11 @@ type ActionsMethods = {
   [ActionTypes.bookAdd] (context: GenerateActionAugments<State, Mutations>, payload: IApisBookAddType): Promise<string>,
   [ActionTypes.bookUpdate] (context: GenerateActionAugments<State, Mutations>, payload: IApisBookUpdateType): Promise<string>,
   [ActionTypes.bookRemove] (context: GenerateActionAugments<State, Mutations>, payload: IApisBookRemoveType): Promise<string>,
-  [ActionTypes.bookInfo] (context: GenerateActionAugments<State, Mutations>, payload: IApisBookRemoveType): Promise<IBookType | null>
+  [ActionTypes.bookInfo] (context: GenerateActionAugments<State, Mutations>, payload: IApisBookRemoveType): Promise<IBookType | null>,
+
+  [ActionTypes.noteAdd] (context: GenerateActionAugments<State, Mutations>, payload: IApisNoteAddType): Promise<string>,
+  [ActionTypes.noteUpdate] (context: GenerateActionAugments<State, Mutations>, payload: IApisNoteUpdateType): Promise<string>,
+  [ActionTypes.noteRemove] (context: GenerateActionAugments<State, Mutations>, payload: IApisNoteRemoveType): Promise<string>,
 }
 export type Actions = ActionTree<State, RootState> & ActionsMethods
 

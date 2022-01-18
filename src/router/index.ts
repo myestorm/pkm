@@ -1,15 +1,24 @@
 import { createRouter, createWebHistory, Router, RouteRecordRaw } from 'vue-router'
 
+import layout from '../components/layout/layout.vue'
+import home from '../views/home.vue'
+import document from '../views/document/document.vue'
+import bookIndex from '../views/book/index.vue'
+import bookInfo from '../views/book/info.vue'
+import userinfo from '../views/user/userinfo.vue'
+import signin from '../views/user/signin.vue'
+import error404 from '../views/error/404.vue'
+
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-NProgress.configure({ easing: 'ease', speed: 500, showSpinner: false })
+NProgress.configure({ easing: 'ease', speed: 500, showSpinner: false }) 
 
 export const authorizeRoutes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Index',
     redirect: '/home',
-    component: () => import('../components/layout/layout.vue'),
+    component: layout,
     meta: {
       icon: 'home',
       keepAlive: false
@@ -17,7 +26,7 @@ export const authorizeRoutes: RouteRecordRaw[] = [
     children: [{
       path: '/home',
       name: 'Home',
-      component: () => import('../views/home.vue'),
+      component: home,
       meta: {
         icon: 'home',
         keepAlive: false
@@ -25,7 +34,7 @@ export const authorizeRoutes: RouteRecordRaw[] = [
     }, {
       path: '/document/:kid/:did?',
       name: 'Document',
-      component: () => import('../views/document/document.vue'),
+      component: document,
       meta: {
         icon: 'document',
         keepAlive: false
@@ -33,7 +42,7 @@ export const authorizeRoutes: RouteRecordRaw[] = [
     }, {
       path: '/book',
       name: 'Book',
-      component: () => import('../views/book/index.vue'),
+      component: bookIndex,
       meta: {
         icon: 'book',
         keepAlive: false
@@ -41,7 +50,7 @@ export const authorizeRoutes: RouteRecordRaw[] = [
     }, {
       path: '/book/info/:groupId/:id',
       name: 'BookInfo',
-      component: () => import('../views/book/info.vue'),
+      component: bookInfo,
       meta: {
         icon: 'book-info',
         keepAlive: false
@@ -49,7 +58,7 @@ export const authorizeRoutes: RouteRecordRaw[] = [
     }, {
       path: '/userinfo',
       name: 'Userinfo',
-      component: () => import('../views/user/userinfo.vue'),
+      component: userinfo,
       meta: {
         icon: 'userinfo',
         keepAlive: false
@@ -61,7 +70,7 @@ export const authorizeRoutes: RouteRecordRaw[] = [
 const routes: RouteRecordRaw[] = [{
   path: '/signin',
   name: 'UserSignin',
-  component: () => import('../views/user/signin.vue'),
+  component: signin,
   meta: {
     icon: 'signin',
     keepAlive: false
@@ -69,7 +78,7 @@ const routes: RouteRecordRaw[] = [{
 }, {
   path: '/:pathMatch(.*)*',
   name: 'NotFound',
-  component: () => import('../views/error/404.vue'),
+  component: error404,
   meta: {
     icon: 'error',
     keepAlive: false

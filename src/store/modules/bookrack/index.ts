@@ -15,7 +15,11 @@ import {
   BookAdd,
   BookUpdate,
   BookRemove,
-  BookInfo
+  BookInfo,
+
+  NoteAdd,
+  NoteUpdate,
+  NoteRemove,
 } from '../../../apis/bookrack'
 
 export const state: State = {
@@ -105,6 +109,34 @@ export const actions: Actions = {
   [ActionTypes.bookInfo] (_, data) {
     return new Promise((resolve, reject) => {
       BookInfo(data).then(res => {
+        resolve(res.data)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+
+  [ActionTypes.noteAdd] (_, postData) {
+    return new Promise((resolve, reject) => {
+      NoteAdd(postData).then(res => {
+        resolve(res.data)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  [ActionTypes.noteUpdate] (_, postData) {
+    return new Promise((resolve, reject) => {
+      NoteUpdate(postData).then(res => {
+        resolve(res.data)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  [ActionTypes.noteRemove] (_, data) {
+    return new Promise((resolve, reject) => {
+      NoteRemove(data).then(res => {
         resolve(res.data)
       }).catch(err => {
         reject(err)

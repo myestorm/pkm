@@ -2,7 +2,7 @@ import { HydratedDocument, Types } from 'mongoose'
 import { IKnowledgeDocType as Doc } from './knowledge'
 
 export interface IRecycleType {
-  _id: string,
+  _id: Types.ObjectId,
   title: string,
   children: IKnowledgeDocType[]
 }

@@ -1,13 +1,13 @@
 <template>
   <div class="book">
-    <pkm-page-header title="书架" subtitle="存放已买已读已听的书，省得每次买重复了">
+    <pkm-page-header title="书架" subtitle="存放已买已读已听的书，省得每次买重复了" @back="back">
       <template #extra>
         <pkm-input-search v-model="keyword" :style="{ width: '320px' }" placeholder="搜索" @press-enter="handleSearch" @clear="handleClear" allow-clear searchLoading />
       </template>
     </pkm-page-header>
     <div class="tabs">
       <pkm-spin :loading="loading" style="width: 100%; min-height: 50vh;">
-        <pkm-tabs default-active-key="" v-model="activeKey" activeTab class="pkm-page-tabs">
+        <pkm-tabs default-active-key="" v-model="activeKey" class="pkm-page-tabs">
           <template #extra>
             <div class="pkm-tabs-extra-btn-group">
               <pkm-button type="primary" @click="addGroupHandler">
@@ -51,7 +51,7 @@
               <pkm-col :xs="24" :sm="12" :md="8" :lg="8" :xl="6" :xxl="4" v-for="(book, subIndex) in item.children" :key="subIndex">
                 <div class="pkm-book-list-item">
                   <div class="image" :style="{
-                    backgroundImage: `url(${book.cover || 'some-error.png'})`
+                    backgroundImage: `url(${book.cover || '/images/no-book.png'})`
                   }"></div>
                   <h4>{{book.title}}</h4>
                   <div class="actions">
@@ -65,13 +65,11 @@
                         <icon-edit />
                       </template>
                     </pkm-button>
-                    <pkm-popconfirm content="确定要删除这条数据?" @ok="deleteBookHandler(item._id, book._id)">
-                      <pkm-button type="text">
-                        <template #icon>
-                          <icon-delete />
-                        </template>
-                      </pkm-button>
-                    </pkm-popconfirm>
+                    <pkm-button type="text" @click="deleteBookHandler(item._id, book._id)">
+                      <template #icon>
+                        <icon-delete />
+                      </template>
+                    </pkm-button>
                   </div>
                 </div>
               </pkm-col>
@@ -306,13 +304,22 @@ export default defineComponent({
     }
     const deleteBookHandler = (groupId: string, id: string) => {
       if (groupId && id) {
-        store.dispatch('bookrack/bookRemove', {
-          groupId: groupId,
-          id: id
-        }).then(() => {
-          getList()
-        }).catch(err => {
-          msg.error(err.message)
+        modal.open({
+          title: '系统提示',
+          content: `你确定要删除这条数据吗？`,
+          hideCancel: false,
+          simple: true,
+          modalClass: ['pkm-modal-simple'],
+          onOk () {
+            store.dispatch('bookrack/bookRemove', {
+              groupId: groupId,
+              id: id
+            }).then(() => {
+              getList()
+            }).catch(err => {
+              msg.error(err.message)
+            })
+          }
         })
       }
     }
@@ -368,6 +375,10 @@ export default defineComponent({
     const handleClear = () => {
       list.value = JSON.parse(JSON.stringify(allList.value))
     }
+
+    const back = () => {
+      router.push('/')
+    }
     
     return {
       list,
@@ -400,7 +411,9 @@ export default defineComponent({
       keyword,
       searchLoading,
       handleSearch,
-      handleClear
+      handleClear,
+
+      back
     }
   }
 })

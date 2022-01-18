@@ -7,38 +7,38 @@
     }">
       <div class="l">
         <ul class="toolbar">
-          <li class="item"><toolbar-header :getEditor="getEditor" /></li>
-          <li class="item"><toolbar-blod :getEditor="getEditor" /></li>
-          <li class="item"><toolbar-italic :getEditor="getEditor" /></li>
-          <li class="item"><toolbar-strikethrough :getEditor="getEditor" /></li>
+          <li class="item" v-if="toolbarIsShowItem('header')"><toolbar-header :getEditor="getEditor" /></li>
+          <li class="item" v-if="toolbarIsShowItem('blod')"><toolbar-blod :getEditor="getEditor" /></li>
+          <li class="item" v-if="toolbarIsShowItem('italic')"><toolbar-italic :getEditor="getEditor" /></li>
+          <li class="item" v-if="toolbarIsShowItem('strikethrough')"><toolbar-strikethrough :getEditor="getEditor" /></li>
           <li class="split"></li>
-          <li class="item"><toolbar-hrline :getEditor="getEditor" /></li>
-          <li class="item"><toolbar-quote :getEditor="getEditor" /></li>
+          <li class="item" v-if="toolbarIsShowItem('hrline')"><toolbar-hrline :getEditor="getEditor" /></li>
+          <li class="item" v-if="toolbarIsShowItem('quote')"><toolbar-quote :getEditor="getEditor" /></li>
           <li class="split"></li>
-          <li class="item"><toolbar-unordered-list :getEditor="getEditor" /></li>
-          <li class="item"><toolbar-ordered-list :getEditor="getEditor" /></li>
-          <li class="item"><toolbar-task-list :getEditor="getEditor" /></li>
+          <li class="item" v-if="toolbarIsShowItem('unordered-list')"><toolbar-unordered-list :getEditor="getEditor" /></li>
+          <li class="item" v-if="toolbarIsShowItem('ordered-list')"><toolbar-ordered-list :getEditor="getEditor" /></li>
+          <li class="item" v-if="toolbarIsShowItem('task-list')"><toolbar-task-list :getEditor="getEditor" /></li>
           <li class="split"></li>
-          <li class="item"><toolbar-table :getEditor="getEditor" /></li>
-          <li class="item"><toolbar-inline-code :getEditor="getEditor" /></li>
-          <li class="item"><toolbar-block-code :getEditor="getEditor" /></li>
+          <li class="item" v-if="toolbarIsShowItem('table')"><toolbar-table :getEditor="getEditor" /></li>
+          <li class="item" v-if="toolbarIsShowItem('inline-code')"><toolbar-inline-code :getEditor="getEditor" /></li>
+          <li class="item" v-if="toolbarIsShowItem('block-code')"><toolbar-block-code :getEditor="getEditor" /></li>
           <li class="split"></li>
-          <li class="item"><toolbar-link :getEditor="getEditor" /></li>
-          <li class="item"><toolbar-media :getEditor="getEditor" /></li>
+          <li class="item" v-if="toolbarIsShowItem('link')"><toolbar-link :getEditor="getEditor" /></li>
+          <li class="item" v-if="toolbarIsShowItem('media')"><toolbar-media :getEditor="getEditor" /></li>
           <li class="split"></li>
-          <li class="item"><toolbar-format @click="format" :getEditor="getEditor" /></li>
-          <li class="item"><toolbar-preview @click="preview" :getEditor="getEditor" /></li>
-          <li class="item"><toolbar-fullscreen @click="fullscreen" :getEditor="getEditor" /></li>
+          <li class="item" v-if="toolbarIsShowItem('format')"><toolbar-format @click="format" :getEditor="getEditor" /></li>
+          <li class="item" v-if="toolbarIsShowItem('preview')"><toolbar-preview @click="preview" :getEditor="getEditor" /></li>
+          <li class="item" v-if="toolbarIsShowItem('fullscreen')"><toolbar-fullscreen @click="fullscreen" :getEditor="getEditor" /></li>
         </ul>
       </div>
       <div class="c"></div>
       <div class="r">
         <ul class="toolbar">
-          <li class="item">
+          <li class="item" v-if="toolbarIsShowItem('info')">
             <toolbar-info :getEditor="getEditor" @click="$emit('infoClick')" />
             <slot name="info"></slot>
           </li>
-          <li class="item"><toolbar-save @click="save" :getEditor="getEditor" /></li>
+          <li class="item" v-if="toolbarIsShowItem('save')"><toolbar-save @click="save" :getEditor="getEditor" /></li>
         </ul>
       </div>
     </div>
@@ -115,6 +115,14 @@ export default defineComponent({
       type: String,
       default: '100vh'
     },
+    toolbar: {
+      type: Array,
+      default: () => [
+        ['header', 'blod', 'italic', 'strikethrough', 'hrline', 'quote', 'unordered-list', 'ordered-list', 'task-list', 'table', 'inline-code', 'block-code', 'media', 'preview', 'fullscreen'],
+        [],
+        ['info', 'save']
+      ]
+    },
     toolbarHeight: {
       type: String,
       default: '48px'
@@ -171,6 +179,12 @@ export default defineComponent({
       }
     })
 
+    const toolbarIsShowItem = (key: string) => {
+      const toolbar = props.toolbar
+      const _all = toolbar[0].concat(toolbar[1]).concat(toolbar[2])
+      return _all.includes(key)
+    }
+
     return {
       id: prefix + id,
       showPreview,
@@ -190,7 +204,8 @@ export default defineComponent({
       },
       format () {
         format(editor.view)
-      }
+      },
+      toolbarIsShowItem
     }
   }
 })

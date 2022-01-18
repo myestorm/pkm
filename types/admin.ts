@@ -1,6 +1,6 @@
 import { HydratedDocument, Types } from 'mongoose'
 export interface IAdminUserType {
-  _id: string,
+  _id: Types.ObjectId,
   username: string,
   password: string,
   avatar: string,

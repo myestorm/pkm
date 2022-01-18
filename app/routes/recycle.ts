@@ -46,7 +46,7 @@ export default class Api {
       const body: IResponeBodyType<string> = {
         code: 0,
         msg: 'success',
-        data: result?._id || ''
+        data: result?._id ? result?._id.toString() : ''
       }
       ctx.body = body
     } else {

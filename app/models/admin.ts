@@ -1,7 +1,7 @@
 import { Schema, model, now } from 'mongoose'
-import { ISchemaAdminType, IAdminModelType } from '../../types/admin'
+import { IAdminModelType } from '../../types/admin'
 
-const schema = new Schema<ISchemaAdminType>({
+const schema = new Schema({
   username: {
     type: String,
     unique: true

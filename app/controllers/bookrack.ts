@@ -3,7 +3,9 @@ import {
   IBookrackGroupType,
   IBookType,
   IControllerBookrackGroupAddType,
-  IControllerBookAddType
+  IControllerBookAddType,
+  INoteType,
+  IControllerNoteAddType
 } from '../../types/bookrack'
 
 import BaseController from '../core/controller'
@@ -69,6 +71,36 @@ class BookrackController extends BaseController {
     sub.remove()
     await parent?.save()
     return sub
+  }
+
+  async addNote (gid: string, bid: string, data: IControllerNoteAddType): Promise<INoteType | null> {
+    const parent = await Bookrack.findById(gid)
+    const book = parent?.children.id(bid)
+    if (book) {
+      book?.children.unshift(data)
+      await parent?.save()
+      return book?.children[0] || null
+    } else {
+      return null
+    }
+  }
+
+  async updateNote (gid: string, bid: string, id: string, data: IControllerNoteAddType): Promise<INoteType | null> {
+    const parent = await Bookrack.findById(gid)
+    const book = parent?.children.id(bid)
+    let note = book?.children.id(id)
+    note = Object.assign(note, data)
+    await parent?.save()
+    return note
+  }
+
+  async removeNote (gid: string, bid: string, id: string): Promise<INoteType | null> {
+    const parent = await Bookrack.findById(gid)
+    const book = parent?.children.id(bid)
+    const note = book?.children.id(id)
+    note.remove()
+    await parent?.save()
+    return note
   }
 }
 
