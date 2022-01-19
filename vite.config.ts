@@ -9,8 +9,8 @@ export default defineConfig({
     VitePWA({
       includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
       manifest: {
-        name: 'totonoo-pkm',
-        short_name: 'totonoo-pkm',
+        name: 'Totonoo - Personal Knowledge Management',
+        short_name: 'Totonoo-PKM',
         description: 'Totonoo Personal Knowledge Management',
         theme_color: '#000000',
         icons: [
