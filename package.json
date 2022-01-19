@@ -12,7 +12,7 @@
     "app-watch": "tsc -p tsconfig.app.json -w",
     "app-nodemon": "nodemon",
     "app-build": "tsc -p tsconfig.app.json",
-    "app-install": "npm run app-build && node ./www/install"
+    "app-install": "npm run app-build && node ./www/app/install"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^0.19.12",
