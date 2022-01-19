@@ -38,19 +38,19 @@
                 </template>
               </pkm-button>
               <template #content>
-                <pkm-doption class="pkm-more-doption" @click.stop="edit(row)">
+                <pkm-doption class="pkm-more-doption" @click="edit(row)">
                   <template #icon>
                     <icon-edit />
                   </template>
                   编辑
                 </pkm-doption>
-                <pkm-doption class="pkm-more-doption" @click.stop="del(row)" v-if="!row.isDefault">
+                <pkm-doption class="pkm-more-doption" @click="del(row)" v-if="!row.isDefault">
                   <template #icon>
                     <icon-delete />
                   </template>
                   删除
                 </pkm-doption>
-                <pkm-doption class="pkm-more-doption" @click.stop="setDefault(row._id)" v-if="!row.isDefault">
+                <pkm-doption class="pkm-more-doption" @click="setDefault(row._id)" v-if="!row.isDefault">
                   <template #icon>
                     <icon-lock />
                   </template>
