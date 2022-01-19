@@ -118,7 +118,7 @@ export default defineComponent({
     toolbar: {
       type: Array,
       default: () => [
-        ['header', 'blod', 'italic', 'strikethrough', 'hrline', 'quote', 'unordered-list', 'ordered-list', 'task-list', 'table', 'inline-code', 'block-code', 'media', 'preview', 'fullscreen'],
+        ['header', 'blod', 'italic', 'strikethrough', 'hrline', 'quote', 'unordered-list', 'ordered-list', 'task-list', 'table', 'inline-code', 'block-code', 'link', 'media', 'format', 'preview', 'fullscreen'],
         [],
         ['info', 'save']
       ]
