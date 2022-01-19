@@ -18,7 +18,7 @@
               <dt>标签</dt>
               <dd>
                 <pkm-space>
-                  <pkm-tag v-for="tag in info.tags">{{tag}}</pkm-tag>
+                  <pkm-tag v-for="(tag, index) in info.tags" :key="index">{{tag}}</pkm-tag>
                 </pkm-space>
               </dd>
             </dl>
@@ -50,7 +50,7 @@
           </pkm-button>
         </div>
         <pkm-timeline>
-          <pkm-timeline-item v-for="(note, index) in info.children" :label="$formatTime(note.updatedAt)" class="pkm-timeline-item">
+          <pkm-timeline-item v-for="(note, index) in info.children" :key="index" :label="formatTime(note.updatedAt)" class="pkm-timeline-item">
             <div v-html="Md2html(note.content)"></div>
             <div class="action">
               <pkm-button type="text" @click="eidtHandler(index)">
@@ -81,8 +81,8 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, reactive, computed, getCurrentInstance } from 'vue'
-import { IBookType } from '../../../types/bookrack'
+import { defineComponent, ref, reactive, getCurrentInstance } from 'vue'
+import { IApisBookUpdateType, IApisNoteUpdateType } from '../../../types/bookrack'
 import { useStore  } from '../../store'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -101,10 +101,11 @@ export default defineComponent({
     const app = getCurrentInstance()
     const modal = app?.appContext.config.globalProperties.$modal
     const msg = app?.appContext.config.globalProperties.$message
+    const formatTime = app?.appContext.config.globalProperties.$formatTime
     const groupId = <string>route.params.groupId
     const id = <string>route.params.id
 
-    const formDefault = {
+    const formDefault: IApisBookUpdateType = {
       _id: '',
       groupId: '',
       title: '',
@@ -121,18 +122,16 @@ export default defineComponent({
       order: 99
     }
 
-    let info = reactive<IBookType>({
+    let info = reactive<IApisBookUpdateType>({
       ...formDefault
     })
-    const getInfo = (gid, bid) => {
+    const getInfo = (gid: string, bid: string) => {
       store.dispatch('bookrack/bookInfo', {
         groupId: gid,
         id: bid
       }).then((res) => {
         if (res) {
-          Object.keys(formDefault).forEach(key => {
-            info[key] = res[key]
-          })
+          info = Object.assign(info, res)
         }
       }).catch(err => {
         msg.error(err.message)
@@ -163,7 +162,7 @@ export default defineComponent({
       content.value = ''
       showVisible()
     }
-    const eidtHandler = (index) => {
+    const eidtHandler = (index: number) => {
       const note = info.children[index]
       if (note) {
         noteId.value = note._id
@@ -172,7 +171,7 @@ export default defineComponent({
         showVisible()
       }
     }
-    const deleteHandler = (index) => {
+    const deleteHandler = (index: number) => {
       const note = info.children[index]
       if (note) {
         modal.open({
@@ -199,7 +198,7 @@ export default defineComponent({
     const saveHandler = () => {
       posting.value = true
       const url = noteId.value ? 'bookrack/noteUpdate' : 'bookrack/noteAdd'
-      const postData = {
+      const postData: IApisNoteUpdateType = {
         content: content.value,
         order: noteOrder.value,
         groupId: groupId,
@@ -236,6 +235,7 @@ export default defineComponent({
       eidtHandler,
       deleteHandler,
       saveHandler,
+      formatTime,
       Md2html
     }
   }

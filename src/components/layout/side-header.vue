@@ -70,7 +70,7 @@ import { defineComponent, ref, computed, getCurrentInstance } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore  } from '../../store'
 
-import { IKnowledgeType, IKnowledgeDocType } from '../../../app/types/knowledge'
+import { IKnowledgeType, IKnowledgeDocType } from '../../../types/knowledge'
 import { ValidatedError } from '@arco-design/web-vue/es/form/interface'
 import { FormInstance } from '@arco-design/web-vue/es/form'
 
@@ -121,7 +121,7 @@ export default defineComponent({
       store.commit('setVisibleKnowledge', true)
     }
     // 新建菜单接口
-    const addKnowledge = (postData: IKnowledgeType) => {
+    const addKnowledge = (postData: IKnowledgeType<string>) => {
       knowledgeFormRef.value?.validate((errors: undefined | Record<string, ValidatedError>) => {
         if (!errors) {
           loading.value = true

@@ -1,10 +1,10 @@
 import Knowledge from '../models/knowledge'
 import Recycle from '../models/recycle'
 import {
-  IKnowledgeType,
-  IKnowledgeDocType,
   IControllerKnowledgeAddType,
-  IControllerKnowledgeDocAddType
+  IControllerKnowledgeDocAddType,
+  IKnowledgeMongoType,
+  IKnowledgeDocMongoType
 } from '../../types/knowledge'
 
 import BaseController from '../core/controller'
@@ -18,7 +18,7 @@ const updateOption = {
 }
 
 class KnowledgeController extends BaseController {
-  async list (): Promise<IKnowledgeType[]> {
+  async list (): Promise<IKnowledgeMongoType[]> {
     return await Knowledge.find({}, {
       children: 0
     }).sort({
@@ -42,15 +42,15 @@ class KnowledgeController extends BaseController {
     })
   }
 
-  async add (data: IControllerKnowledgeAddType): Promise<IKnowledgeType> {
+  async add (data: IControllerKnowledgeAddType): Promise<IKnowledgeMongoType> {
     return await Knowledge.create(data)
   }
 
-  async update (id: string, data: IControllerKnowledgeAddType): Promise<IKnowledgeType | null> {
+  async update (id: string, data: IControllerKnowledgeAddType): Promise<IKnowledgeMongoType | null> {
     return await Knowledge.findByIdAndUpdate(id, data, updateOption)
   }
 
-  async remove (id: string): Promise<IKnowledgeType | null> {
+  async remove (id: string): Promise<IKnowledgeMongoType | null> {
     const _list = await Knowledge.findByIdAndRemove(id)
     if (_list) {
       const _info = await Knowledge.findOne({
@@ -65,21 +65,21 @@ class KnowledgeController extends BaseController {
     return _list
   }
 
-  async info (id: string, hasChildren: boolean = false): Promise<IKnowledgeType | null> {
+  async info (id: string, hasChildren: boolean = false): Promise<IKnowledgeMongoType | null> {
     const opts = hasChildren ? {} : {
       children: 0
     }
     return await Knowledge.findById(id, opts)
   }
 
-  async addDoc (id: string, data: IControllerKnowledgeDocAddType): Promise<IKnowledgeDocType | null> {
+  async addDoc (id: string, data: IControllerKnowledgeDocAddType): Promise<IKnowledgeDocMongoType | null> {
     const parent = await Knowledge.findById(id)
     parent?.children.unshift(data)
     await parent?.save()
     return parent?.children[0] || null
   }
 
-  async updateDoc (id: string, did: string, data: IControllerKnowledgeDocAddType): Promise<IKnowledgeDocType | null> {
+  async updateDoc (id: string, did: string, data: IControllerKnowledgeDocAddType): Promise<IKnowledgeDocMongoType | null> {
     const parent = await Knowledge.findById(id)
     let sub = parent?.children.id(did)
     sub = Object.assign(sub, data)
@@ -87,7 +87,7 @@ class KnowledgeController extends BaseController {
     return sub
   }
 
-  async setOrderDoc (id: string, did: string, order: number): Promise<IKnowledgeDocType | null> {
+  async setOrderDoc (id: string, did: string, order: number): Promise<IKnowledgeDocMongoType | null> {
     const parent = await Knowledge.findById(id)
     let sub = parent?.children.id(did)
     sub.order = order
@@ -107,7 +107,7 @@ class KnowledgeController extends BaseController {
     return sub
   }
 
-  async removeDoc (id: string, did: string): Promise<IKnowledgeDocType | null> {
+  async removeDoc (id: string, did: string): Promise<IKnowledgeDocMongoType | null> {
     const parent = await Knowledge.findById(id)
     const sub = parent?.children.id(did)
     sub.remove()
@@ -118,7 +118,7 @@ class KnowledgeController extends BaseController {
     const _info = await Recycle.findOne({
       title
     })
-    let children: IKnowledgeDocType[] = [
+    let children: IKnowledgeDocMongoType[] = [
       sub
     ]
     if (_info && _info.children) {

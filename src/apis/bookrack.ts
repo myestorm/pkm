@@ -18,7 +18,7 @@ import {
 const prefix = '/api/bookrack'
 
 // 获取所有分类
-export const BookrackList = (options?: AxiosRequestConfig): Promise<IResponeBodyType<IBookrackGroupType[]>> => {
+export const BookrackList = (options?: AxiosRequestConfig): Promise<IResponeBodyType<IBookrackGroupType<string>[]>> => {
   return axios.get(`${prefix}/list`, {
     ...options
   })
@@ -49,7 +49,7 @@ export const BookrackRemove = (id: string, options?: AxiosRequestConfig): Promis
 }
 
 // 查找分类下所有书本
-export const BookList = (id: string, options?: AxiosRequestConfig): Promise<IResponeBodyType<IBookType[]>> => {
+export const BookList = (id: string, options?: AxiosRequestConfig): Promise<IResponeBodyType<IBookType<string>[]>> => {
   return axios.get(`${prefix}/book/${id}`, {
     ...options
   })
@@ -83,7 +83,7 @@ export const BookRemove = (data: IApisBookRemoveType, options?: AxiosRequestConf
 }
 
 // 书本信息
-export const BookInfo = (data: IApisBookRemoveType, options?: AxiosRequestConfig): Promise<IResponeBodyType<IBookType | null>> => {
+export const BookInfo = (data: IApisBookRemoveType, options?: AxiosRequestConfig): Promise<IResponeBodyType<IBookType<string> | null>> => {
   return axios.get(`${prefix}/book/info/${data.groupId}/${data.id}`, {
     ...options
   })

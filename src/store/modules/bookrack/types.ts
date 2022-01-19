@@ -48,16 +48,16 @@ export enum ActionTypes {
   noteRemove = 'noteRemove',
 }
 type ActionsMethods = {
-  [ActionTypes.bookrackList] (context: GenerateActionAugments<State, Mutations>): Promise<IBookrackGroupType[]>,
+  [ActionTypes.bookrackList] (context: GenerateActionAugments<State, Mutations>): Promise<IBookrackGroupType<string>[]>,
   [ActionTypes.bookrackAdd] (context: GenerateActionAugments<State, Mutations>, payload: IApisBookrackGroupAddType): Promise<string>,
   [ActionTypes.bookrackUpdate] (context: GenerateActionAugments<State, Mutations>, payload: IApisBookrackGroupUpdateType): Promise<string>,
   [ActionTypes.bookrackRemove] (context: GenerateActionAugments<State, Mutations>, payload: string): Promise<string>,
 
-  [ActionTypes.bookList] (context: GenerateActionAugments<State, Mutations>, payload: string): Promise<IBookType[]>,
+  [ActionTypes.bookList] (context: GenerateActionAugments<State, Mutations>, payload: string): Promise<IBookType<string>[]>,
   [ActionTypes.bookAdd] (context: GenerateActionAugments<State, Mutations>, payload: IApisBookAddType): Promise<string>,
   [ActionTypes.bookUpdate] (context: GenerateActionAugments<State, Mutations>, payload: IApisBookUpdateType): Promise<string>,
   [ActionTypes.bookRemove] (context: GenerateActionAugments<State, Mutations>, payload: IApisBookRemoveType): Promise<string>,
-  [ActionTypes.bookInfo] (context: GenerateActionAugments<State, Mutations>, payload: IApisBookRemoveType): Promise<IBookType | null>,
+  [ActionTypes.bookInfo] (context: GenerateActionAugments<State, Mutations>, payload: IApisBookRemoveType): Promise<IBookType<string> | null>,
 
   [ActionTypes.noteAdd] (context: GenerateActionAugments<State, Mutations>, payload: IApisNoteAddType): Promise<string>,
   [ActionTypes.noteUpdate] (context: GenerateActionAugments<State, Mutations>, payload: IApisNoteUpdateType): Promise<string>,

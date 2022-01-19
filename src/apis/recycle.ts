@@ -7,7 +7,7 @@ import { IRecycleType } from '../../types/recycle'
 const prefix = '/api/recycle'
 
 // 获取所有回收站内容
-export const RecycleList = (options?: AxiosRequestConfig): Promise<IResponeBodyType<IRecycleType[]>> => {
+export const RecycleList = (options?: AxiosRequestConfig): Promise<IResponeBodyType<IRecycleType<string>[]>> => {
   return axios.get(`${prefix}/list`, {
     ...options
   })

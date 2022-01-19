@@ -4,13 +4,13 @@ import { prefix, get, post, put, del } from '../core/router'
 import Bookrack from '../controllers/bookrack'
 
 import { IResponeBodyType } from '../../types/index'
-import { 
-  IBookrackGroupType,
-  IBookType,
+import {
   IControllerBookrackGroupAddType,
   IControllerBookAddType,
   IControllerNoteAddType,
-  INoteType
+  IBookrackGroupMongoType,
+  IBookMongoType,
+  INoteMongoType
  } from '../../types/bookrack'
 
 const bookrack = new Bookrack()
@@ -21,7 +21,7 @@ export default class BookrackRouter {
   @get('/list')
   async BookrackList (ctx: Context, next: Next) {
     const result = await bookrack.list()
-    const body: IResponeBodyType<IBookrackGroupType[]> = {
+    const body: IResponeBodyType<IBookrackGroupMongoType[]> = {
       code: 0,
       msg: 'success',
       data: result
@@ -43,7 +43,7 @@ export default class BookrackRouter {
           return aOrder - bOrder
         })
       }
-      const body: IResponeBodyType<IBookrackGroupType | null> = {
+      const body: IResponeBodyType<IBookrackGroupMongoType | null> = {
         code: 0,
         msg: 'success',
         data: result
@@ -120,7 +120,7 @@ export default class BookrackRouter {
     const { id = '' } = ctx.params
     if (id) {
       const result = await bookrack.info(id, true)
-      const body: IResponeBodyType<IBookType[]> = {
+      const body: IResponeBodyType<IBookMongoType[]> = {
         code: 0,
         msg: 'success',
         data: result?.children || []
@@ -141,7 +141,7 @@ export default class BookrackRouter {
     const _body = ctx.request.body as unknown as IControllerBookAddType
     if (gid) {
       const result = await bookrack.addBook(gid, _body)
-      const body: IResponeBodyType<IBookType | null> = {
+      const body: IResponeBodyType<IBookMongoType | null> = {
         code: 0,
         msg: 'success',
         data: result
@@ -162,7 +162,7 @@ export default class BookrackRouter {
     const _body = ctx.request.body as unknown as IControllerBookAddType
     if (gid && id) {
       const result = await bookrack.updateBook(gid, id, _body)
-      const body: IResponeBodyType<IBookType | null> = {
+      const body: IResponeBodyType<IBookMongoType | null> = {
         code: 0,
         msg: 'success',
         data: result
@@ -202,7 +202,7 @@ export default class BookrackRouter {
     const { gid = '', id = '' } = ctx.params
     if (gid && id) {
       const result = await bookrack.infoBook(gid, id)
-      const body: IResponeBodyType<IBookType | null> = {
+      const body: IResponeBodyType<IBookMongoType | null> = {
         code: 0,
         msg: 'success',
         data: result
@@ -223,7 +223,7 @@ export default class BookrackRouter {
     const _body = ctx.request.body as unknown as IControllerNoteAddType
     if (gid && bid) {
       const result = await bookrack.addNote(gid, bid, _body)
-      const body: IResponeBodyType<INoteType | null> = {
+      const body: IResponeBodyType<INoteMongoType | null> = {
         code: 0,
         msg: 'success',
         data: result
@@ -244,7 +244,7 @@ export default class BookrackRouter {
     const _body = ctx.request.body as unknown as IControllerNoteAddType
     if (gid && bid && id) {
       const result = await bookrack.updateNote(gid, bid, id, _body)
-      const body: IResponeBodyType<INoteType | null> = {
+      const body: IResponeBodyType<INoteMongoType | null> = {
         code: 0,
         msg: 'success',
         data: result

@@ -156,7 +156,7 @@ import MarkdownEditor from '../../components/editor/markdown-editor.vue'
 import UploadImage from '../../components/upload/upload-image.vue'
 import SelectKnowledge from '../../components/select-knowledge/index.vue'
 import DragSort, { IChangeDataType } from '../../components/dragsort/index.vue'
-import { IKnowledgeType, IKnowledgeDocType } from '../../../app/types/knowledge'
+import { IKnowledgeType, IKnowledgeDocType, IStoreKnowledgeDocAddType, IStoreKnowledgeDocUpdateType } from '../../../types/knowledge'
 
 export default defineComponent({
   components: {
@@ -189,7 +189,7 @@ export default defineComponent({
     }
 
     // 获取知识库以及该知识库下的文档
-    const pageInfo = reactive<IKnowledgeType>({
+    const pageInfo = reactive<IKnowledgeType<string>>({
       _id: '',
       title: '',
       isDefault: false,
@@ -197,6 +197,7 @@ export default defineComponent({
       createdAt: new Date(),
       updatedAt: new Date(),
       thumb: '',
+      order: 99,
       children: []
     })
     const getKnowledgeInfo = (id: any) => {
@@ -230,8 +231,7 @@ export default defineComponent({
     }
 
     // 文档信息
-    type IDocType = IKnowledgeDocType & { kid?: string }
-    const form = reactive<IDocType>({
+    const form = reactive<IStoreKnowledgeDocUpdateType>({
       _id: '',
       kid: myKid.value.toString(),
       title: '',
@@ -239,10 +239,11 @@ export default defineComponent({
       publishAt: new Date(),
       thumb: '',
       content: '',
-      tags: []
+      tags: [],
+      order: 99
     })
 
-    const setForm = (data: IKnowledgeDocType | undefined) => {
+    const setForm = (data: IKnowledgeDocType<string> | undefined) => {
       if (data) {
         form._id = data._id
         form.kid = myKid.value.toString()
@@ -264,11 +265,10 @@ export default defineComponent({
     }
 
     // 创建文档
-    const createDocument = (postData: IDocType) => {
+    const createDocument = (postData: IStoreKnowledgeDocAddType) => {
       const _postData = {
         ...postData
       }
-      delete postData._id
       return store.dispatch('knowledge/addDoc', _postData)
     }
     // 创建空文档
@@ -276,7 +276,13 @@ export default defineComponent({
       if (myKid.value) {
         await createDocument({
           kid: myKid.value.toString(),
-          title: '新文档'
+          title: '新文档',
+          desc: '',
+          publishAt: new Date(),
+          thumb: '',
+          content: '',
+          tags: [],
+          order: 99
         }).then(res => {
           pageInfo.children?.unshift(res)
           router.push(`/document/${myKid.value}/${res._id}`)
@@ -287,7 +293,7 @@ export default defineComponent({
     }
 
     // 修改文档
-    const updateDocument = (postData: IDocType) => {
+    const updateDocument = (postData: IStoreKnowledgeDocUpdateType) => {
       return store.dispatch('knowledge/updateDoc', postData)
     }
     const posting = ref(false)
@@ -484,7 +490,7 @@ export default defineComponent({
     ]
     const filter = (key: FilterTypes, order: OrderTypes) => {
       const ori = pageInfo.children ? [...pageInfo.children] : []
-      ori.sort((a: IKnowledgeDocType, b: IKnowledgeDocType) => {
+      ori.sort((a: IKnowledgeDocType<string>, b: IKnowledgeDocType<string>) => {
         const aTime = a[key]
         const bTime = b[key]
         const at = Number(dayjs(aTime).valueOf())
@@ -502,7 +508,7 @@ export default defineComponent({
     }
 
     const sort = (event: any) => {
-      const data = event as IChangeDataType<IKnowledgeDocType>
+      const data = event as IChangeDataType<IKnowledgeDocType<string>>
       let targetOrder = data.target.data.order
       targetOrder = typeof targetOrder !== 'undefined' ? targetOrder : 99
 

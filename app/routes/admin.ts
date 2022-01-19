@@ -69,7 +69,7 @@ export default class User {
 
   @post('/signup')
   async Signup (ctx: Context, next: Next) {
-    const _body = <IAdminUserType>ctx.request.body
+    const _body = <IAdminUserType<string>>ctx.request.body
     await admin.add(_body)
     const body: IResponeBodyType<string> = {
       code: 0,

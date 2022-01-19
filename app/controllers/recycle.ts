@@ -1,11 +1,11 @@
 import Recycle from '../models/recycle'
-import { IRecycleType, IKnowledgeDocType } from '../../types/recycle'
+import { IRecycleMongoType, IKnowledgeDocType } from '../../types/recycle'
 
 import BaseController from '../core/controller'
 
 class RecycleController extends BaseController {
 
-  async list (): Promise<IRecycleType[]> {
+  async list (): Promise<IRecycleMongoType[]> {
     return await Recycle.find().sort({
       _id: -1
     })

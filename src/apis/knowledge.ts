@@ -13,14 +13,14 @@ import {
 const prefix = '/api/knowledge'
 
 // 获取所有知识库
-export const KnowledgeList = (options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeType[]>> => {
+export const KnowledgeList = (options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeType<string>[]>> => {
   return axios.get(`${prefix}/list`, {
     ...options
   })
 }
 
 // 通过id查找知识库信息
-export const KnowledgeInfoId = (data: { id: string, hasChildren?: number }, options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeType>> => {
+export const KnowledgeInfoId = (data: { id: string, hasChildren?: number }, options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeType<string>>> => {
   let url = `${prefix}/info/${data.id}`
   if (Number(data.hasChildren) === 1) {
     url = `${url}/${data.hasChildren}`
@@ -31,7 +31,7 @@ export const KnowledgeInfoId = (data: { id: string, hasChildren?: number }, opti
 }
 
 // 通过id查询所有文档
-export const KnowledgeDocumentId = (id: string, options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeDocType[]>> => {
+export const KnowledgeDocumentId = (id: string, options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeDocType<string>[]>> => {
   return axios.get(`${prefix}/document/${id}`, {
     ...options
   })
@@ -75,7 +75,7 @@ export const KnowledgeOrder = (data: { id: string, order: number }, options?: Ax
 }
 
 // 修改文档
-export const DocumentUpdate = (postData: IStoreKnowledgeDocUpdateType, options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeDocType>> => {
+export const DocumentUpdate = (postData: IStoreKnowledgeDocUpdateType, options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeDocType<string>>> => {
   const id = postData.kid
   const did = postData._id
   delete postData._id
@@ -86,7 +86,7 @@ export const DocumentUpdate = (postData: IStoreKnowledgeDocUpdateType, options?:
 }
 
 // 添加文档
-export const DocumentAdd = (postData: IStoreKnowledgeDocAddType, options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeDocType>> => {
+export const DocumentAdd = (postData: IStoreKnowledgeDocAddType, options?: AxiosRequestConfig): Promise<IResponeBodyType<IKnowledgeDocType<string>>> => {
   const id = postData.kid
   delete postData.kid
   return axios.post(`${prefix}/document/add/${id}`, postData, {

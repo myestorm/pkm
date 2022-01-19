@@ -4,7 +4,7 @@ import { prefix, get, del } from '../core/router'
 import Recycle from '../controllers/recycle'
 
 import { IResponeBodyType } from '../../types/index'
-import { IRecycleType } from '../../types/recycle'
+import { IRecycleMongoType } from '../../types/recycle'
 
 const recycle = new Recycle()
 
@@ -15,7 +15,7 @@ export default class Api {
   @get('/list')
   async RecycleList (ctx: Context, next: Next) {
     const result = await recycle.list()
-    const body: IResponeBodyType<IRecycleType[]> = {
+    const body: IResponeBodyType<IRecycleMongoType[]> = {
       code: 0,
       msg: 'success',
       data: result

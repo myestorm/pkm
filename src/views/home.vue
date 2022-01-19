@@ -4,15 +4,16 @@
   </div>
 </template>
 <script lang="ts">
-
-export default {
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'Home',
   setup () {
+    const title: string = 'Personal Knowledge Management'
     return {
-      title: 'Personal Knowledge Management'
+      title
     }
   }
-}
+})
 </script>
 <style lang="scss" scoped>
 .home {

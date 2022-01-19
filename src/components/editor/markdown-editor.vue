@@ -180,8 +180,8 @@ export default defineComponent({
     })
 
     const toolbarIsShowItem = (key: string) => {
-      const toolbar = props.toolbar
-      const _all = toolbar[0].concat(toolbar[1]).concat(toolbar[2])
+      const toolbar = props.toolbar as unknown as string[][]
+      const _all = toolbar.flat()
       return _all.includes(key)
     }
 

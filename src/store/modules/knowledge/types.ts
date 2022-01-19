@@ -12,8 +12,8 @@ import {
 } from '../../../../types/knowledge'
 
 export type State = {
-  list: IKnowledgeType[],
-  selected: IKnowledgeType | null
+  list: IKnowledgeType<string>[],
+  selected: IKnowledgeType<string> | null
 }
 
 export enum GetterTypes {
@@ -21,8 +21,8 @@ export enum GetterTypes {
   getSelected = 'getSelected'
 }
 type GetterMethods = {
-  [GetterTypes.getList] (state: State): IKnowledgeType[]
-  [GetterTypes.getSelected] (state: State): IKnowledgeType | null
+  [GetterTypes.getList] (state: State): IKnowledgeType<string>[]
+  [GetterTypes.getSelected] (state: State): IKnowledgeType<string> | null
 }
 export type Getters = GetterTree<State, RootState> & GetterMethods
 
@@ -31,8 +31,8 @@ export enum MutationTypes {
   setSelected = 'setSelected'
 }
 type MutationsMethods = {
-  [MutationTypes.setList] (state: State, value: IKnowledgeType[]): void
-  [MutationTypes.setSelected] (state: State, value: IKnowledgeType): void
+  [MutationTypes.setList] (state: State, value: IKnowledgeType<string>[]): void
+  [MutationTypes.setSelected] (state: State, value: IKnowledgeType<string>): void
 }
 export type Mutations = MutationTree<State> & MutationsMethods
 
@@ -52,15 +52,15 @@ export enum ActionTypes {
   setOrderDoc = 'setOrderDoc',
 }
 type ActionsMethods = {
-  [ActionTypes.getList] (context: GenerateActionAugments<State, Mutations>): Promise<IKnowledgeType[]>
-  [ActionTypes.getInfo] (context: GenerateActionAugments<State, Mutations>, payload: { id: string, hasChildren?: number }): Promise<IKnowledgeType>
-  [ActionTypes.getDocsByid] (context: GenerateActionAugments<State, Mutations>, payload: string): Promise<IKnowledgeDocType[]>
+  [ActionTypes.getList] (context: GenerateActionAugments<State, Mutations>): Promise<IKnowledgeType<string>[]>
+  [ActionTypes.getInfo] (context: GenerateActionAugments<State, Mutations>, payload: { id: string, hasChildren?: number }): Promise<IKnowledgeType<string>>
+  [ActionTypes.getDocsByid] (context: GenerateActionAugments<State, Mutations>, payload: string): Promise<IKnowledgeDocType<string>[]>
   [ActionTypes.setDefault] (context: GenerateActionAugments<State, Mutations>, payload: string): Promise<string>
   [ActionTypes.add] (context: GenerateActionAugments<State, Mutations>, payload: IControllerKnowledgeAddType): Promise<string>
   [ActionTypes.update] (context: GenerateActionAugments<State, Mutations>, payload: IStoreKnowledgeUpdateType): Promise<string>
   [ActionTypes.remove] (context: GenerateActionAugments<State, Mutations>, payload: string): Promise<string>
-  [ActionTypes.addDoc] (context: GenerateActionAugments<State, Mutations>, payload: IStoreKnowledgeDocAddType): Promise<IKnowledgeDocType>
-  [ActionTypes.updateDoc] (context: GenerateActionAugments<State, Mutations>, payload: IStoreKnowledgeDocUpdateType): Promise<IKnowledgeDocType>
+  [ActionTypes.addDoc] (context: GenerateActionAugments<State, Mutations>, payload: IStoreKnowledgeDocAddType): Promise<IKnowledgeDocType<string>>
+  [ActionTypes.updateDoc] (context: GenerateActionAugments<State, Mutations>, payload: IStoreKnowledgeDocUpdateType): Promise<IKnowledgeDocType<string>>
   [ActionTypes.removeDoc] (context: GenerateActionAugments<State, Mutations>, payload: { kid: string, id: string }): Promise<string>
   [ActionTypes.transferDoc] (context: GenerateActionAugments<State, Mutations>, payload: { fid: string, tid: string, id: string }): Promise<string>
   [ActionTypes.setOrder] (context: GenerateActionAugments<State, Mutations>, payload: { id: string, order: number }): Promise<string>

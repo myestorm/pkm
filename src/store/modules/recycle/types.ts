@@ -2,17 +2,17 @@ import { MutationTree, GetterTree, ActionTree, Module } from 'vuex'
 import { GenerateActionAugments } from '../../util'
 import { RootState } from '../../types'
 
-import { IRecycleType } from '../../../../app/types/recycle'
+import { IRecycleType } from '../../../../types/recycle'
 
 export type State = {
-  list: IRecycleType[]
+  list: IRecycleType<string>[]
 }
 
 export enum GetterTypes {
   getList = 'getList'
 }
 type GetterMethods = {
-  [GetterTypes.getList] (state: State): IRecycleType[]
+  [GetterTypes.getList] (state: State): IRecycleType<string>[]
 }
 export type Getters = GetterTree<State, RootState> & GetterMethods
 
@@ -20,7 +20,7 @@ export enum MutationTypes {
   setList = 'setList'
 }
 type MutationsMethods = {
-  [MutationTypes.setList] (state: State, value: IRecycleType[]): void
+  [MutationTypes.setList] (state: State, value: IRecycleType<string>[]): void
 }
 export type Mutations = MutationTree<State> & MutationsMethods
 
@@ -30,7 +30,7 @@ export enum ActionTypes {
   remove = 'remove'
 }
 type ActionsMethods = {
-  [ActionTypes.getList] (context: GenerateActionAugments<State, Mutations>): Promise<IRecycleType[]>
+  [ActionTypes.getList] (context: GenerateActionAugments<State, Mutations>): Promise<IRecycleType<string>[]>
   [ActionTypes.removeAll] (context: GenerateActionAugments<State, Mutations>): Promise<string>
   [ActionTypes.remove] (context: GenerateActionAugments<State, Mutations>, payload: { kid: string, id: string }): Promise<string>
 }

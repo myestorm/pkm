@@ -1,7 +1,7 @@
 import { MD5 } from 'crypto-js'
 import jwt from 'jsonwebtoken'
 import Admin from '../models/admin'
-import { IAdminUserType, ISigninType, IAdminUserAddType } from '../../types/admin'
+import { ISigninType, IAdminUserAddType, IAdminUserMongoType } from '../../types/admin'
 
 import BaseController from '../core/controller'
 
@@ -37,16 +37,16 @@ class AdminController extends BaseController {
     return Boolean(info && info._id)
   }
 
-  async add (data: IAdminUserAddType): Promise<IAdminUserType> {
+  async add (data: IAdminUserAddType): Promise<IAdminUserMongoType> {
     data.password = MD5(data.password).toString()
     return await Admin.create(data)
   }
 
-  async remove (id: string): Promise<IAdminUserType | null> {
+  async remove (id: string): Promise<IAdminUserMongoType | null> {
     return await Admin.findByIdAndRemove(id)
   }
 
-  async update (id: string, data: IAdminUserAddType): Promise<IAdminUserType | null> {
+  async update (id: string, data: IAdminUserAddType): Promise<IAdminUserMongoType | null> {
     return await Admin.findByIdAndUpdate(id, data, { 
       new: true, 
       upsert: true,
@@ -55,7 +55,7 @@ class AdminController extends BaseController {
     })
   }
 
-  async info (id: string): Promise<IAdminUserType | null> {
+  async info (id: string): Promise<IAdminUserMongoType | null> {
     return await Admin.findById(id, {
       password: 0
     })

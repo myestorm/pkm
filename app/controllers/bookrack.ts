@@ -1,29 +1,29 @@
 import Bookrack from '../models/bookrack'
 import {
-  IBookrackGroupType,
-  IBookType,
   IControllerBookrackGroupAddType,
   IControllerBookAddType,
-  INoteType,
-  IControllerNoteAddType
+  IControllerNoteAddType,
+  IBookrackGroupMongoType,
+  IBookMongoType,
+  INoteMongoType
 } from '../../types/bookrack'
 
 import BaseController from '../core/controller'
 
 class BookrackController extends BaseController {
 
-  async list (): Promise<IBookrackGroupType[]> {
+  async list (): Promise<IBookrackGroupMongoType[]> {
     const list = await Bookrack.find({}).sort({
       _id: -1
     })
     return list
   }
 
-  async add (data: IControllerBookrackGroupAddType): Promise<IBookrackGroupType> {
+  async add (data: IControllerBookrackGroupAddType): Promise<IBookrackGroupMongoType> {
     return await Bookrack.create(data)
   }
 
-  async update (id: string, data: IControllerBookrackGroupAddType): Promise<IBookrackGroupType | null> {
+  async update (id: string, data: IControllerBookrackGroupAddType): Promise<IBookrackGroupMongoType | null> {
     return await Bookrack.findByIdAndUpdate(id, data, { 
       new: true, 
       upsert: true,
@@ -33,31 +33,31 @@ class BookrackController extends BaseController {
     })
   }
 
-  async remove (id: string): Promise<IBookrackGroupType | null> {
+  async remove (id: string): Promise<IBookrackGroupMongoType | null> {
     return await Bookrack.findByIdAndRemove(id)
   }
 
-  async info (id: string, hasChildren: boolean = false): Promise<IBookrackGroupType | null> {
+  async info (id: string, hasChildren: boolean = false): Promise<IBookrackGroupMongoType | null> {
     const opts = hasChildren ? {} : {
       children: 0
     }
     return await Bookrack.findById(id, opts)
   }
 
-  async addBook (gid: string, data: IControllerBookAddType): Promise<IBookType | null> {
+  async addBook (gid: string, data: IControllerBookAddType): Promise<IBookMongoType | null> {
     const parent = await Bookrack.findById(gid)
     parent?.children.unshift(data)
     await parent?.save()
     return parent?.children[0] || null
   }
 
-  async infoBook (gid: string, id: string): Promise<IBookType | null> {
+  async infoBook (gid: string, id: string): Promise<IBookMongoType | null> {
     const parent = await Bookrack.findById(gid)
     const sub = parent?.children.id(id)
     return sub
   }
 
-  async updateBook (gid: string, id: string, data: IControllerBookAddType): Promise<IBookType | null> {
+  async updateBook (gid: string, id: string, data: IControllerBookAddType): Promise<IBookMongoType | null> {
     const parent = await Bookrack.findById(gid)
     let sub = parent?.children.id(id)
     sub = Object.assign(sub, data)
@@ -65,7 +65,7 @@ class BookrackController extends BaseController {
     return sub
   }
 
-  async removeBook (gid: string, id: string): Promise<IBookType | null> {
+  async removeBook (gid: string, id: string): Promise<IBookMongoType | null> {
     const parent = await Bookrack.findById(gid)
     const sub = parent?.children.id(id)
     sub.remove()
@@ -73,7 +73,7 @@ class BookrackController extends BaseController {
     return sub
   }
 
-  async addNote (gid: string, bid: string, data: IControllerNoteAddType): Promise<INoteType | null> {
+  async addNote (gid: string, bid: string, data: IControllerNoteAddType): Promise<INoteMongoType | null> {
     const parent = await Bookrack.findById(gid)
     const book = parent?.children.id(bid)
     if (book) {
@@ -85,7 +85,7 @@ class BookrackController extends BaseController {
     }
   }
 
-  async updateNote (gid: string, bid: string, id: string, data: IControllerNoteAddType): Promise<INoteType | null> {
+  async updateNote (gid: string, bid: string, id: string, data: IControllerNoteAddType): Promise<INoteMongoType | null> {
     const parent = await Bookrack.findById(gid)
     const book = parent?.children.id(bid)
     let note = book?.children.id(id)
@@ -94,7 +94,7 @@ class BookrackController extends BaseController {
     return note
   }
 
-  async removeNote (gid: string, bid: string, id: string): Promise<INoteType | null> {
+  async removeNote (gid: string, bid: string, id: string): Promise<INoteMongoType | null> {
     const parent = await Bookrack.findById(gid)
     const book = parent?.children.id(bid)
     const note = book?.children.id(id)

@@ -122,7 +122,7 @@
 import { defineComponent, ref, reactive, computed, getCurrentInstance } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore  } from '../../store'
-import { IKnowledgeType } from '../../../app/types/knowledge'
+import { IKnowledgeType } from '../../../types/knowledge'
 
 import DragSort, { IChangeDataType } from '../dragsort/index.vue'
 
@@ -181,7 +181,7 @@ export default defineComponent({
     }
 
     const sort = (event: any) => {
-      const data = event as IChangeDataType<IKnowledgeType>
+      const data = event as IChangeDataType<IKnowledgeType<string>>
       let targetOrder = data.target.data.order
       targetOrder = typeof targetOrder !== 'undefined' ? targetOrder : 99
 
@@ -206,11 +206,11 @@ export default defineComponent({
       add () {
         store.commit('setVisibleKnowledge', true)
       },
-      edit (data: IKnowledgeType) {
+      edit (data: IKnowledgeType<string>) {
         store.commit('setKnowledgeForm', { ...data })
         store.commit('setVisibleKnowledge', true)
       },
-      del (data: IKnowledgeType) {
+      del (data: IKnowledgeType<string>) {
         modal.open({
           title: '系统提示',
           content: `是否确定删除“${data.title}”？该知识库下的文档自动转移到“默认分类”目录下。`,

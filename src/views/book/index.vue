@@ -164,8 +164,8 @@ export default defineComponent({
 
     // list
     const activeKey = ref<string>('')
-    const list = ref<IBookrackGroupType[]>([])
-    const allList = ref<IBookrackGroupType[]>([])
+    const list = ref<IBookrackGroupType<string>[]>([])
+    const allList = ref<IBookrackGroupType<string>[]>([])
     const loading = ref<boolean>(false)
     const getList = () => {
       loading.value = true
@@ -265,7 +265,9 @@ export default defineComponent({
       purchased: false,
       ISBN: '',
       tags: [],
-      rating: 3
+      rating: 3,
+      order: 99,
+      children: []
     }
     let form = reactive<IApisBookUpdateType>({
       ...formDefault
@@ -296,7 +298,7 @@ export default defineComponent({
         showFormDrawer()
       }
     }
-    const eidtBookHandler = (groupId: string, data: IBookType) => {
+    const eidtBookHandler = (groupId: string, data: IBookType<string>) => {
       if (groupId) {
         assignBook(groupId, data)
         showFormDrawer()
@@ -356,9 +358,9 @@ export default defineComponent({
     const searchLoading = ref<Boolean>(false)
     const handleSearch = () => {
       if (keyword.value) {
-        const _allList: IBookrackGroupType[] = JSON.parse(JSON.stringify(allList.value))
+        const _allList: IBookrackGroupType<string>[] = JSON.parse(JSON.stringify(allList.value))
         searchLoading.value = true
-        const res: IBookrackGroupType[] = []
+        const res: IBookrackGroupType<string>[] = []
         _allList.forEach(item => {
           let children = [...item.children]
           children = children.filter(sub => new RegExp(keyword.value, 'gmi').test(sub.title))

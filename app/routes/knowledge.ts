@@ -4,7 +4,7 @@ import { prefix, get, post, put, del } from '../core/router'
 import Knowledge from '../controllers/knowledge'
 
 import { IResponeBodyType } from '../../types/index'
-import { IKnowledgeType, IKnowledgeDocType, IControllerKnowledgeAddType, IControllerKnowledgeDocAddType } from '../../types/knowledge'
+import { IControllerKnowledgeAddType, IControllerKnowledgeDocAddType, IKnowledgeMongoType, IKnowledgeDocMongoType } from '../../types/knowledge'
 
 const knowledge = new Knowledge()
 
@@ -14,7 +14,7 @@ export default class Api {
   @get('/list')
   async KnowledgeList (ctx: Context, next: Next) {
     const result = await knowledge.list()
-    const body: IResponeBodyType<IKnowledgeType[]> = {
+    const body: IResponeBodyType<IKnowledgeMongoType[]> = {
       code: 0,
       msg: 'success',
       data: result
@@ -30,13 +30,13 @@ export default class Api {
     if (id) {
       const result = await knowledge.info(id, Boolean(_hasChildren))
       if (result && result.children && result.children.length > 0) {
-        result.children.sort((a, b) => {
+        result.children.sort((a: IKnowledgeDocMongoType, b: IKnowledgeDocMongoType) => {
           const aOrder = <number>a.order
           const bOrder = <number>b.order
           return aOrder - bOrder
         })
       }
-      const body: IResponeBodyType<IKnowledgeType | null> = {
+      const body: IResponeBodyType<IKnowledgeMongoType | null> = {
         code: 0,
         msg: 'success',
         data: result
@@ -76,7 +76,7 @@ export default class Api {
     const { id = '' } = ctx.params
     if (id) {
       const result = await knowledge.info(id, true)
-      const body: IResponeBodyType<IKnowledgeDocType[]> = {
+      const body: IResponeBodyType<IKnowledgeDocMongoType[]> = {
         code: 0,
         msg: 'success',
         data: result?.children || []
@@ -172,7 +172,7 @@ export default class Api {
     const _body = ctx.request.body as unknown as IControllerKnowledgeDocAddType
     if (id) {
       const result = await knowledge.addDoc(id, _body)
-      const body: IResponeBodyType<IKnowledgeDocType | null> = {
+      const body: IResponeBodyType<IKnowledgeDocMongoType | null> = {
         code: 0,
         msg: 'success',
         data: result
@@ -193,7 +193,7 @@ export default class Api {
     const _body = ctx.request.body as unknown as IControllerKnowledgeDocAddType
     if (id && did) {
       const result = await knowledge.updateDoc(id, did, _body)
-      const body: IResponeBodyType<IKnowledgeDocType | null> = {
+      const body: IResponeBodyType<IKnowledgeDocMongoType | null> = {
         code: 0,
         msg: 'success',
         data: result
