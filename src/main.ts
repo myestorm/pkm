@@ -12,6 +12,14 @@ import { store, key } from './store/index'
 
 import App from './App.vue'
 
+import { registerSW } from 'virtual:pwa-register'
+
+registerSW({
+  onRegisterError (error: any) {
+    console.log(error)
+  }
+})
+
 const app = createApp(App)
 app.use(ArcoVue, {
   componentPrefix: 'pkm'

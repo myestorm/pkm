@@ -12,6 +12,9 @@
     "lib": ["esnext", "dom"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "types": [
+      "vite-plugin-pwa/client"
+    ],
     "typeRoots": [
 			"./node_modules/koa-body",
       "./node_modules/@types",
