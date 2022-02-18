@@ -14,11 +14,7 @@ import App from './App.vue'
 
 import { registerSW } from 'virtual:pwa-register'
 
-registerSW({
-  onRegisterError (error: any) {
-    console.log(error)
-  }
-})
+registerSW()
 
 const app = createApp(App)
 app.use(ArcoVue, {
