@@ -1,11 +1,9 @@
 import { createRouter, createWebHistory, Router, RouteRecordRaw } from 'vue-router'
+import pc from './pc/index'
+import mobile from './mobile/index'
 
-import layout from '../components/layout/layout.vue'
-import home from '../views/home.vue'
-import document from '../views/document/document.vue'
-import bookIndex from '../views/book/index.vue'
-import bookInfo from '../views/book/info.vue'
-import userinfo from '../views/user/userinfo.vue'
+
+import empty from '../components/layout/empty.vue'
 import signin from '../views/user/signin.vue'
 import error404 from '../views/error/404.vue'
 
@@ -17,53 +15,15 @@ export const authorizeRoutes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Index',
-    redirect: '/home',
-    component: layout,
+    component: empty,
     meta: {
       icon: 'home',
       keepAlive: false
     },
-    children: [{
-      path: '/home',
-      name: 'Home',
-      component: home,
-      meta: {
-        icon: 'home',
-        keepAlive: false
-      }
-    }, {
-      path: '/document/:kid/:did?',
-      name: 'Document',
-      component: document,
-      meta: {
-        icon: 'document',
-        keepAlive: false
-      }
-    }, {
-      path: '/book',
-      name: 'Book',
-      component: bookIndex,
-      meta: {
-        icon: 'book',
-        keepAlive: false
-      }
-    }, {
-      path: '/book/info/:groupId/:id',
-      name: 'BookInfo',
-      component: bookInfo,
-      meta: {
-        icon: 'book-info',
-        keepAlive: false
-      }
-    }, {
-      path: '/userinfo',
-      name: 'Userinfo',
-      component: userinfo,
-      meta: {
-        icon: 'userinfo',
-        keepAlive: false
-      }
-    }]
+    children: [
+      pc,
+      mobile
+    ]
   }
 ]
 

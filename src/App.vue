@@ -5,7 +5,7 @@
 </template>
 <script lang="ts">
 import './assets/scss/app.scss'
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore  } from './store'
 import { authorizeRoutes } from './router'
@@ -14,10 +14,15 @@ export default defineComponent({
   setup () {
     const store = useStore()
     const router = useRouter()
-    let fullPath = (window.location.pathname || '/') + window.location.search
-    fullPath = /^\/signin/.test(fullPath) ? '/' : fullPath
+    const isMobile = computed(() => store.getters['getIsMobile'])
+    const defaultHome = isMobile.value ? '/m/home' : '/p/home'
+    
+    let pathName = window.location.pathname
+    if (!pathName || pathName === '/' || /^\/signin/.test(pathName)) {
+      pathName = defaultHome
+    }
 
-    document.body.setAttribute('arco-theme', 'dark')
+    const fullPath = pathName + window.location.search
 
     // 动态加载路由
     const addRoute = () => {
@@ -25,19 +30,21 @@ export default defineComponent({
         router.addRoute(item)
       })
     }
+    addRoute()
+    router.push(fullPath)
 
     // 获取用户信息
-    store.dispatch('admin/getUserInfo').then(() => {
-      addRoute()
-      router.push(fullPath)
-    }).catch(() => {
-      router.push({
-        path: '/signin',
-        query: {
-          refer: encodeURIComponent(fullPath)
-        }
-      })
-    })
+    // store.dispatch('admin/getUserInfo').then(() => {
+    //   addRoute()
+    //   router.push(fullPath)
+    // }).catch(() => {
+    //   router.push({
+    //     path: '/signin',
+    //     query: {
+    //       refer: encodeURIComponent(fullPath)
+    //     }
+    //   })
+    // })
   }
 })
 </script>

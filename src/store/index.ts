@@ -10,6 +10,13 @@ import bookrack from './modules/bookrack/index'
 export const key: InjectionKey<Store<RootState>> = Symbol()
 
 const state: State = {
+  system: {
+    userAgent: navigator.userAgent.toLowerCase(),
+    isMobile: /Mobi|Android|iPhone/i.test(navigator.userAgent)
+  },
+  mobile: {
+    current: 0
+  },
   visibleKnowledge: false,
   knowledgeForm: {
     title: '',
@@ -26,6 +33,15 @@ const getters: Getter = {
   },
   [GetterTypes.getKnowledgeForm] (state) {
     return state.knowledgeForm
+  },
+  [GetterTypes.getUserAgent] (state) {
+    return state.system.userAgent
+  },
+  [GetterTypes.getIsMobile] (state) {
+    return state.system.isMobile
+  },
+  [GetterTypes.getMobileCurrent] (state) {
+    return state.mobile.current
   }
 }
 
@@ -37,6 +53,9 @@ const mutations: Mutations = {
     state.knowledgeForm = {
       ...knowledgeForm
     }
+  },
+  [MutationTypes.setMobileCurrent] (state, current) {
+    state.mobile.current = current || 0
   }
 }
 
