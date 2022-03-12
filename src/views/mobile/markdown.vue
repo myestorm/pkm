@@ -1,14 +1,22 @@
 <template>
-  <mobile-layout title="文档" subtitle="祖国富强民主，八荣八耻" :footer="false">
+  <mobile-layout title="文档" subtitle="祖国富强民主，八荣八耻" :footer="false" class="editor-page" :style="{
+    paddingLeft: '0',
+    paddingRight: '0',
+    paddingBottom: '0'
+  }">
       <template #main>
         <div class="markdown-editor">
-          <MarkdownEditor @change="change" />
+          <MarkdownEditor @change="change" :helper="{
+            theme: false,
+            hotkey: !isMobile
+          }" />
         </div>
       </template>
   </mobile-layout>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
+import { useStore  } from '../../store'
 import MobileLayout from '../../components/layout/mobile-layout.vue'
 
 import '@totonoo/vue-codemirror/dist/style.css'
@@ -20,7 +28,10 @@ export default defineComponent({
     MarkdownEditor
   },
   setup () {
+    const store = useStore()
+    const isMobile = computed(() => store.getters['getIsMobile'])
     return {
+      isMobile,
       change (val: string) {
         console.log(val)
       }
@@ -30,6 +41,8 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .markdown-editor {
-  height: calc(100vh - 76px);
+  --editor-bg: --my-app-bg;
+  --editor-bg-dark: --home-color-bg-1;
+  height: calc(100vh - 62px);
 }
 </style>

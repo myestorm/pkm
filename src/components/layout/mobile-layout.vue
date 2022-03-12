@@ -5,7 +5,7 @@
         <pkm-page-header :title="title" :subtitle="subtitle" @back="backHandler"></pkm-page-header>
       </slot>
     </header>
-    <main class="pkm-mobile-app-main" :style="{ paddingTop: `${headerHeight + 16}px`, paddingBottom: footer ? '' : '12px' }">
+    <main class="pkm-mobile-app-main" :style="mainStyle">
       <slot name="main"></slot>
     </main>
     <footer class="pkm-mobile-app-footer" v-if="footer">
@@ -53,12 +53,19 @@ export default defineComponent({
       default: () => {
         window.history.back()
       }
+    },
+    style: {
+      type: Object,
+      default: null
     }
   },
   setup (props) {
     const store = useStore()
     const router = useRouter()
     const current = computed(() => store.getters['getMobileCurrent'])
+
+    const _mainStyle = { paddingTop: `${props.headerHeight + 16}px`, paddingBottom: props.footer ? '' : '12px' }
+    const mainStyle = Object.assign({}, _mainStyle, props.style)
 
     const navs = [{
       title: '首页',
@@ -80,6 +87,7 @@ export default defineComponent({
     return {
       navs,
       current,
+      mainStyle,
       toLink (url: string) {
         router.push(url)
       },
