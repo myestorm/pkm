@@ -240,6 +240,9 @@ body, #app {
         .item {
           box-sizing: border-box;
           position: relative;
+          .link {
+            cursor: pointer;
+          }
           .title {
             width: 100%;
             box-sizing: border-box;

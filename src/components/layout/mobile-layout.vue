@@ -118,7 +118,7 @@ $--footer-height: 64px;
   }
   &-main {
     width: 100%;
-    padding: $--header-height + 16px 12px $--footer-height + 16px;
+    padding: $--header-height + 16px 16px $--footer-height + 16px;
     box-sizing: border-box;
   }
   &-footer {

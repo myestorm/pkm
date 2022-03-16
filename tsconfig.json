@@ -17,6 +17,7 @@
     ],
     "typeRoots": [
 			"./node_modules/koa-body",
+			"./node_modules/@totonoo/vue-codemirror",
       "./node_modules/@types",
       "./app/types"
     ]

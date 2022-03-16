@@ -25,8 +25,10 @@
           <div class="book-list">
             <ul>
               <li class="item" v-for="i in 10" :key="i">
-                <img src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp" style="width: 100%; height: 140px;" />
-                <div class="title">这将为你提供一个</div>
+                <div class="link" @click="info()">
+                  <img src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp" style="width: 100%; height: 140px;" />
+                  <div class="title">这将为你提供一个</div>
+                </div>
                 <div class="action">
                   <pkm-dropdown position="br">
                     <pkm-button-group>
@@ -56,7 +58,7 @@
             </ul>
           </div>
         </div>
-        <pkm-button type="primary" shape="circle" class="fix-btn" size="large">
+        <pkm-button type="primary" shape="circle" class="fix-btn" size="large" @click="add">
           <icon-plus />
         </pkm-button>
       </div>
@@ -82,6 +84,12 @@ export default defineComponent({
     store.commit('setMobileCurrent', 2)
 
     return {
+      add () {
+        router.push('/m/book/editor/')
+      },
+      info () {
+        router.push('/m/book/info/')
+      }
     }
   }
 })

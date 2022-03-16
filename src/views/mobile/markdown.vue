@@ -9,6 +9,9 @@
           <MarkdownEditor @change="change" :helper="{
             theme: false,
             hotkey: !isMobile
+          }" :config="{
+            theme: 'light',
+            themeAttr: 'arco-theme'
           }" />
         </div>
       </template>
@@ -41,8 +44,8 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .markdown-editor {
-  --editor-bg: --my-app-bg;
-  --editor-bg-dark: --home-color-bg-1;
-  height: calc(100vh - 62px);
+  // --editor-bg: --my-app-bg;
+  // --editor-bg-dark: --home-color-bg-1;
+  height: calc(100vh - 64px);
 }
 </style>

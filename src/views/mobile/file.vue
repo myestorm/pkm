@@ -47,7 +47,7 @@
             </ul>
           </div>
         </div>
-        <pkm-button type="primary" shape="circle" class="fix-btn" size="large">
+        <pkm-button type="primary" shape="circle" class="fix-btn" size="large" @click="add()">
           <icon-plus />
         </pkm-button>
       </div>
@@ -73,6 +73,9 @@ export default defineComponent({
     store.commit('setMobileCurrent', 1)
 
     return {
+      add () {
+        router.push('/m/markdown')
+      }
     }
   }
 })
