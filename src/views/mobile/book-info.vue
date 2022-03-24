@@ -39,7 +39,7 @@
         <div class="notes">
           <pkm-typography-title :heading="5" flex="auto">笔记</pkm-typography-title>
           <div class="btn">
-            <pkm-button type="primary" shape="circle" size="large" @click="addHandler">
+            <pkm-button type="primary" shape="circle" size="large">
               <template #icon>
                 <icon-plus />
               </template>
@@ -63,27 +63,53 @@
             </pkm-timeline-item>
           </pkm-timeline>
         </div>
+        <pkm-drawer width="100%" class="editor-drawer" :visible="visible" :footer="false" @ok="handleOk" @cancel="handleCancel" unmountOnClose>
+          <template #title>
+            笔记
+          </template>
+          <div class="markdown-editor">
+            <MarkdownEditor @change="change" :helper="{
+              theme: false,
+              hotkey: !isMobile
+            }" :config="{
+              theme: 'light',
+              themeAttr: 'arco-theme'
+            }" />
+          </div>
+        </pkm-drawer>
       </template>
   </mobile-layout>
 </template>
 <script lang="ts">
-import { defineComponent, getCurrentInstance, ref } from 'vue'
+import { defineComponent, getCurrentInstance, ref, computed } from 'vue'
 
 import MobileLayout from '../../components/layout/mobile-layout.vue'
 import BookForm from '../../components/book-form/index.vue'
 import Md2html from '../../components/editor/parser/md2html'
 
+import '@totonoo/vue-codemirror/dist/style.css'
+import { MarkdownEditor } from '@totonoo/vue-codemirror'
+
+import { useStore  } from '../../store'
+
 
 export default defineComponent({
   components: {
     MobileLayout,
-    BookForm
+    BookForm,
+    MarkdownEditor
   },
   setup () {
     const app = getCurrentInstance()
     const formatTime = app?.appContext.config.globalProperties.$formatTime
-    const data = {"code":0,"msg":"success","data":{"title":"如何形成清晰的观点","author":"[美] 查尔斯·S.皮尔士","cover":"","desc":"在人们的思维活动中，有许多种想法，却不知怎样表达。该如何形成自己清晰的观点？这种观点又是怎样决定人们的习惯从而影响人们的现实生活？什么样的观点是有效的观点？","readed":false,"heard":false,"purchased":true,"ISBN":"9787545549928","tags":["深度思考","逻辑推理","准确表达"],"rating":3,"order":99,"children":[{"content":"第二条","order":99,"createdAt":"2022-02-17T06:53:55.264Z","updatedAt":"2022-02-17T06:53:55.264Z","_id":"623058b9670d6255fb226324"},{"content":"如何形成清晰的观点\n\n测试笔记","order":99,"createdAt":"2022-02-17T06:53:55.264Z","updatedAt":"2022-02-17T06:53:55.264Z","_id":"62305898670d6255fb226316"}],"createdAt":"2022-01-19T06:23:27.083Z","updatedAt":"2022-03-15T09:13:29.252Z","_id":"61ebc03825a74f80cb2f7004"}}
+    const store = useStore()
+    const isMobile = computed(() => store.getters['getIsMobile'])
+
+    const visible = ref(true)
+    const data = {"code":0,"msg":"success","data":{"title":"如何形成清晰的观点","author":"[美] 查尔斯·S.皮尔士","cover":"","desc":"在人们的思维活动中，有许多种想法，却不知怎样表达。该如何形成自己清晰的观点？这种观点又是怎样决定人们的习惯从而影响人们的现实生活？什么样的观点是有效的观点？","readed":false,"heard":false,"purchased":true,"ISBN":"9787545549928","tags":["深度思考","逻辑推理","准确表达"],"rating":3,"order":99,"children":[{"content":"在人们的思维活动中，有许多种想法，却不知怎样表达。该如何形成自己清晰的观点？这种观点又是怎样决定人们的习惯从而影响人们的现实生活？什么样的观点是有效的观点？","order":99,"createdAt":"2022-02-17T06:53:55.264Z","updatedAt":"2022-02-17T06:53:55.264Z","_id":"623058b9670d6255fb226324"},{"content":"如何形成清晰的观点\n\n测试笔记","order":99,"createdAt":"2022-02-17T06:53:55.264Z","updatedAt":"2022-02-17T06:53:55.264Z","_id":"62305898670d6255fb226316"}],"createdAt":"2022-01-19T06:23:27.083Z","updatedAt":"2022-03-15T09:13:29.252Z","_id":"61ebc03825a74f80cb2f7004"}}
     return {
+      visible,
+      isMobile,
       formatTime,
       Md2html,
       info: data.data
@@ -91,7 +117,7 @@ export default defineComponent({
   },
 })
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .book-info {
   color: var(--color-text-1);
   text-align: justify;
@@ -113,20 +139,38 @@ export default defineComponent({
     margin-right: 20px;
     display: inline-block;
   }
-  .notes {
-    .btn {
-      position: fixed;
-      right: 0;
-      bottom: 0;
-    }
+}
+.notes {
+  padding-right: 54px;
+  .btn {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    padding: 16px;
   }
-  .pkm-timeline-item {
-    position: relative;
-    .action {
-      position: absolute;
-      right: 0;
-      bottom: 0;
-    }
+}
+.pkm-timeline-item {
+  position: relative;
+  padding-bottom: 16px;
+  text-align: justify;
+  :deep(p) {
+    margin: 0;
+    padding: 0;
+  }
+  .action {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+}
+.markdown-editor {
+  height: calc(100vh - 48px);
+}
+</style>
+<style lang="scss">
+.editor-drawer {
+  .arco-drawer-body {
+    padding: 0;
   }
 }
 </style>
