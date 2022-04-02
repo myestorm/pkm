@@ -68,13 +68,7 @@
             笔记
           </template>
           <div class="markdown-editor">
-            <MarkdownEditor @change="change" :helper="{
-              theme: false,
-              hotkey: !isMobile
-            }" :config="{
-              theme: 'light',
-              themeAttr: 'arco-theme'
-            }" />
+            <markdown-editor v-model="editorValue" @change="change" />
           </div>
         </pkm-drawer>
       </template>
@@ -87,8 +81,7 @@ import MobileLayout from '../../components/layout/mobile-layout.vue'
 import BookForm from '../../components/book-form/index.vue'
 import Md2html from '../../components/editor/parser/md2html'
 
-import '@totonoo/vue-codemirror/dist/style.css'
-import { MarkdownEditor } from '@totonoo/vue-codemirror'
+import MarkdownEditor from '../../components/editor/markdown.vue'
 
 import { useStore  } from '../../store'
 
@@ -105,9 +98,32 @@ export default defineComponent({
     const store = useStore()
     const isMobile = computed(() => store.getters['getIsMobile'])
 
-    const visible = ref(true)
+    const visible = ref(false)
     const data = {"code":0,"msg":"success","data":{"title":"如何形成清晰的观点","author":"[美] 查尔斯·S.皮尔士","cover":"","desc":"在人们的思维活动中，有许多种想法，却不知怎样表达。该如何形成自己清晰的观点？这种观点又是怎样决定人们的习惯从而影响人们的现实生活？什么样的观点是有效的观点？","readed":false,"heard":false,"purchased":true,"ISBN":"9787545549928","tags":["深度思考","逻辑推理","准确表达"],"rating":3,"order":99,"children":[{"content":"在人们的思维活动中，有许多种想法，却不知怎样表达。该如何形成自己清晰的观点？这种观点又是怎样决定人们的习惯从而影响人们的现实生活？什么样的观点是有效的观点？","order":99,"createdAt":"2022-02-17T06:53:55.264Z","updatedAt":"2022-02-17T06:53:55.264Z","_id":"623058b9670d6255fb226324"},{"content":"如何形成清晰的观点\n\n测试笔记","order":99,"createdAt":"2022-02-17T06:53:55.264Z","updatedAt":"2022-02-17T06:53:55.264Z","_id":"62305898670d6255fb226316"}],"createdAt":"2022-01-19T06:23:27.083Z","updatedAt":"2022-03-15T09:13:29.252Z","_id":"61ebc03825a74f80cb2f7004"}}
+
+    const editorValue = ref('')
+    const handleCancel = () => {
+      visible.value = false
+    }
+    const handleOk = () => {
+      visible.value = false
+    }
+    const eidtHandler = (index: number) => {
+      const item = data.data.children[index]
+      editorValue.value = item.content || ''
+      visible.value = true
+    }
+    const deleteHandler = (index: number) => {
+      const item = data.data.children[index]
+      editorValue.value = item.content || ''
+      visible.value = true
+    }
     return {
+      editorValue,
+      handleCancel,
+      handleOk,
+      eidtHandler,
+      deleteHandler,
       visible,
       isMobile,
       formatTime,
@@ -164,13 +180,21 @@ export default defineComponent({
   }
 }
 .markdown-editor {
-  height: calc(100vh - 48px);
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
 }
 </style>
 <style lang="scss">
 .editor-drawer {
   .arco-drawer-body {
+    width: 100%;
     padding: 0;
+    margin: 0;
   }
 }
 </style>

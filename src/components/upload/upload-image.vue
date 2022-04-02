@@ -21,7 +21,7 @@
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue'
 
-import { FileItem } from '@arco-design/web-vue/es/upload/interfaces'
+import type { FileItem } from '@arco-design/web-vue/es/upload/interfaces'
 import config from './config'
 type IFileListItemType = {
   uid: string,

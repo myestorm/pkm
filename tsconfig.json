@@ -18,6 +18,7 @@
     "typeRoots": [
 			"./node_modules/koa-body",
 			"./node_modules/@totonoo/vue-codemirror",
+			"./node_modules/@arco-design/web-vue",
       "./node_modules/@types",
       "./app/types"
     ]
