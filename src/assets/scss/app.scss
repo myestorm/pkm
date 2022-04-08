@@ -63,8 +63,10 @@ body, #app {
 }
 
 .#{$--prefix}-modal-simple {
-  width: 360px;
+  width: 100%;
+  max-width: 360px;
   padding: 16px 16px 24px;
+  box-sizing: border-box;
   .arco-modal-body {
     text-align: center;
     padding: 0 8px;
@@ -136,6 +138,10 @@ body, #app {
   }
 }
 
+.block {
+  width: 100%;
+}
+
 .md-drawer {
   .arco-drawer-body {
     padding: 0;
@@ -182,6 +188,27 @@ body, #app {
   }
   .search {
     padding-bottom: 8px;
+    position: relative;
+    z-index: 10;
+    .search-result {
+      width: 100%;
+      position: absolute;
+      left: 0;
+      top: 32px;
+      background-color: var(--color-bg-1);
+      em {
+        font-style: normal;
+        color: rgb(var(--primary-6));
+      }
+      .title {
+        font-size: 14px;
+        color: var(--color-text-2);
+      }
+      .desc {
+        font-size: 12px;
+        color: var(--color-text-3);
+      }
+    }
   }
   .filter {
     padding-bottom: 8px;
@@ -201,9 +228,10 @@ body, #app {
       list-style: none;
     }
     .file-list {
+      padding: 4px 0;
       .item {
         display: flex;
-        padding: 12px 0;
+        padding: 4px 0;
         // align-items: center;
         .icon {
           flex: 0 0 36px;
@@ -221,6 +249,12 @@ body, #app {
           .title {
             color: var(--color-text-2);
             font-size: 14px;
+            font-weight: bold;
+          }
+          .desc {
+            color: var(--color-text-3);
+            font-size: 12px;
+            padding: 4px 0;
           }
         }
         .action {

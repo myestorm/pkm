@@ -25,7 +25,7 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { useStore  } from '../../store'
+import useCommonStore from '../../store/index'
 
 export default defineComponent({
   name: 'SideBar',
@@ -60,9 +60,9 @@ export default defineComponent({
     }
   },
   setup (props) {
-    const store = useStore()
+    const store = useCommonStore()
     const router = useRouter()
-    const current = computed(() => store.getters['getMobileCurrent'])
+    const current = store.getMobileCurrent
 
     const _mainStyle = { paddingTop: `${props.headerHeight + 16}px`, paddingBottom: props.footer ? '' : '12px' }
     const mainStyle = Object.assign({}, _mainStyle, props.style)

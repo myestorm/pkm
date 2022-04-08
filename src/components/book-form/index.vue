@@ -36,11 +36,11 @@ import { FormInstance, } from '@arco-design/web-vue/es/form'
 import { ValidatedError } from '@arco-design/web-vue/es/form/interface'
 import UploadImage from '../../components/upload/upload-image.vue'
 
-import { useStore  } from '../../store'
+import useCommonStore from '../../store'
 
-import {
-  IApisBookUpdateType
-} from '../../../types/bookrack'
+// import {
+//   IApisBookUpdateType
+// } from '../../../types/bookrack'
 
 export default defineComponent({
   name: 'BookForm',
@@ -55,7 +55,7 @@ export default defineComponent({
     UploadImage
   },
   setup (props, ctx) {
-    const store = useStore()
+    // const store = useStore()
     const app = getCurrentInstance()
     const msg = app?.appContext.config.globalProperties.$message
 
@@ -76,7 +76,7 @@ export default defineComponent({
       order: 99,
       children: []
     }
-    let form = reactive<IApisBookUpdateType>({
+    let form = reactive<any>({
       ...formDefault
     })
 
@@ -91,20 +91,20 @@ export default defineComponent({
           if (!postData._id) {
             delete postData._id
           }
-          store.dispatch(url, postData).then(() => {
-            ctx.emit('success', true)
-          }).catch(err => {
-            msg.error(err.message)
-            ctx.emit('fail', err)
-          }).then(() => {
-            ctx.emit('update:loading', false)
-          })
+          // store.dispatch(url, postData).then(() => {
+          //   ctx.emit('success', true)
+          // }).catch(err => {
+          //   msg.error(err.message)
+          //   ctx.emit('fail', err)
+          // }).then(() => {
+          //   ctx.emit('update:loading', false)
+          // })
         }
       })
     }
 
     
-    const setFormValue = (groupId: string, data: IApisBookUpdateType) => {
+    const setFormValue = (groupId: string, data: any) => {
       form._id = data._id
       form.groupId = groupId
       form.title = data.title

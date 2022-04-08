@@ -1,18 +1,14 @@
 import { AppRouter } from '../core/router'
 import Home from './home'
-import Admin from './admin'
-import Knowledge from './knowledge'
-import Recycle from './recycle'
 import File from './file'
-import Bookrack from './bookrack'
+import Admin from './admin'
+import Document from './document'
 
 const appRouter = new AppRouter()
 appRouter
   .mount(Home)
-  .mount(Admin)
-  .mount(Knowledge)
-  .mount(Recycle)
   .mount(File)
-  .mount(Bookrack)
+  .mount(Admin)
+  .mount(Document)
 
 export default appRouter.router

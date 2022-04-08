@@ -8,7 +8,8 @@ import Axios from './plugins/axios'
 import Utils from './plugins/utils'
 
 import Router from './router/index'
-import { store, key } from './store/index'
+import { createPinia } from 'pinia'
+// import { store, key } from './store/index'
 
 import App from './App.vue'
 
@@ -24,5 +25,5 @@ app.use(ArcoVueIcon)
 app.use(Utils)
 app.use(Axios)
 app.use(Router)
-app.use(store, key)
+app.use(createPinia())
 app.mount('#app')

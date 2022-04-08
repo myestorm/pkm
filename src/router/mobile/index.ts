@@ -51,7 +51,7 @@ export default {
       keepAlive: false
     }
   }, {
-    path: `${prefix}/markdown/:path*`,
+    path: `${prefix}/markdown`,
     name: 'MobilemMrkdown',
     component: mobilemMrkdown,
     meta: {

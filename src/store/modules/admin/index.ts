@@ -1,89 +1,61 @@
-import { 
-  State,
-  GetterTypes, Getters,
-  MutationTypes, Mutations,
-  ActionTypes, Actions,
-  ModuleType
-} from './types'
-
-import { AdminInfo, AdminSignin, AdminSignout } from '../../../apis/admin'
-import { IUserInfoType, ISigninType } from '../../../../types/admin'
+import { defineStore } from 'pinia'
+import { AdminState } from './types'
 
 import { localStorageToken } from '../../../config'
+import { ISigninType } from '../../../../types/admin'
+import { AdminInfo, AdminSignin, AdminSignout } from '../../../apis/admin'
 
 const emptyUserinfo = {
   username: ''
 }
 
-export const state: State = {
-  token: localStorage.getItem(localStorageToken) || '',
-  userinfo: {
-    ...emptyUserinfo
-  }
-}
+const useStore = defineStore('admin', {
+  state: (): AdminState => ({
+    token: localStorage.getItem(localStorageToken) || '',
+    userinfo: {
+      ...emptyUserinfo
+    }
+  }),
 
-export const getters: Getters = {
-  [GetterTypes.getToken] (state) {
-    return state.token
-  },
-  [GetterTypes.getUserinfo] (state) {
-    return state.userinfo
-  }
-}
+  actions: {
+    signin (postData: ISigninType) {
+      return new Promise((resolve, reject) => {
+        AdminSignin(postData).then(res => {
+          this.token = res.data || ''
+          localStorage.setItem(localStorageToken, this.token)
+          resolve(res.data)
+        }).catch(err => {
+          reject(err)
+        })
+      })
+    },
 
-export const mutations: Mutations = {
-  [MutationTypes.setToken] (state, token) {
-    localStorage.setItem(localStorageToken, token || '')
-    state.token = token || ''
-  },
-  [MutationTypes.setUserinfo] (state, userinfo = { ...emptyUserinfo }) {
-    state.userinfo = {
-      ...userinfo
+    signout () {
+      return new Promise((resolve, reject) => {
+        AdminSignout().then(res => {
+          this.token = ''
+          this.userinfo = emptyUserinfo
+          resolve(res.data)
+        }).catch(err => {
+          reject(err)
+        })
+      })
+    },
+
+    getUserinfo () {
+      return new Promise((resolve, reject) => {
+        AdminInfo().then(res => {
+          const token = res.data.token
+          const userinfo = res.data.userinfo
+          this.token = token
+          this.userinfo = Object.assign(emptyUserinfo, userinfo)
+          localStorage.setItem(localStorageToken, this.token)
+          resolve(res.data)
+        }).catch(err => {
+          reject(err)
+        })
+      })
     }
   }
-}
-
-export const actions: Actions = {
-  [ActionTypes.signin] ({ commit }, postData: ISigninType) {
-    return new Promise((resolve, reject) => {
-      AdminSignin(postData).then(res => {
-        commit(MutationTypes.setToken, res.data)
-        resolve(res.data)
-      }).catch(err => {
-        reject(err)
-      })
-    })
-  },
-  [ActionTypes.getUserInfo] ({ commit }) {
-    return new Promise((resolve, reject) => {
-      AdminInfo().then(res => {
-        commit(MutationTypes.setToken, res.data.token)
-        commit(MutationTypes.setUserinfo, res.data.userinfo)
-        resolve(res.data)
-      }).catch(err => {
-        reject(err)
-      })
-    })
-  },
-  [ActionTypes.signout] ({ commit }) {
-    return new Promise((resolve, reject) => {
-      AdminSignout().then(res => {
-        commit(MutationTypes.setToken, '')
-        commit(MutationTypes.setUserinfo, { username: '' })
-        resolve(res.data)
-      }).catch(err => {
-        reject(err)
-      })
-    })
-  }
-}
-
-const module: ModuleType =  {
-  namespaced: true,
-  state,
-  getters,
-  mutations,
-  actions
-}
-
-export default module
+})
+export default useStore

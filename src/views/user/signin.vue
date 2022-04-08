@@ -2,14 +2,17 @@
   <div class="pkm-page-signin">
     <div class="pkm-page-signin-bg">
       <pkm-form :model="form" class="login-form" ref="signinFormRef" @submit="submit">
-        <pkm-form-item field="username" label="用户" :rules="[{ required: true, message: '请输入用户名/手机/邮箱' }]">
+        <pkm-form-item :hide-label="true">
+          <TotonooLogo />
+        </pkm-form-item>
+        <pkm-form-item field="username" label="用户" :hide-label="true" :rules="[{ required: true, message: '请输入用户名/手机/邮箱' }]">
           <pkm-input v-model="form.username" placeholder="用户名/手机/邮箱" />
         </pkm-form-item>
-        <pkm-form-item field="password" label="密码" :rules="[{ required: true, message: '请输入密码' }]">
+        <pkm-form-item field="password" label="密码" :hide-label="true" :rules="[{ required: true, message: '请输入密码' }]">
           <pkm-input-password v-model="form.password" placeholder="请输入登录密码" />
         </pkm-form-item>
-        <pkm-form-item>
-          <pkm-button long html-type="submit" :loading="loading" :disabled="loading">立 即 登 录</pkm-button>
+        <pkm-form-item :hide-label="true">
+          <pkm-button type="primary" long html-type="submit" :loading="loading" :disabled="loading">立 即 登 录</pkm-button>
         </pkm-form-item>
       </pkm-form>
     </div>
@@ -21,11 +24,15 @@ import { MD5 } from 'crypto-js'
 import { ValidatedError } from '@arco-design/web-vue/es/form/interface'
 import { FormInstance } from '@arco-design/web-vue/es/form'
 import { useRoute } from 'vue-router'
-import { useStore  } from '../../store'
+import useAdminStore from '../../store/modules/admin/index'
+import TotonooLogo from '../../components/totonoo-logo/index.vue'
 
 export default defineComponent({
+  components: {
+    TotonooLogo
+  },
   setup () {
-    const store = useStore()
+    const storeAdmin = useAdminStore()
     const route = useRoute()
     const app = getCurrentInstance()
     const msg = app?.appContext.config.globalProperties.$message
@@ -46,7 +53,7 @@ export default defineComponent({
             ...form
           }
           postData.password = MD5(postData.password).toString()
-          store.dispatch('admin/signin', postData).then(() => {
+          storeAdmin.signin(postData).then(() => {
             window.location.href = decodeURIComponent(refer)
           }).catch(err => {
             msg.error(err.message)
@@ -79,10 +86,12 @@ export default defineComponent({
     display: flex;
     align-items: center;
     justify-content: center;
-    backdrop-filter: blur(32px);
-    background-color: rgba(0,0,0, 0.8);
+    backdrop-filter: blur(8px);
+    background-color: rgba(0,0,0, 0.12);
     .login-form {
-      max-width: 468px;
+      max-width: 320px;
+      box-sizing: border-box;
+      padding: 0 32px;
       width: 100%;
     }
   }

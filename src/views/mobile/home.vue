@@ -53,16 +53,15 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import MobileLayout from '../../components/layout/mobile-layout.vue'
-import { useStore  } from '../../store'
+import useCommonStore from '../../store/index'
 
 export default defineComponent({
   components: {
     MobileLayout
   },
   setup () {
-    const store = useStore()
-
-    store.commit('setMobileCurrent', 0)
+    const store = useCommonStore()
+    store.mobile.current = 0
     return {
     }
   }

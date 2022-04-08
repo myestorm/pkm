@@ -68,7 +68,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import MobileLayout from '../../components/layout/mobile-layout.vue'
-import { useStore  } from '../../store'
+import useCommonStore from '../../store/index'
 import { useRouter, useRoute } from 'vue-router'
 
 export default defineComponent({
@@ -76,12 +76,12 @@ export default defineComponent({
     MobileLayout
   },
   setup () {
-    const store = useStore()
+    const store = useCommonStore()
     const router = useRouter()
     const route = useRoute()
 
     console.log(route.params.path)
-    store.commit('setMobileCurrent', 2)
+    store.mobile.current = 2
 
     return {
       add () {

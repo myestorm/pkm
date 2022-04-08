@@ -14,16 +14,16 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import MobileLayout from '../../components/layout/mobile-layout.vue'
-import { useStore  } from '../../store'
+import useCommonStore from '../../store/index'
 
 export default defineComponent({
   components: {
     MobileLayout
   },
   setup () {
-    const store = useStore()
+    const store = useCommonStore()
 
-    store.commit('setMobileCurrent', 3)
+    store.mobile.current = 3
     return {
       changeHandler (val: boolean) {
         if (val) {

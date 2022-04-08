@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, Router, RouteRecordRaw } from 'vue-router'
-import pc from './pc/index'
+// import pc from './pc/index'
 import mobile from './mobile/index'
 
 
@@ -21,7 +21,7 @@ export const authorizeRoutes: RouteRecordRaw[] = [
       keepAlive: false
     },
     children: [
-      pc,
+      // pc,
       mobile
     ]
   }

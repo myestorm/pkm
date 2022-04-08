@@ -5,6 +5,7 @@
     <markdown-editor
       v-model="value"
       :theme="theme"
+      :upload="uploadConfig"
       @blur="blurHandler"
       @focus="focusHandler"
       @selectionChange="selectionChangeHandler"
@@ -46,6 +47,17 @@ export default defineComponent({
       observer: 'body',
       observerAttr: 'arco-theme'
     }
+    const uploadConfig = {
+      uploadUrl: '/api/file/upload',
+      headers: {
+      },
+      uploadSuccess: (result: any): string => {
+        return result.data.domain + result.data.filepath
+      },
+      uploadFail: (error: any): void => {
+        console.log('console', error)
+      }
+    }
     const value = ref(props.modelValue)
     watch(() => props.modelValue, (val) => {
       value.value = val
@@ -73,6 +85,7 @@ export default defineComponent({
     return {
       value,
       theme,
+      uploadConfig,
       blurHandler,
       focusHandler,
       selectionChangeHandler,
