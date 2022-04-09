@@ -5,7 +5,7 @@
         <div class="search">
           <pkm-input-search placeholder="搜索所有书籍" class="search-input" />
         </div>
-        <div class="filter">
+        <!-- <div class="filter">
           <pkm-space>
             <pkm-select :style="{width:'120px'}" placeholder="Select" class="filter-selector" size="small">
               <pkm-option>Beijing-Beijing-Beijing</pkm-option>
@@ -20,14 +20,14 @@
               <pkm-option disabled>Disabled</pkm-option>
             </pkm-select>
           </pkm-space>
-        </div>
+        </div> -->
         <div class="content">
           <div class="book-list">
             <ul>
-              <li class="item" v-for="i in 10" :key="i">
-                <div class="link" @click="info()">
-                  <img src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp" style="width: 100%; height: 140px;" />
-                  <div class="title">这将为你提供一个</div>
+              <li class="item" v-for="item in list" :key="item._id">
+                <div class="link" @click="info(item._id)">
+                  <img :src="item.cover" style="width: 100%; height: 140px;" />
+                  <div class="title">{{ item.title }}</div>
                 </div>
                 <div class="action">
                   <pkm-dropdown position="br">
@@ -39,13 +39,13 @@
                       </pkm-button>
                     </pkm-button-group>
                     <template #content>
-                      <pkm-doption>
+                      <pkm-doption @click="edit(item._id)">
                         <template #icon>
                           <icon-edit />
                         </template>
                         编辑
                       </pkm-doption>
-                      <pkm-doption>
+                      <pkm-doption @click="remove(item._id)">
                         <template #icon>
                           <icon-delete />
                         </template>
@@ -66,30 +66,69 @@
   </mobile-layout>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref, getCurrentInstance } from 'vue'
 import MobileLayout from '../../components/layout/mobile-layout.vue'
 import useCommonStore from '../../store/index'
+import { BookList, BookRemove } from '../../apis/book'
 import { useRouter, useRoute } from 'vue-router'
+import { IBookDataApiType } from '../../../types/book'
 
 export default defineComponent({
   components: {
     MobileLayout
   },
   setup () {
+    const app = getCurrentInstance()
+    const msg = app?.appContext.config.globalProperties.$message
+    const modal = app?.appContext.config.globalProperties.$modal
+
     const store = useCommonStore()
     const router = useRouter()
     const route = useRoute()
 
-    console.log(route.params.path)
+    const list = ref<IBookDataApiType[]>([])
+    const getList = () => {
+      BookList().then(res => {
+        list.value = res.data || []
+      }).catch(err => {
+        msg.error(err.message)
+      })
+    }
+    const add = () => {
+      router.push('/m/book/editor/')
+    }
+    const edit = (id: string) => {
+      router.push(`/m/book/editor/${id}`)
+    }
+    const info = (id: string) => {
+      router.push(`/m/book/info/${id}`)
+    }
+    const remove = (id: string) => {
+      modal.open({
+        title: '系统提示',
+        content: `该操作会删除内容，是否继续？`,
+        hideCancel: false,
+        simple: true,
+        modalClass: ['pkm-modal-simple'],
+        onOk () {
+          BookRemove(id).then(_ => {
+            getList()
+          }).catch(err => {
+            msg.error(err.message)
+          })
+        }
+      })
+    }
+    getList()
+
     store.mobile.current = 2
 
     return {
-      add () {
-        router.push('/m/book/editor/')
-      },
-      info () {
-        router.push('/m/book/info/')
-      }
+      list,
+      add,
+      edit,
+      remove,
+      info
     }
   }
 })

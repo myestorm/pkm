@@ -3,6 +3,7 @@ import Home from './home'
 import File from './file'
 import Admin from './admin'
 import Document from './document'
+import Book from './book'
 
 const appRouter = new AppRouter()
 appRouter
@@ -10,5 +11,6 @@ appRouter
   .mount(File)
   .mount(Admin)
   .mount(Document)
+  .mount(Book)
 
 export default appRouter.router

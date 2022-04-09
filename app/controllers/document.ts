@@ -62,8 +62,6 @@ class DocumentController extends BaseController {
       })
     }
 
-    and.push()
-
     const params = {
       $or: [
         { title: { $regex : reg } },

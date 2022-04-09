@@ -35,7 +35,7 @@ export default {
       keepAlive: false
     }
   }, {
-    path: `${prefix}/book/:path*`,
+    path: `${prefix}/book`,
     name: 'MobileBook',
     component: mobileBook,
     meta: {
@@ -59,7 +59,7 @@ export default {
       keepAlive: false
     }
   }, {
-    path: `${prefix}/book/editor/:path*`,
+    path: `${prefix}/book/editor/:id?`,
     name: 'MobilemBookEditor',
     component: mobilemBookEditor,
     meta: {
@@ -67,7 +67,7 @@ export default {
       keepAlive: false
     }
   }, {
-    path: `${prefix}/book/info/:path*`,
+    path: `${prefix}/book/info/:id?`,
     name: 'MobilemBookInfo',
     component: mobilemBookInfo,
     meta: {

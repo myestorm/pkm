@@ -1,23 +1,23 @@
 <template>
-  <mobile-layout title="书架" subtitle="如何形成清晰的观点" :footer="false">
+  <mobile-layout title="书架" :subtitle="pageData.title" :footer="false">
       <template #main>
         <pkm-space direction="vertical" class="book-info" size="medium">
-          <h1>{{info.title}} - <span>{{info.author}}</span></h1>
+          <h1>{{pageData.title}} - <span>{{pageData.author}}</span></h1>
           <div class="desc">
-            <img :src="info.cover || '/images/no-book.png'">
+            <img :src="pageData.cover || '/images/no-book.png'">
             <pkm-typography-text type="secondary">
-              {{info.desc}}
+              {{pageData.desc}}
             </pkm-typography-text>
           </div>
           <dl>
             <dt>ISBN</dt>
-            <dd>{{info.ISBN}}</dd>
+            <dd>{{pageData.ISBN}}</dd>
           </dl>
           <dl>
             <dt>标签</dt>
             <dd>
               <pkm-space>
-                <pkm-tag v-for="(tag, index) in info.tags" :key="index">{{tag}}</pkm-tag>
+                <pkm-tag v-for="(tag, index) in pageData.tags" :key="index">{{tag}}</pkm-tag>
               </pkm-space>
             </dd>
           </dl>
@@ -25,28 +25,28 @@
             <dt>状态</dt>
             <dd>
               <pkm-space>
-                <pkm-checkbox v-model="info.readed" disabled>已读</pkm-checkbox>
-                <pkm-checkbox v-model="info.heard" disabled>已听</pkm-checkbox>
-                <pkm-checkbox v-model="info.purchased" disabled>已买</pkm-checkbox>
+                <pkm-checkbox v-model="pageData.readed" disabled>已读</pkm-checkbox>
+                <pkm-checkbox v-model="pageData.heard" disabled>已听</pkm-checkbox>
+                <pkm-checkbox v-model="pageData.purchased" disabled>已买</pkm-checkbox>
               </pkm-space>
             </dd>
           </dl>
           <dl>
             <dt>评价</dt>
-            <dd><pkm-rate v-model="info.rating" allow-half readonly /></dd>
+            <dd><pkm-rate v-model="pageData.rating" allow-half readonly /></dd>
           </dl>
         </pkm-space>
         <div class="notes">
           <pkm-typography-title :heading="5" flex="auto">笔记</pkm-typography-title>
           <div class="btn">
-            <pkm-button type="primary" shape="circle" size="large">
+            <pkm-button type="primary" shape="circle" size="large" @click="showDrawer">
               <template #icon>
                 <icon-plus />
               </template>
             </pkm-button>
           </div>
-          <pkm-timeline>
-            <pkm-timeline-item v-for="(note, index) in info.children" :key="index" :label="formatTime(note.updatedAt)" class="pkm-timeline-item">
+          <pkm-timeline v-if="pageData.notes.length > 0">
+            <pkm-timeline-item v-for="(note, index) in pageData.notes" :key="index" :label="formatTime(note.updatedAt)" class="pkm-timeline-item">
               <div v-html="Md2html(note.content)"></div>
               <div class="action">
                 <pkm-button type="text" @click="eidtHandler(index)">
@@ -62,29 +62,34 @@
               </div>
             </pkm-timeline-item>
           </pkm-timeline>
+          <pkm-empty v-else>暂无笔记</pkm-empty>
         </div>
-        <pkm-drawer width="100%" class="editor-drawer" :visible="visible" :footer="false" @ok="handleOk" @cancel="handleCancel" unmountOnClose>
+        <pkm-drawer width="100%" class="editor-drawer" :visible="visible" :footer="false" @cancel="hideDrawer" unmountOnClose>
           <template #title>
             笔记
           </template>
-          <div class="markdown-editor">
-            <markdown-editor v-model="editorValue" @change="change" />
-          </div>
+          <pkm-spin class="block" :loading="loading" dot>
+            <div class="markdown-editor">
+              <markdown-editor v-model="editorValue" @toolbarItemAction="toolbarItemAction" height="calc(100vh - 48px)" />
+            </div>
+          </pkm-spin>
         </pkm-drawer>
       </template>
   </mobile-layout>
 </template>
 <script lang="ts">
-import { defineComponent, getCurrentInstance, ref, computed } from 'vue'
-import { storeToRefs } from 'pinia'
+import { defineComponent, getCurrentInstance, ref, reactive, computed } from 'vue'
+import { useRoute } from 'vue-router'
 
 import MobileLayout from '../../components/layout/mobile-layout.vue'
 import BookForm from '../../components/book-form/index.vue'
 import Md2html from '../../components/editor/parser/md2html'
 
 import MarkdownEditor from '../../components/editor/markdown.vue'
+import type { ToolbarItemType } from '@totonoo/vue-codemirror/dist_types/components/editor/markdown/toolbar'
 
-import useCommonStore from '../../store/index'
+import { BookInfo, NoteAdd, NoteUpdate, NoteRemove } from '../../apis/book'
+import { IBookDataApiType } from '../../../types/book'
 
 
 export default defineComponent({
@@ -96,45 +101,130 @@ export default defineComponent({
   setup () {
     const app = getCurrentInstance()
     const formatTime = app?.appContext.config.globalProperties.$formatTime
-    const commonStore = useCommonStore()
-    const { system } = storeToRefs(commonStore)
+    const msg = app?.appContext.config.globalProperties.$message
+    const modal = app?.appContext.config.globalProperties.$modal
+
+    const route = useRoute()
+    const id = (route.params.id || '') as string
+    const nid = ref('')
+    const formDefault = {
+      _id: '',
+      title: '',
+      author: '',
+      cover: '',
+      desc: '',
+      readed: false,
+      heard: false,
+      purchased: false,
+      ISBN: '',
+      tags: [],
+      rating: 3,
+      notes: [], 
+      createdAt: new Date(), 
+      createdBy: '', 
+      updatedAt: new Date(), 
+      updatedBy: ''
+    }
+    const pageData = reactive<IBookDataApiType>({ ...formDefault })
+    const setPageDataValue = (data: IBookDataApiType) => {
+      pageData._id = data._id
+      pageData.title = data.title
+      pageData.author = data.author
+      pageData.cover = data.cover
+      pageData.desc = data.desc
+      pageData.readed = data.readed
+      pageData.heard = data.heard
+      pageData.purchased = data.purchased
+      pageData.ISBN = data.ISBN
+      pageData.tags = data.tags
+      pageData.rating = data.rating
+      pageData.notes = data.notes
+      pageData.createdAt = data.createdAt
+      pageData.createdBy = data.createdBy
+      pageData.updatedAt = data.updatedAt
+      pageData.updatedBy = data.updatedBy
+    }
+
+    const getInfo = (id: string) => {
+      BookInfo(id).then(res => {
+        if (res.data) {
+          setPageDataValue(res.data)
+        }
+      }).catch(err => {
+        msg.error(err.message)
+      })
+    }
+    if (id) {
+      getInfo(id)
+    }
+
 
     const visible = ref(false)
-    const data = {"code":0,"msg":"success","data":{"title":"如何形成清晰的观点","author":"[美] 查尔斯·S.皮尔士","cover":"","desc":"在人们的思维活动中，有许多种想法，却不知怎样表达。该如何形成自己清晰的观点？这种观点又是怎样决定人们的习惯从而影响人们的现实生活？什么样的观点是有效的观点？","readed":false,"heard":false,"purchased":true,"ISBN":"9787545549928","tags":["深度思考","逻辑推理","准确表达"],"rating":3,"order":99,"children":[{"content":"在人们的思维活动中，有许多种想法，却不知怎样表达。该如何形成自己清晰的观点？这种观点又是怎样决定人们的习惯从而影响人们的现实生活？什么样的观点是有效的观点？","order":99,"createdAt":"2022-02-17T06:53:55.264Z","updatedAt":"2022-02-17T06:53:55.264Z","_id":"623058b9670d6255fb226324"},{"content":"如何形成清晰的观点\n\n测试笔记","order":99,"createdAt":"2022-02-17T06:53:55.264Z","updatedAt":"2022-02-17T06:53:55.264Z","_id":"62305898670d6255fb226316"}],"createdAt":"2022-01-19T06:23:27.083Z","updatedAt":"2022-03-15T09:13:29.252Z","_id":"61ebc03825a74f80cb2f7004"}}
-
-    console.log(system.value)
-    setTimeout(() => {
-      commonStore.setIsMobile(false)
-      console.log(system.value)
-    }, 30000)
-
+    const loading = ref(false)
     const editorValue = ref('')
-    const handleCancel = () => {
+    const showDrawer = () => {
+      nid.value = ''
+      editorValue.value = ''
+      visible.value = true
+    }
+    const hideDrawer = () => {
       visible.value = false
     }
-    const handleOk = () => {
-      visible.value = false
+
+    const toolbarItemAction = (item: ToolbarItemType) => {
+      if (item.type === 'Save') {
+        const postData = {
+          content: editorValue.value
+        }
+        loading.value = true
+        const actions = nid.value ? NoteUpdate(id, nid.value, postData) : NoteAdd(id, postData)
+        actions.then(() => {
+          msg.success('成功')
+          visible.value = false
+          getInfo(id)
+        }).catch(err => {
+          msg.error(err.message)
+        }).then(() => {
+          loading.value = false
+        })
+      }
     }
+
     const eidtHandler = (index: number) => {
-      const item = data.data.children[index]
+      const item = pageData.notes[index]
+      nid.value = item._id
       editorValue.value = item.content || ''
       visible.value = true
     }
     const deleteHandler = (index: number) => {
-      const item = data.data.children[index]
-      editorValue.value = item.content || ''
-      visible.value = true
+      const item = pageData.notes[index]
+      modal.open({
+        title: '系统提示',
+        content: `该操作会删除内容，是否继续？`,
+        hideCancel: false,
+        simple: true,
+        modalClass: ['pkm-modal-simple'],
+        onOk () {
+          NoteRemove(id, item._id).then(_ => {
+            getInfo(id)
+          }).catch(err => {
+            msg.error(err.message)
+          })
+        }
+      })
     }
     return {
-      editorValue,
-      handleCancel,
-      handleOk,
+      pageData,
       eidtHandler,
       deleteHandler,
       visible,
+      loading,
+      editorValue,
+      showDrawer,
+      hideDrawer,
+      toolbarItemAction,
       formatTime,
-      Md2html,
-      info: data.data
+      Md2html
     }
   },
 })

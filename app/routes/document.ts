@@ -3,7 +3,7 @@ import { prefix, get, post, put, del } from '../core/router'
 
 import Document from '../controllers/document'
 import { IResponeBodyType } from '../../types/index'
-import { IDocumentAddType, IDocumentUpdateType, IDocumentFilterType, IDocumentDataType } from '../../types/document'
+import { IDocumentRouteAddType, IDocumentRouteUpdateType, IDocumentFilterType, IDocumentDataType } from '../../types/document'
 
 const document = new Document()
 
@@ -13,7 +13,7 @@ export default class DocumentRouter {
   @post('/add')
   async DocumentAdd (ctx: Context, next: Next) {
     const { userinfo } = ctx.state
-    const _body = ctx.request.body as IDocumentAddType
+    const _body = ctx.request.body as IDocumentRouteAddType
     _body.authorId = userinfo._id
     _body.createdBy = userinfo._id
     _body.updatedBy = userinfo._id
@@ -30,7 +30,7 @@ export default class DocumentRouter {
   @put('/update')
   async DocumentUpdate (ctx: Context, next: Next) {
     const { userinfo } = ctx.state
-    const _body = ctx.request.body as IDocumentUpdateType
+    const _body = ctx.request.body as IDocumentRouteUpdateType
     _body.updatedBy = userinfo._id
     const info = await document.info(_body._id)
     if (info) {

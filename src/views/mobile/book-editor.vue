@@ -1,8 +1,8 @@
 <template>
-  <mobile-layout title="书架" subtitle="祖国富强民主，八荣八耻" :footer="false" class="editor-page">
+  <mobile-layout title="书架" :subtitle="title" :footer="false" class="editor-page">
       <template #main>
         <div class="book-form">
-          <book-form ref="formRef" v-model:loading="loading" />
+          <book-form ref="formRef" :id="id" v-model:loading="loading" @info="infoHandler" />
           <div class="fixed-button">
             <pkm-button type="primary" :loading="loading" long @click="submit">保存数据</pkm-button>
           </div>
@@ -12,10 +12,12 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
 import MobileLayout from '../../components/layout/mobile-layout.vue'
 import BookForm from '../../components/book-form/index.vue'
 
+import { IBookDataFormType } from '../../../types/book'
 
 export default defineComponent({
   components: {
@@ -23,14 +25,25 @@ export default defineComponent({
     BookForm
   },
   setup () {
+    const route = useRoute()
+    const id = (route.params.id || '') as string
+
     const formRef = ref<null | InstanceType<typeof BookForm>>(null)
     const loading = ref(false)
+    const title = ref('添加书籍')
+    const infoHandler = (data: IBookDataFormType) => {
+      title.value = data.title || '添加书籍'
+    }
+    const submit = () => {
+      formRef.value?.save()
+    }
     return {
+      id,
       formRef,
       loading,
-      submit () {
-        formRef.value?.save()
-      }
+      title,
+      infoHandler,
+      submit
     }
   },
 })

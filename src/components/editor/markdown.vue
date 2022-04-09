@@ -21,6 +21,11 @@ import { defineComponent, ref, PropType, CSSProperties, computed, watch } from '
 import '@totonoo/vue-codemirror/dist/style.css'
 import { MarkdownEditor } from '@totonoo/vue-codemirror'
 
+enum ThemeType {
+  DARK = 'dark',
+  LIGHT = 'light'
+}
+
 interface Props {
   modelValue: string;
   height: CSSProperties['height']
@@ -43,7 +48,7 @@ export default defineComponent({
   emits: ['update:modelValue', 'change', 'blur', 'focus', 'selectionChange', 'themeChange', 'toolbarItemAction'],
   setup (props, ctx) {
     const theme = {
-      def: 'light',
+      def: ThemeType.LIGHT,
       observer: 'body',
       observerAttr: 'arco-theme'
     }

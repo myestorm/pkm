@@ -19,9 +19,9 @@ export interface IDocumentType<T> {
   parents: string[], // 所属目录
   comments: ICommentType<T>[]
   createdAt: Date, // 创建时间
-  createdBy?: String, // 创建人
+  createdBy: string, // 创建人
   updatedAt: Date, // 创建时间
-  updatedBy?: Date // 修改人
+  updatedBy: string // 修改人
 }
 
 export type ISchemaDocumentType = Omit<IDocumentType<Types.ObjectId>, '_id'>
@@ -34,10 +34,14 @@ export type IDocumentModelType = HydratedDocument<
 >
 
 export type IDocumentDataType = IDocumentType<Types.ObjectId>
-export type IDocumentAddType = Omit<IDocumentType<string>, '_id' | 'createdAt' | 'updatedAt' | 'comments'>
+export type IDocumentAddType = Omit<IDocumentType<string>, '_id' | 'createdAt' | 'updatedAt' | 'comments' | 'createdBy' | 'updatedBy'>
 export type IDocumentUpdateType = IDocumentAddType & { _id: string }
 export type IDocumentFilterType = Partial<IDocumentType<string>>
 
 export type IDocumentFormType = IDocumentAddType & { _id?: string }
 export type IDocumentPageListItemType = IDocumentType<string>
 export type IDocumentSearchType = Pick<IDocumentType<string>, '_id' | 'title' | 'parents' | 'type' | 'desc' | 'top'>
+
+// route
+export type IDocumentRouteAddType = Omit<IDocumentType<string>, '_id' | 'createdAt' | 'updatedAt' | 'comments'>
+export type IDocumentRouteUpdateType = IDocumentRouteAddType & { _id: string }

@@ -31,38 +31,42 @@
   </pkm-form>
 </template>
 <script lang="ts">
-import { defineComponent, ref, reactive, getCurrentInstance } from 'vue'
+import { defineComponent, ref, reactive, getCurrentInstance, PropType } from 'vue'
 import { FormInstance, } from '@arco-design/web-vue/es/form'
 import { ValidatedError } from '@arco-design/web-vue/es/form/interface'
 import UploadImage from '../../components/upload/upload-image.vue'
 
-import useCommonStore from '../../store'
+import { IBookDataFormType, IBookAddType, IBookUpdateType } from '../../../types/book'
+import { BookAdd, BookUpdate, BookInfo } from '../../apis/book'
 
-// import {
-//   IApisBookUpdateType
-// } from '../../../types/bookrack'
+export interface BookFormPropType {
+  id: string,
+  loading: boolean
+}
 
 export default defineComponent({
   name: 'BookForm',
   props: {
+    id: {
+      type: String as PropType<BookFormPropType['id']>,
+      default: ''
+    },
     loading: {
-      type: Boolean,
+      type: Boolean as PropType<BookFormPropType['loading']>,
       default: false
     }
   },
-  emits: ['update:loading', 'success', 'fail'],
+  emits: ['update:loading', 'success', 'fail', 'info'],
   components: {
     UploadImage
   },
   setup (props, ctx) {
-    // const store = useStore()
     const app = getCurrentInstance()
     const msg = app?.appContext.config.globalProperties.$message
 
     const formRef = ref<FormInstance | null>(null)
     const formDefault = {
       _id: '',
-      groupId: '',
       title: '',
       author: '',
       cover: '',
@@ -72,41 +76,14 @@ export default defineComponent({
       purchased: false,
       ISBN: '',
       tags: [],
-      rating: 3,
-      order: 99,
-      children: []
+      rating: 3
     }
-    let form = reactive<any>({
+    const form = reactive<IBookDataFormType>({
       ...formDefault
     })
 
-    const save = () => {
-      formRef.value?.validate((errors: undefined | Record<string, ValidatedError>) => {
-        if (!errors) {
-          ctx.emit('update:loading', true)
-          const url = form?._id ? 'bookrack/bookUpdate' : 'bookrack/bookAdd'
-          const postData = {
-            ...form
-          }
-          if (!postData._id) {
-            delete postData._id
-          }
-          // store.dispatch(url, postData).then(() => {
-          //   ctx.emit('success', true)
-          // }).catch(err => {
-          //   msg.error(err.message)
-          //   ctx.emit('fail', err)
-          // }).then(() => {
-          //   ctx.emit('update:loading', false)
-          // })
-        }
-      })
-    }
-
-    
-    const setFormValue = (groupId: string, data: any) => {
+    const setFormValue = (data: IBookDataFormType) => {
       form._id = data._id
-      form.groupId = groupId
       form.title = data.title
       form.author = data.author
       form.cover = data.cover
@@ -119,8 +96,47 @@ export default defineComponent({
       form.rating = data.rating
     }
 
+    const getInfo = (id: string) => {
+      BookInfo(id).then(res => {
+        if (res.data) {
+          setFormValue(res.data)
+          ctx.emit('info', res.data)
+        }
+      }).catch(err => {
+        msg.error(err.message)
+      })
+    }
+
+    const save = () => {
+      formRef.value?.validate((errors: undefined | Record<string, ValidatedError>) => {
+        if (!errors) {
+          ctx.emit('update:loading', true)
+          const postData = {
+            ...form
+          }
+          if (!form._id) {
+            delete postData._id
+          }
+          const action = form?._id ? BookUpdate(postData as IBookUpdateType) : BookAdd(postData as IBookAddType)
+          action.then((res) => {
+            ctx.emit('success', true)
+            ctx.emit('info', res.data)
+          }).catch(err => {
+            msg.error(err.message)
+            ctx.emit('fail', err)
+          }).then(() => {
+            ctx.emit('update:loading', false)
+          })
+        }
+      })
+    }
+
     const getFormValue = () => {
       return form
+    }
+
+    if (props.id) {
+      getInfo(props.id)
     }
 
     return {
