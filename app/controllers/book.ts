@@ -50,7 +50,7 @@ class BookController extends BaseController {
         { tags: { $regex: reg } }
       ]
     }
-    const list = await Book.find(params, '_id title desc parents type').sort({
+    const list = await Book.find(params, '_id title desc author cover').sort({
       _id: -1
     })
     list.sort(sortMethod)

@@ -5,5 +5,6 @@ export type CommonState = {
   },
   mobile: {
     current: number
-  }
+  },
+  theme: string
 }

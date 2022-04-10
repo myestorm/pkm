@@ -35,6 +35,7 @@ const useStore = defineStore('admin', {
         AdminSignout().then(res => {
           this.token = ''
           this.userinfo = emptyUserinfo
+          localStorage.setItem(localStorageToken, this.token)
           resolve(res.data)
         }).catch(err => {
           reject(err)

@@ -1,5 +1,5 @@
 <template>
-  <mobile-layout title="书架" :subtitle="pageData.title" :footer="false">
+  <mobile-layout title="书架" :subtitle="pageData.title" :footer="false" :back="pageBack">
       <template #main>
         <pkm-space direction="vertical" class="book-info" size="medium">
           <h1>{{pageData.title}} - <span>{{pageData.author}}</span></h1>
@@ -35,6 +35,9 @@
             <dt>评价</dt>
             <dd><pkm-rate v-model="pageData.rating" allow-half readonly /></dd>
           </dl>
+          <pkm-button type="outline" long size="small" @click="editBook">
+            编辑
+          </pkm-button>
         </pkm-space>
         <div class="notes">
           <pkm-typography-title :heading="5" flex="auto">笔记</pkm-typography-title>
@@ -79,7 +82,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, getCurrentInstance, ref, reactive, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 import MobileLayout from '../../components/layout/mobile-layout.vue'
 import BookForm from '../../components/book-form/index.vue'
@@ -104,6 +107,7 @@ export default defineComponent({
     const msg = app?.appContext.config.globalProperties.$message
     const modal = app?.appContext.config.globalProperties.$modal
 
+    const router = useRouter()
     const route = useRoute()
     const id = (route.params.id || '') as string
     const nid = ref('')
@@ -213,7 +217,15 @@ export default defineComponent({
         }
       })
     }
+
+    const editBook = () => {
+      router.push(`/m/book/editor/${id}`)
+    }
+    const pageBack = () => {
+      router.push('/m/book')
+    }
     return {
+      pageBack,
       pageData,
       eidtHandler,
       deleteHandler,
@@ -224,13 +236,15 @@ export default defineComponent({
       hideDrawer,
       toolbarItemAction,
       formatTime,
-      Md2html
+      Md2html,
+      editBook
     }
   },
 })
 </script>
 <style lang="scss" scoped>
 .book-info {
+  width: 100%;
   color: var(--color-text-1);
   text-align: justify;
   h1 {

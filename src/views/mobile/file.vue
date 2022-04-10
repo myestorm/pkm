@@ -1,16 +1,8 @@
 <template>
-  <mobile-layout title="文档" :subtitle="pageTitle">
+  <mobile-layout title="文档" :subtitle="pageTitle" :back="pageBack">
     <template #main>
       <div class="pkm-mobile-file-list">
-        <div class="search">
-          <pkm-input-search placeholder="搜索当前文档" v-model="keyword" class="search-input" :loading="searchLoading" :allow-clear="true" @input="searchHandle" @search="searchHandle" @clear="searchClear" @focus="showSearchResult" @blur="searchBlurHandler" />
-          <pkm-list size="small" class="search-result" v-if="searchResultVisible">
-            <pkm-list-item v-for="item in searchResult" :key="item._id" @click="searchResultClickHandler(item._id, item.parents)">
-              <div class="title" v-html="replaceHtml(item.title)"></div>
-              <div class="desc" v-html="replaceHtml(item.desc)"></div>
-            </pkm-list-item>
-          </pkm-list>
-        </div>
+        <search-list placeholder="搜索当前文档" type="document" :conditions="filePath" @itemClick="itemClickHandler"></search-list>
         <!-- <div class="filter"></div> -->
         <div class="content">
           <div class="file-list">
@@ -75,6 +67,7 @@
 import { defineComponent, ref, getCurrentInstance } from 'vue'
 import MobileLayout from '../../components/layout/mobile-layout.vue'
 import FileFormDrawer from '../../components/file-form/drawer.vue'
+import SearchList, { ListItemType } from '../../components/search-list/index.vue'
 import useCommonStore from '../../store/index'
 import { useRouter, useRoute } from 'vue-router'
 import { DocumentList, DocumentRemove, DocumentSearch, DocumentInfo } from '../../apis/document'
@@ -83,7 +76,8 @@ import { IDocumentPageListItemType, IDocumentFormType, IDocumentTypeType, IDocum
 export default defineComponent({
   components: {
     MobileLayout,
-    FileFormDrawer
+    FileFormDrawer,
+    SearchList
   },
   setup () {
     const app = getCurrentInstance()
@@ -98,51 +92,6 @@ export default defineComponent({
     const showBtn = ref(false)
     const drawerVisible = ref(false)
     const type = ref()
-
-    const keyword = ref('')
-    const searchResultVisible = ref(false)
-    const searchResult = ref<IDocumentSearchType[]>([])
-    const showSearchResult = () => {
-      searchResultVisible.value = true
-    }
-    const hideSearchResult = () => {
-      searchResultVisible.value = false
-    }
-    const searchBlurHandler = () => {
-      if (!keyword.value) {
-        searchResultVisible.value = false
-      }
-    }
-    const searchLoading = ref(false)
-    const searchHandle = () => {
-      if (keyword.value) {
-        searchLoading.value = true
-        DocumentSearch(keyword.value, [...filePath.value]).then(res => {
-          searchResult.value = res.data || []
-        }).catch(_ => {
-          searchResult.value = []
-        }).finally(() => {
-          searchLoading.value = false
-        })
-      }
-    }
-    const searchClear = () => {
-      hideSearchResult()
-    }
-    const replaceHtml = (str: string) => {
-      return str.replace(new RegExp(keyword.value, 'gmi'), `<em>${keyword.value}</em>`)
-    }
-    const searchResultClickHandler = (id: string, parents: string[]) => {
-      router.push({
-        name: 'MobilemMrkdown',
-        params: {
-          parents,
-          id
-        }
-      })
-      keyword.value = ''
-      hideSearchResult()
-    }
 
     const list = ref<IDocumentPageListItemType[]>([])
     const drawerData = ref<IDocumentFormType>()
@@ -184,7 +133,7 @@ export default defineComponent({
     const remove = (id: string) => {
       modal.open({
         title: '系统提示',
-        content: `该操作会删除分类，并清空内容，是否继续？`,
+        content: `该操作会删除内容，是否继续？`,
         hideCancel: false,
         simple: true,
         modalClass: ['pkm-modal-simple'],
@@ -201,7 +150,7 @@ export default defineComponent({
       const _parents = [...item.parents]
       if (item.type === IDocumentTypeType.DOC) {
         router.push({
-          name: 'MobilemMrkdown',
+          name: 'MobileMrkdown',
           params: {
             parents: item.parents,
             id: item._id
@@ -234,19 +183,28 @@ export default defineComponent({
     }
     getList()
 
+    const itemClickHandler = (item: ListItemType) => {
+      router.push({
+        name: 'MobileMrkdown',
+        params: {
+          parents: item.parents,
+          id: item._id
+        }
+      })
+    }
+
+    const pageBack = () => {
+      if (filePath.value && filePath.value.length > 0) {
+        router.back()
+      } else {
+        router.push('/m/home')
+      }
+    }
+
     return {
+      pageBack,
+      filePath,
       pageTitle,
-      keyword,
-      searchResultVisible,
-      showSearchResult,
-      hideSearchResult,
-      searchBlurHandler,
-      searchResult,
-      searchLoading,
-      searchHandle,
-      searchClear,
-      searchResultClickHandler,
-      replaceHtml,
       showBtn,
       drawerVisible,
       type,
@@ -257,7 +215,8 @@ export default defineComponent({
       edit,
       remove,
       successHandler,
-      clickHandler
+      clickHandler,
+      itemClickHandler
     }
   }
 })

@@ -136,7 +136,7 @@ export default class User {
       _body.createdBy = userinfo._id
       _body.updatedBy = userinfo._id
       const result = await book.addNote(bookId, _body)
-      const body: IResponeBodyType<INoteControlReurnType> = {
+      const body: IResponeBodyType<INoteControlReurnType | null> = {
         code: 0,
         msg: 'success',
         data: result

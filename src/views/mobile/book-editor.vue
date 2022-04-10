@@ -2,7 +2,7 @@
   <mobile-layout title="书架" :subtitle="title" :footer="false" class="editor-page">
       <template #main>
         <div class="book-form">
-          <book-form ref="formRef" :id="id" v-model:loading="loading" @info="infoHandler" />
+          <book-form ref="formRef" :id="id" v-model:loading="loading" @info="infoHandler" @success="successHandler" />
           <div class="fixed-button">
             <pkm-button type="primary" :loading="loading" long @click="submit">保存数据</pkm-button>
           </div>
@@ -12,7 +12,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 import MobileLayout from '../../components/layout/mobile-layout.vue'
 import BookForm from '../../components/book-form/index.vue'
@@ -25,6 +25,7 @@ export default defineComponent({
     BookForm
   },
   setup () {
+    const router = useRouter()
     const route = useRoute()
     const id = (route.params.id || '') as string
 
@@ -37,13 +38,17 @@ export default defineComponent({
     const submit = () => {
       formRef.value?.save()
     }
+    const successHandler = () => {
+      router.back()
+    }
     return {
       id,
       formRef,
       loading,
       title,
       infoHandler,
-      submit
+      submit,
+      successHandler
     }
   },
 })

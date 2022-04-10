@@ -1,10 +1,8 @@
 <template>
-  <mobile-layout title="书架" subtitle="所有书籍的列表">
+  <mobile-layout title="书架" subtitle="所有书籍的列表" :back="pageBack">
     <template #main>
       <div class="pkm-mobile-file-list">
-        <div class="search">
-          <pkm-input-search placeholder="搜索所有书籍" class="search-input" />
-        </div>
+        <search-list placeholder="搜索所有书籍" type="book" @itemClick="itemClickHandler"></search-list>
         <!-- <div class="filter">
           <pkm-space>
             <pkm-select :style="{width:'120px'}" placeholder="Select" class="filter-selector" size="small">
@@ -68,14 +66,16 @@
 <script lang="ts">
 import { defineComponent, ref, getCurrentInstance } from 'vue'
 import MobileLayout from '../../components/layout/mobile-layout.vue'
+import SearchList, { ListItemType } from '../../components/search-list/index.vue'
 import useCommonStore from '../../store/index'
 import { BookList, BookRemove } from '../../apis/book'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { IBookDataApiType } from '../../../types/book'
 
 export default defineComponent({
   components: {
-    MobileLayout
+    MobileLayout,
+    SearchList
   },
   setup () {
     const app = getCurrentInstance()
@@ -84,7 +84,6 @@ export default defineComponent({
 
     const store = useCommonStore()
     const router = useRouter()
-    const route = useRoute()
 
     const list = ref<IBookDataApiType[]>([])
     const getList = () => {
@@ -119,16 +118,25 @@ export default defineComponent({
         }
       })
     }
+    const itemClickHandler = (item: ListItemType) => {
+      info(item._id)
+    }
     getList()
+
+    const pageBack = () => {
+      router.push('/m/home')
+    }
 
     store.mobile.current = 2
 
     return {
+      pageBack,
       list,
       add,
       edit,
       remove,
-      info
+      info,
+      itemClickHandler
     }
   }
 })

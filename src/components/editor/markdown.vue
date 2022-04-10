@@ -17,6 +17,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, PropType, CSSProperties, computed, watch } from 'vue'
+import useCommonStore from '../../store/index'
 
 import '@totonoo/vue-codemirror/dist/style.css'
 import { MarkdownEditor } from '@totonoo/vue-codemirror'
@@ -47,8 +48,9 @@ export default defineComponent({
   },
   emits: ['update:modelValue', 'change', 'blur', 'focus', 'selectionChange', 'themeChange', 'toolbarItemAction'],
   setup (props, ctx) {
+    const store = useCommonStore()
     const theme = {
-      def: ThemeType.LIGHT,
+      def: store.theme === 'dark' ? ThemeType.DARK : ThemeType.LIGHT,
       observer: 'body',
       observerAttr: 'arco-theme'
     }

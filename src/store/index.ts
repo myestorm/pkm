@@ -1,5 +1,13 @@
 import { defineStore } from 'pinia'
 import { CommonState } from './types'
+import { localStorageTheme } from '../config/index'
+
+const _theme = localStorage.getItem(localStorageTheme) || 'light'
+if (_theme === 'dark') {
+  document.body.setAttribute('arco-theme', 'dark')
+} else {
+  document.body.removeAttribute('arco-theme')
+}
 
 const useStore = defineStore('user', {
   state: (): CommonState => ({
@@ -9,7 +17,8 @@ const useStore = defineStore('user', {
     },
     mobile: {
       current: 0
-    }
+    },
+    theme: _theme
   }),
 
   getters: {
@@ -30,6 +39,10 @@ const useStore = defineStore('user', {
     },
     setMobileCurrent (current: number) {
       this.mobile.current = current
+    },
+    setTheme (theme: string) {
+      this.theme = theme
+      localStorage.setItem(localStorageTheme, this.theme)
     }
   }
 })

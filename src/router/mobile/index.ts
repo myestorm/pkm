@@ -3,9 +3,10 @@ import mobileHome from '../../views/mobile/home.vue'
 import mobileFile from '../../views/mobile/file.vue'
 import mobileBook from '../../views/mobile/book.vue'
 import mobileSetting from '../../views/mobile/setting.vue'
-import mobilemMrkdown from '../../views/mobile/markdown.vue'
-import mobilemBookEditor from '../../views/mobile/book-editor.vue'
-import mobilemBookInfo from '../../views/mobile/book-info.vue'
+import mobileMrkdown from '../../views/mobile/markdown.vue'
+import mobileBookEditor from '../../views/mobile/book-editor.vue'
+import mobileBookInfo from '../../views/mobile/book-info.vue'
+import mobileAdmin from '../../views/mobile/admin.vue'
 
 const prefix = '/m'
 
@@ -52,26 +53,34 @@ export default {
     }
   }, {
     path: `${prefix}/markdown`,
-    name: 'MobilemMrkdown',
-    component: mobilemMrkdown,
+    name: 'MobileMrkdown',
+    component: mobileMrkdown,
     meta: {
       icon: 'markdown',
       keepAlive: false
     }
   }, {
     path: `${prefix}/book/editor/:id?`,
-    name: 'MobilemBookEditor',
-    component: mobilemBookEditor,
+    name: 'MobileBookEditor',
+    component: mobileBookEditor,
     meta: {
       icon: 'bookEditor',
       keepAlive: false
     }
   }, {
     path: `${prefix}/book/info/:id?`,
-    name: 'MobilemBookInfo',
-    component: mobilemBookInfo,
+    name: 'MobileBookInfo',
+    component: mobileBookInfo,
     meta: {
       icon: 'bookInfo',
+      keepAlive: false
+    }
+  }, {
+    path: `${prefix}/admin`,
+    name: 'MobileAdmin',
+    component: mobileAdmin,
+    meta: {
+      icon: 'manage',
       keepAlive: false
     }
   }]
