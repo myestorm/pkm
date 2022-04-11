@@ -18,6 +18,10 @@ import mongoConfig from './.mongo.config'
     nickname: 'totonoo',
     mobile: '18688886666',
     email: 'totonoo@totonoo.com',
+    root: true,
+    status: 1,
+    createdBy: '', 
+    updatedBy: ''
   }
   const result = await admin.checkUnique('username', userinfo.username)
   if (!result) {

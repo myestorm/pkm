@@ -1,5 +1,5 @@
 import { Schema, model, now } from 'mongoose'
-import { IAdminModelType } from '../../types/admin'
+import { IModelAdminType } from '../../types/admin'
 
 const schema = new Schema({
   username: {
@@ -25,9 +25,25 @@ const schema = new Schema({
     type: String,
     default: ''
   },
+  root: {
+    type: Boolean,
+    default: false
+  },
+  status: {
+    type: String,
+    default: 1
+  },
+  createdBy: {
+    type: String,
+    default: ''
+  },
   createdAt: {
     type: Date,
     default: now()
+  },
+  updatedBy: {
+    type: String,
+    default: ''
   },
   updatedAt: {
     type: Date,
@@ -40,6 +56,6 @@ const schema = new Schema({
   }
 })
 
-const AdminModel = model<IAdminModelType>('Admin', schema)
+const AdminModel = model<IModelAdminType>('Admin', schema)
 
 export default AdminModel

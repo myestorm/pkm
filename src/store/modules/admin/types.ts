@@ -1,5 +1,5 @@
-import { IFeAdminUserType } from '../../../../types/admin'
+import { IApiAdminReurnType } from '../../../../types/admin'
 export type AdminState = {
   token: string,
-  userinfo: IFeAdminUserType
+  userinfo: IApiAdminReurnType
 }

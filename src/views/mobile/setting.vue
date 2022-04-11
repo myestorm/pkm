@@ -16,7 +16,8 @@
             </pkm-avatar>
             {{ userinfo.username }}
           </div>
-          <pkm-button type="text" status="success"><icon-edit /></pkm-button>
+          <pkm-button type="text" status="success" @click="visible = true"><icon-edit /></pkm-button>
+          <admin-self v-model="visible" :initValue="userinfo" @success="successHandler" />
         </div>
         <pkm-collapse :default-active-key="activeKey" expand-icon-position="right">
           <pkm-collapse-item header="系统设置" key="1" disabled :show-expand-icon="false">
@@ -28,7 +29,7 @@
             </div>
           </pkm-collapse-item>
         </pkm-collapse>
-        <pkm-button type="primary" long @click="adminHandler">用户管理</pkm-button>
+        <pkm-button type="outline" long @click="adminHandler">用户管理</pkm-button>
         <pkm-button type="outline" status="danger" long @click="logoutHandler">退出登录</pkm-button>
       </pkm-space>
     </template>
@@ -39,12 +40,15 @@ import { defineComponent, ref, reactive, getCurrentInstance } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import MobileLayout from '../../components/layout/mobile-layout.vue'
+import AdminSelf from '../../components/admin-form/self.vue'
 import useCommonStore from '../../store/index'
 import useAdminStore from '../../store/modules/admin/index'
+import { IApiAdminUpdateSelfType } from '../../../types/admin'
 
 export default defineComponent({
   components: {
-    MobileLayout
+    MobileLayout,
+    AdminSelf
   },
   setup () {
     const app = getCurrentInstance()
@@ -55,6 +59,8 @@ export default defineComponent({
     const router = useRouter()
     const isDark = ref(store.theme === 'dark')
     const activeKey = reactive(['1'])
+    const visible = ref(false)
+
     const { userinfo } = storeToRefs(storeAdmin)
     const changeHandler = (val: boolean) => {
       if (val) {
@@ -86,6 +92,15 @@ export default defineComponent({
     const adminHandler = () => {
       router.push('/m/admin')
     }
+    const successHandler = (data: IApiAdminUpdateSelfType) => {
+      if (data.password) {
+        storeAdmin.signout().then(_ => {
+          router.push('/signin')
+        }).catch(err => {
+          msg.error(err.message)
+        })
+      }
+    }
     store.mobile.current = 3
     return {
       userinfo,
@@ -94,7 +109,9 @@ export default defineComponent({
       activeKey,
       changeHandler,
       logoutHandler,
-      adminHandler
+      adminHandler,
+      visible,
+      successHandler
     }
   }
 })

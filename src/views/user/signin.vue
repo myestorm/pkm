@@ -8,7 +8,7 @@
         <pkm-form-item field="username" label="用户" :hide-label="true" :rules="[{ required: true, message: '请输入用户名/手机/邮箱' }]">
           <pkm-input v-model="form.username" placeholder="用户名/手机/邮箱" />
         </pkm-form-item>
-        <pkm-form-item field="password" label="密码" :hide-label="true" :rules="[{ required: true, message: '请输入密码' }]">
+        <pkm-form-item field="password" label="密码" :hide-label="true" >
           <pkm-input-password v-model="form.password" placeholder="请输入登录密码" />
         </pkm-form-item>
         <pkm-form-item :hide-label="true">
