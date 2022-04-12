@@ -15,9 +15,6 @@ const useStore = defineStore('user', {
       userAgent: navigator.userAgent.toLowerCase(),
       isMobile: /Mobi|Android|iPhone/i.test(navigator.userAgent)
     },
-    mobile: {
-      current: 0
-    },
     theme: _theme
   }),
 
@@ -27,18 +24,12 @@ const useStore = defineStore('user', {
     },
     getIsMobile (state: CommonState): boolean {
       return state.system.isMobile
-    },
-    getMobileCurrent (state: CommonState): number {
-      return state.mobile.current
     }
   },
 
   actions: {
     setIsMobile (isMobile: boolean) {
       this.system.isMobile = isMobile
-    },
-    setMobileCurrent (current: number) {
-      this.mobile.current = current
     },
     setTheme (theme: string) {
       this.theme = theme

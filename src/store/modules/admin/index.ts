@@ -6,7 +6,18 @@ import { ISigninType } from '../../../../types/admin'
 import { AdminInfo, AdminSignin, AdminSignout } from '../../../apis/admin'
 
 const emptyUserinfo = {
-  username: ''
+  _id: '',
+  username: '',
+  mobile: '',
+  avatar: '',
+  nickname: '',
+  email: '',
+  root: false,
+  status: 1,
+  createdBy: '',
+  createdAt: new Date(),
+  updatedBy: '',
+  updatedAt: new Date()
 }
 
 const useStore = defineStore('admin', {

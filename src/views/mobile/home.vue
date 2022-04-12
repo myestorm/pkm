@@ -34,7 +34,6 @@ import { defineComponent, ref, getCurrentInstance } from 'vue'
 import { useRouter } from 'vue-router'
 import MobileLayout from '../../components/layout/mobile-layout.vue'
 import SearchList, { ListItemType } from '../../components/search-list/index.vue'
-import useCommonStore from '../../store/index'
 import { DocumentListPage } from '../../apis/document'
 import { IDocumentPageListItemType, IDocumentTypeType } from '../../../types/document'
 import { BookListPage } from '../../apis/book'
@@ -48,9 +47,7 @@ export default defineComponent({
   setup () {
     const app = getCurrentInstance()
     const dayjs = app?.appContext.config.globalProperties.$dayjs
-    const store = useCommonStore()
     const router = useRouter()
-    store.mobile.current = 0
 
     const documentList = ref<IDocumentPageListItemType[]>([])
     DocumentListPage({

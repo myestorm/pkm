@@ -5,7 +5,7 @@
 </template>
 <script lang="ts">
 import './assets/scss/app.scss'
-import { defineComponent, computed } from 'vue'
+import { defineComponent } from 'vue'
 import { useRouter } from 'vue-router'
 import useCommonStore from './store/index'
 import useAdminStore from './store/modules/admin/index'

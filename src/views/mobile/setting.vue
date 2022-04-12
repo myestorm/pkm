@@ -101,7 +101,6 @@ export default defineComponent({
         })
       }
     }
-    store.mobile.current = 3
     return {
       userinfo,
       pageBack,
@@ -122,6 +121,7 @@ export default defineComponent({
     width: 100%;
     display: flex;
     align-items: center;
+    color: var(--color-text-1);
     .user-info {
       flex: 1;
     }

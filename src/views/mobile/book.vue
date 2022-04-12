@@ -67,7 +67,6 @@
 import { defineComponent, ref, getCurrentInstance } from 'vue'
 import MobileLayout from '../../components/layout/mobile-layout.vue'
 import SearchList, { ListItemType } from '../../components/search-list/index.vue'
-import useCommonStore from '../../store/index'
 import { BookList, BookRemove } from '../../apis/book'
 import { useRouter } from 'vue-router'
 import { IBookDataApiType } from '../../../types/book'
@@ -81,8 +80,6 @@ export default defineComponent({
     const app = getCurrentInstance()
     const msg = app?.appContext.config.globalProperties.$message
     const modal = app?.appContext.config.globalProperties.$modal
-
-    const store = useCommonStore()
     const router = useRouter()
 
     const list = ref<IBookDataApiType[]>([])
@@ -126,8 +123,6 @@ export default defineComponent({
     const pageBack = () => {
       router.push('/m/home')
     }
-
-    store.mobile.current = 2
 
     return {
       pageBack,

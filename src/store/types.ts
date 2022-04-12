@@ -3,8 +3,5 @@ export type CommonState = {
     userAgent: string,
     isMobile: boolean
   },
-  mobile: {
-    current: number
-  },
   theme: string
 }

@@ -16,6 +16,7 @@ export default {
   redirect: `${prefix}/home`,
   component: empty,
   meta: {
+    title: '首页',
     icon: 'home',
     keepAlive: false
   },
@@ -24,7 +25,9 @@ export default {
     name: 'MobileHome',
     component: mobileHome,
     meta: {
-      icon: 'home',
+      title: '首页',
+      icon: 'icon-home',
+      nav: true,
       keepAlive: false
     }
   }, {
@@ -32,7 +35,9 @@ export default {
     name: 'MobileFile',
     component: mobileFile,
     meta: {
-      icon: 'file',
+      title: '文档',
+      icon: 'icon-file',
+      nav: true,
       keepAlive: false
     }
   }, {
@@ -40,7 +45,9 @@ export default {
     name: 'MobileBook',
     component: mobileBook,
     meta: {
-      icon: 'book',
+      title: '书架',
+      icon: 'icon-bookmark',
+      nav: true,
       keepAlive: false
     }
   }, {
@@ -48,7 +55,9 @@ export default {
     name: 'MobileSetting',
     component: mobileSetting,
     meta: {
-      icon: 'settings',
+      title: '设置',
+      icon: 'icon-settings',
+      nav: true,
       keepAlive: false
     }
   }, {
@@ -56,6 +65,7 @@ export default {
     name: 'MobileMrkdown',
     component: mobileMrkdown,
     meta: {
+      title: '文档编辑',
       icon: 'markdown',
       keepAlive: false
     }
@@ -64,6 +74,7 @@ export default {
     name: 'MobileBookEditor',
     component: mobileBookEditor,
     meta: {
+      title: '书籍编辑',
       icon: 'bookEditor',
       keepAlive: false
     }
@@ -72,6 +83,7 @@ export default {
     name: 'MobileBookInfo',
     component: mobileBookInfo,
     meta: {
+      title: '书籍信息',
       icon: 'bookInfo',
       keepAlive: false
     }
@@ -80,6 +92,7 @@ export default {
     name: 'MobileAdmin',
     component: mobileAdmin,
     meta: {
+      title: '用户管理',
       icon: 'manage',
       keepAlive: false
     }

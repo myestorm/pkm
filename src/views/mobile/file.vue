@@ -68,10 +68,9 @@ import { defineComponent, ref, getCurrentInstance } from 'vue'
 import MobileLayout from '../../components/layout/mobile-layout.vue'
 import FileFormDrawer from '../../components/file-form/drawer.vue'
 import SearchList, { ListItemType } from '../../components/search-list/index.vue'
-import useCommonStore from '../../store/index'
 import { useRouter, useRoute } from 'vue-router'
-import { DocumentList, DocumentRemove, DocumentSearch, DocumentInfo } from '../../apis/document'
-import { IDocumentPageListItemType, IDocumentFormType, IDocumentTypeType, IDocumentSearchType } from '../../../types/document'
+import { DocumentList, DocumentRemove, DocumentInfo } from '../../apis/document'
+import { IDocumentPageListItemType, IDocumentFormType, IDocumentTypeType } from '../../../types/document'
 
 export default defineComponent({
   components: {
@@ -84,7 +83,6 @@ export default defineComponent({
     const msg = app?.appContext.config.globalProperties.$message
     const modal = app?.appContext.config.globalProperties.$modal
     const dayjs = app?.appContext.config.globalProperties.$dayjs
-    const store = useCommonStore()
     const router = useRouter()
     const route = useRoute()
 
@@ -171,8 +169,6 @@ export default defineComponent({
         msg.error(err.message)
       })
     }
-    
-    store.mobile.current = 1
 
     if (route.params.path) {
       filePath.value = [...route.params.path]

@@ -12,7 +12,7 @@
       <slot name="footer">
         <pkm-row class="footer-nav" justify="space-around">
           <pkm-col :span="6" :gutter="0" v-for="(item, index) in navs" :key="index">
-            <pkm-button type="text" :class="[current == index ? 'current' : '']" @click="toLink(item.url)">
+            <pkm-button type="text" :class="[mobileCurrent == index ? 'current' : '']" @click="toLink(item.url)">
               <component :size="24" :strokeWidth="3" :is="item.icon"></component>
               <strong>{{ item.title }}</strong>
             </pkm-button>
@@ -24,8 +24,9 @@
 </template>
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
-import useCommonStore from '../../store/index'
+import useStore from '../../store/modules/navigation/index'
 
 export default defineComponent({
   name: 'SideBar',
@@ -60,9 +61,9 @@ export default defineComponent({
     }
   },
   setup (props) {
-    const store = useCommonStore()
+    const store = useStore()
     const router = useRouter()
-    const current = store.getMobileCurrent
+    const { mobileCurrent } = storeToRefs(store)
 
     const _mainStyle = { paddingTop: `${props.headerHeight + 16}px`, paddingBottom: props.footer ? '' : '12px' }
     const mainStyle = Object.assign({}, _mainStyle, props.style)
@@ -86,7 +87,7 @@ export default defineComponent({
     }]
     return {
       navs,
-      current,
+      mobileCurrent,
       mainStyle,
       toLink (url: string) {
         router.push(url)
