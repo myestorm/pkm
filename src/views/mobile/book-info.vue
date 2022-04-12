@@ -1,5 +1,5 @@
 <template>
-  <mobile-layout title="书架" :subtitle="pageData.title" :footer="false" :back="pageBack">
+  <mobile-layout title="书架" :subtitle="pageData.title" :footer="false">
       <template #main>
         <pkm-space direction="vertical" class="book-info" size="medium">
           <h1>{{pageData.title}} - <span>{{pageData.author}}</span></h1>
@@ -221,11 +221,7 @@ export default defineComponent({
     const editBook = () => {
       router.push(`/m/book/editor/${id}`)
     }
-    const pageBack = () => {
-      router.push('/m/book')
-    }
     return {
-      pageBack,
       pageData,
       eidtHandler,
       deleteHandler,

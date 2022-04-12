@@ -14,7 +14,7 @@
                 {{userinfo.username?.charAt(0).toUpperCase()}}
               </template>
             </pkm-avatar>
-            {{ userinfo.username }}
+            {{ userinfo.nickname || userinfo.username }}
           </div>
           <pkm-button type="text" status="success" @click="visible = true"><icon-edit /></pkm-button>
           <admin-self v-model="visible" :initValue="userinfo" @success="successHandler" />

@@ -1,6 +1,6 @@
 <template>
   <div class="search">
-    <pkm-input-search :placeholder="placeholder" v-model="keyword" class="search-input" :loading="loading" :allow-clear="true" @input="searchHandle" @search="searchHandle" @clear="searchClear" @focus="showSearchResult" @blur="searchBlurHandler" />
+    <pkm-input-search :placeholder="placeholder" v-model="keyword" class="pkm-search-input" :loading="loading" :allow-clear="true" @input="searchHandle" @search="searchHandle" @clear="searchClear" @focus="showSearchResult" @blur="searchBlurHandler" />
     <pkm-list size="small" class="search-result" v-if="searchResultVisible">
       <pkm-list-item v-for="item in searchResult" :key="item._id" @click="searchResultClickHandler(item)">
         <div class="title" v-html="replaceHtml(item.title)"></div>

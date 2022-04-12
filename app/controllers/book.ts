@@ -1,6 +1,7 @@
 import BaseController from '../core/controller'
 import Book from '../models/book'
 import { IBookDataType, IBookAddType, IBookUpdateType, INoteControlAddType, INoteControlReurnType } from '../../types/book'
+import { IResponePageBodyType } from '../../types/index'
 
 const sortMethod = (a: IBookDataType, b: IBookDataType): number => {
   const _a = a.title.charCodeAt(0)
@@ -38,6 +39,22 @@ class BookController extends BaseController {
     })
     list.sort(sortMethod)
     return list
+  }
+
+  async listPage (page: number, pagesize: number): Promise<IResponePageBodyType<IBookDataType>> {
+    const start = (page - 1) * pagesize
+    const total = await Book.find().count()
+    const list: IBookDataType[] = await Book.find().skip(start).limit(pagesize).sort({
+      _id: -1
+    })
+    list.sort(sortMethod)
+    const res = {
+      list,
+      page,
+      pagesize,
+      total
+    }
+    return res
   }
 
   async search (keyword: string): Promise<IBookDataType[]> {

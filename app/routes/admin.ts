@@ -181,11 +181,11 @@ export default class User {
   @post('/update/self')
   async AdminUpdateSelf (ctx: Context, next: Next) {
     const { userinfo } = ctx.state
-    const id = userinfo._id
+    const id = userinfo._id as string
     if (id) {
       const _body = ctx.request.body as IApiAdminUpdateSelfType
       // 更新密码
-      if (_body.password) {
+      if (_body.password && _body.oldPassword) {
         const postData: IApiAdminUpdateSelfType = {
           password: _body.password,
           avatar: _body.avatar,
@@ -199,7 +199,7 @@ export default class User {
             msg: '两次输入的密码不一致'
           }
         } else {
-          const isChecked = await admin.checkOldPassword(id, postData.oldPassword)
+          const isChecked = await admin.checkOldPassword(id, postData.oldPassword as string)
           if (isChecked) {
             const _postData = {
               password: postData.password,

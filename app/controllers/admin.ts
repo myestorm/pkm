@@ -46,7 +46,7 @@ class AdminController extends BaseController {
 
   async remove (id: string): Promise<string> {
     const result = await Admin.findByIdAndRemove(id)
-    return result._id.toString()
+    return result?._id.toString() || ''
   }
 
   async update (id: string, data: IControllerAdminAddType): Promise<string> {
@@ -101,20 +101,20 @@ class AdminController extends BaseController {
       password: MD5(password).toString(),
       status: 1
     })
-    return Boolean(result)
+    return Boolean(result?._id)
   }
 
   async updateSelf (id: string, data: IControllerUpdateSelfType): Promise<string> {
     if (data.password) {
       data.password = MD5(data.password).toString()
     }
-    const result = await Admin.findByIdAndUpdate(id, data, { 
+    await Admin.findByIdAndUpdate(id, data, { 
       new: true, 
       upsert: true,
       runValidators: true, 
       findByIdAndUpdate: 'after' 
     })
-    return result._id.toString()
+    return id
   }
 
 }

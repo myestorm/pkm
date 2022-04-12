@@ -2,7 +2,7 @@ import { Context, Next } from 'koa'
 import { prefix, get, post, put, del } from '../core/router'
 
 import { IBookDataType, IBookRouteAddType, IBookRouteUpdateType, INoteControlAddType, INoteControlReurnType } from '../../types/book'
-import { IResponeBodyType } from '../../types/index'
+import { IResponeBodyType, IResponePageBodyType, IPageType } from '../../types/index'
 import Book from '../controllers/book'
 
 const book = new Book()
@@ -101,6 +101,19 @@ export default class User {
   async BookList (ctx: Context, next: Next) {
     const result = await book.list()
     const body: IResponeBodyType<IBookDataType[]> = {
+      code: 0,
+      msg: 'success',
+      data: result
+    }
+    ctx.body = body
+    await next()
+  }
+
+  @post('/list/page')
+  async BookListPage (ctx: Context, next: Next) {
+    const _body = ctx.request.body as IPageType<{}>
+    const result = await book.listPage(_body.page, _body.pagesize)
+    const body: IResponeBodyType<IResponePageBodyType<IBookDataType>> = {
       code: 0,
       msg: 'success',
       data: result

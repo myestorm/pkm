@@ -1,7 +1,7 @@
 import { axios } from '../plugins/axios'
 import { AxiosRequestConfig } from 'axios'
 
-import { IResponeBodyType } from '../../types/index'
+import { IResponeBodyType, IResponePageBodyType, IPageType } from '../../types/index'
 import { IBookDataApiType, IBookAddType, IBookUpdateType, INoteApiAddType, INoteApiReurnType } from '../../types/book'
 
 const prefix = '/api/book'
@@ -37,6 +37,13 @@ export const BookInfo = (id: string, options?: AxiosRequestConfig): Promise<IRes
 // 获取所有书籍
 export const BookList = (options?: AxiosRequestConfig): Promise<IResponeBodyType<IBookDataApiType[]>> => {
   return axios.post(`${prefix}/list`, {}, {
+    ...options
+  })
+}
+
+// 获取书籍分页
+export const BookListPage = (postData: IPageType<{}>, options?: AxiosRequestConfig): Promise<IResponeBodyType<IResponePageBodyType<IBookDataApiType>>> => {
+  return axios.post(`${prefix}/list/page`, postData, {
     ...options
   })
 }

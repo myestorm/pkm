@@ -18,5 +18,11 @@ export interface IFileUploadType {
   filepath: string
 }
 
+export interface IPageType<T> {
+  page: number,
+  pagesize: number,
+  conditions?: T
+}
+
 // 使某个type变成可选
 export type PartialKey<T, U extends keyof T> = Pick<T, Exclude<keyof T, U>> & Pick<Partial<T>, U>

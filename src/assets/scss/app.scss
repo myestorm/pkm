@@ -182,11 +182,11 @@ body, #app {
   }
 }
 
+.#{$--prefix}-search-input {
+  border-radius: 16px;
+  background-color: var(--color-bg-1);
+}
 .#{$--prefix}-mobile-file-list {
-  .search-input {
-    border-radius: 16px;
-    background-color: var(--color-bg-1);
-  }
   .fix-btn {
     position: fixed;
     right: 12px;

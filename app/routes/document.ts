@@ -2,7 +2,7 @@ import { Context, Next } from 'koa'
 import { prefix, get, post, put, del } from '../core/router'
 
 import Document from '../controllers/document'
-import { IResponeBodyType } from '../../types/index'
+import { IResponeBodyType, IPageType, IResponePageBodyType } from '../../types/index'
 import { IDocumentRouteAddType, IDocumentRouteUpdateType, IDocumentFilterType, IDocumentDataType } from '../../types/document'
 
 const document = new Document()
@@ -112,6 +112,19 @@ export default class DocumentRouter {
     const _body = ctx.request.body as IDocumentFilterType
     const result = await document.list(_body)
     const body: IResponeBodyType<IDocumentDataType[]> = {
+      code: 0,
+      msg: 'success',
+      data: result
+    }
+    ctx.body = body
+    await next()
+  }
+
+  @post('/list/page')
+  async DocumentListPage (ctx: Context, next: Next) {
+    const _body = ctx.request.body as IPageType<IDocumentFilterType>
+    const result = await document.listPage(_body.page, _body.pagesize, _body.conditions)
+    const body: IResponeBodyType<IResponePageBodyType<IDocumentDataType>> = {
       code: 0,
       msg: 'success',
       data: result

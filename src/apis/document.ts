@@ -1,7 +1,7 @@
 import { axios } from '../plugins/axios'
 import { AxiosRequestConfig } from 'axios'
 
-import { IResponeBodyType } from '../../types/index'
+import { IResponeBodyType, IResponePageBodyType, IPageType } from '../../types/index'
 import { IDocumentAddType, IDocumentUpdateType, IDocumentFilterType, IDocumentPageListItemType, IDocumentSearchType } from '../../types/document'
 
 const prefix = '/api/document'
@@ -37,6 +37,13 @@ export const DocumentInfo = (id: string, options?: AxiosRequestConfig): Promise<
 // 获取所有文档
 export const DocumentList = (postData: IDocumentFilterType, options?: AxiosRequestConfig): Promise<IResponeBodyType<IDocumentPageListItemType[]>> => {
   return axios.post(`${prefix}/list`, postData, {
+    ...options
+  })
+}
+
+// 获取所有文档分页
+export const DocumentListPage = (postData: IPageType<IDocumentFilterType>, options?: AxiosRequestConfig): Promise<IResponeBodyType<IResponePageBodyType<IDocumentPageListItemType>>> => {
+  return axios.post(`${prefix}/list/page`, postData, {
     ...options
   })
 }
