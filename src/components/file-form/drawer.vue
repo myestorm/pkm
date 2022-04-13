@@ -9,7 +9,7 @@
   </pkm-drawer>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, ref, watch } from 'vue'
+import { defineComponent, PropType, ref } from 'vue'
 import { IDocumentTypeType, IDocumentFormType } from '../../../types/document'
 import FileForm from './form.vue'
 
@@ -32,7 +32,7 @@ export default defineComponent({
     },
     initValue: {
       type: Object as PropType<FileFormDrawerProps['initValue']>,
-      default: () => {}
+      default: {}
     }
   },
   components: {

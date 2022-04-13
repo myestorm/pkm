@@ -6,7 +6,8 @@
     <pkm-layout-content class="pkm-layout-content">
       <pkm-layout class="main">
         <pc-header />
-        <pkm-layout-content>
+        <pkm-divider class="divider" />
+        <pkm-layout-content class="content">
           <router-view></router-view>
         </pkm-layout-content>
       </pkm-layout>
@@ -32,6 +33,12 @@ export default defineComponent({
   .main {
     width: 100%;
     height: 100%;
+  }
+  .divider {
+    margin: 0;
+  }
+  .content {
+    overflow: auto;
   }
 }
 </style>

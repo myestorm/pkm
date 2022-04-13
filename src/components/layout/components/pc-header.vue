@@ -50,10 +50,10 @@
         </pkm-dropdown>
         <pkm-switch v-model="isDark" @change="changeHandler">
           <template #checked>
-            关灯
+            开灯
           </template>
           <template #unchecked>
-            开灯
+            关灯
           </template>
         </pkm-switch>
       </pkm-space>

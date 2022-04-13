@@ -88,7 +88,7 @@ class DocumentController extends BaseController {
       ],
       $and: and
     }
-    const list = await Document.find(params, '_id title desc parents type cover').sort({
+    const list = await Document.find(params).sort({
       _id: -1
     })
     list.sort(sortMethod)

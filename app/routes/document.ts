@@ -123,7 +123,8 @@ export default class DocumentRouter {
   @post('/list/page')
   async DocumentListPage (ctx: Context, next: Next) {
     const _body = ctx.request.body as IPageType<IDocumentFilterType>
-    const result = await document.listPage(_body.page, _body.pagesize, _body.conditions)
+    const conditions = _body.conditions as IDocumentFilterType
+    const result = await document.listPage(_body.page, _body.pagesize, conditions)
     const body: IResponeBodyType<IResponePageBodyType<IDocumentDataType>> = {
       code: 0,
       msg: 'success',

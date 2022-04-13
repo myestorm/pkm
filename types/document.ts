@@ -40,7 +40,7 @@ export type IDocumentFilterType = Partial<IDocumentType<string>>
 
 export type IDocumentFormType = IDocumentAddType & { _id?: string }
 export type IDocumentPageListItemType = IDocumentType<string>
-export type IDocumentSearchType = Pick<IDocumentType<string>, '_id' | 'title' | 'parents' | 'type' | 'desc' | 'top' | 'cover'>
+export type IDocumentSearchType = Pick<IDocumentType<string>, '_id' | 'title' | 'parents' | 'type' | 'desc' | 'top' | 'cover' | 'updatedAt'>
 
 // route
 export type IDocumentRouteAddType = Omit<IDocumentType<string>, '_id' | 'createdAt' | 'updatedAt' | 'comments'>

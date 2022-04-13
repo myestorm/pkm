@@ -49,7 +49,7 @@ export const DocumentListPage = (postData: IPageType<IDocumentFilterType>, optio
 }
 
 // 搜索文档
-export const DocumentSearch = (keyword: string, parents?: string[], options?: AxiosRequestConfig): Promise<IResponeBodyType<IDocumentSearchType[]>> => {
+export const DocumentSearch = (keyword: string, parents?: string[], options?: AxiosRequestConfig): Promise<IResponeBodyType<IDocumentPageListItemType[]>> => {
   return axios.post(`${prefix}/search/${keyword}`, { parents }, {
     ...options
   })
