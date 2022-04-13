@@ -3,6 +3,8 @@ import Pclayout from '../../components/layout/pc-layout.vue'
 import home from '../../views/pc/home.vue'
 import file from '../../views/pc/file.vue'
 import fileEditor from '../../views/pc/file-editor.vue'
+import book from '../../views/pc/book.vue'
+import bookView from '../../views/pc/book-view.vue'
 
 const prefix = '/p'
 
@@ -49,12 +51,23 @@ export default {
   }, {
     path: `${prefix}/book`,
     name: 'PcBook',
-    component: home,
+    component: book,
     meta: {
       title: '书架',
       icon: 'icon-bookmark',
       nav: true,
       keepAlive: false
-    }
+    },
+    children: [{
+      path: `${prefix}/book/view/:id`,
+      name: 'PcBookView',
+      component: bookView,
+      meta: {
+        title: '查看书籍',
+        icon: 'icon-file',
+        nav: true,
+        keepAlive: false
+      }
+    }]
   }]
 }

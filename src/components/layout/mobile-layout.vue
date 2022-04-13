@@ -11,7 +11,7 @@
     <footer class="pkm-mobile-app-footer" v-if="footer">
       <slot name="footer">
         <pkm-row class="footer-nav" justify="space-around">
-          <pkm-col :span="6" :gutter="0" v-for="(item, index) in navs" :key="index">
+          <pkm-col :span="6" :gutter="0" v-for="(item, index) in mobileNav" :key="index">
             <pkm-button type="text" :class="[mobileCurrent == index ? 'current' : '']" @click="toLink(item.url)">
               <component :size="24" :strokeWidth="3" :is="item.icon"></component>
               <strong>{{ item.title }}</strong>
@@ -63,30 +63,13 @@ export default defineComponent({
   setup (props) {
     const store = useStore()
     const router = useRouter()
-    const { mobileCurrent } = storeToRefs(store)
+    const { mobileCurrent, mobileNav } = storeToRefs(store)
 
     const _mainStyle = { paddingTop: `${props.headerHeight + 16}px`, paddingBottom: props.footer ? '' : '12px' }
     const mainStyle = Object.assign({}, _mainStyle, props.style)
 
-    const navs = [{
-      title: '首页',
-      icon: 'icon-home',
-      url: '/m/home'
-    }, {
-      title: '文档',
-      icon: 'icon-file',
-      url: '/m/file'
-    }, {
-      title: '书架',
-      icon: 'icon-bookmark',
-      url: '/m/book'
-    }, {
-      title: '系统',
-      icon: 'icon-settings',
-      url: '/m/setting'
-    }]
     return {
-      navs,
+      mobileNav,
       mobileCurrent,
       mainStyle,
       toLink (url: string) {

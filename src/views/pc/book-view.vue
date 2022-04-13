@@ -19,11 +19,6 @@
         </pkm-button-group>
       </div>
     </div>
-    <pkm-spin dot :loading="loading" class="block">
-      <div class="markdown-editor">
-        <markdown-editor v-model="value" @toolbarItemAction="toolbarItemAction" height="calc(100vh - 95px)" />
-      </div>
-    </pkm-spin>
   </div>
 </template>
 <script lang="ts">
@@ -31,15 +26,11 @@ import { defineComponent, getCurrentInstance, ref, reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import useDocStore from '../../store/modules/document/index'
 
-import MarkdownEditor from '../../components/editor/markdown.vue'
 import { DocumentInfo, DocumentUpdate } from '../../apis/document'
 import type { ToolbarItemType } from '@totonoo/vue-codemirror/dist_types/components/editor/markdown/toolbar'
 import { IDocumentUpdateType, IDocumentTypeType } from '../../../types/document'
 
 export default defineComponent({
-  components: {
-    MarkdownEditor
-  },
   setup () {
     const route = useRoute()
     const app = getCurrentInstance()

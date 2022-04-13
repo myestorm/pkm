@@ -4,32 +4,34 @@
       <div class="header">
         <pkm-space direction="vertical" fill>
           <div class="pkm-add-button">
-            <pkm-button type="primary" long @click.stop="toggleDisplayAddList">
-              <template #icon>
-                <icon-plus />
-              </template>
-              <template #default>
-                新建
-              </template>
-            </pkm-button>
-            <div class="pkm-add-button-options" v-show="isDisplayAddList">
-              <pkm-button type="text" long @click="creatDocument">
+            <pkm-dropdown popup-container=".pkm-add-button">
+              <pkm-button type="primary" long>
                 <template #icon>
-                  <icon-file />
+                  <icon-plus />
                 </template>
                 <template #default>
-                  <span class="w">文档</span>
+                  新建
                 </template>
               </pkm-button>
-              <pkm-button type="text" long @click="creatFolder">
-                <template #icon>
-                  <icon-folder />
-                </template>
-                <template #default>
-                  <span class="w">目录</span>
-                </template>
-              </pkm-button>
-            </div>
+              <template #content>
+                <pkm-doption @click="creatDocument">
+                  <template #icon>
+                    <icon-file />
+                  </template>
+                  <template #default>
+                    <span class="w">文档</span>
+                  </template>
+                </pkm-doption>
+                <pkm-doption @click="creatFolder">
+                  <template #icon>
+                    <icon-folder />
+                  </template>
+                  <template #default>
+                    <span class="w">目录</span>
+                  </template>
+                </pkm-doption>
+              </template>
+            </pkm-dropdown>
             <file-form-drawer width="420px" v-model="fileFormVisible" :type="fileFormType" :initValue="fileFormInitValue" />
           </div>
           <pkm-space class="flex">
@@ -41,48 +43,68 @@
           </pkm-space>
         </pkm-space>
       </div>
-      <div class="file-list">
-        <ul>
-          <li class="item" v-for="item in list" :key="item._id" :class="[item._id == id ? 'current' : '']">
-            <div class="icon" @click="fileListItemClick(item)">
-              <icon-file :size="24" :strokeWidth="2" v-if="item.type == 'document'" />
-              <icon-folder :size="24" :strokeWidth="2" v-else />
-            </div>
-            <div class="info" @click="fileListItemClick(item)">
-              <div class="title">{{ item.title }}</div>
-              <div class="desc">{{ item.desc }}</div>
-              <div class="day">
-                {{ dayjs(item.updatedAt).format('YYYY-MM-DD HH:mm') }}
+      <pkm-dropdown trigger="contextMenu" alignPoint :style="{ display:'block' }">
+        <div class="file-list">
+          <ul>
+            <li class="item" v-for="item in list" :key="item._id" :class="[item._id == id ? 'current' : '']">
+              <div class="icon" @click="fileListItemClick(item)">
+                <icon-file :size="24" :strokeWidth="2" v-if="item.type == 'document'" />
+                <icon-folder :size="24" :strokeWidth="2" v-else />
               </div>
-            </div>
-            <div class="action">
-              <pkm-dropdown position="br">
-                <pkm-button-group>
-                  <pkm-button type="text" class="btn-info">
-                    <template #icon>
-                      <icon-more />
-                    </template>
-                  </pkm-button>
-                </pkm-button-group>
-                <template #content>
-                  <pkm-doption @click="edit(item)">
-                    <template #icon>
-                      <icon-edit />
-                    </template>
-                    编辑
-                  </pkm-doption>
-                  <pkm-doption @click="remove(item._id)">
-                    <template #icon>
-                      <icon-delete />
-                    </template>
-                    删除
-                  </pkm-doption>
-                </template>
-              </pkm-dropdown>
-            </div>
-          </li>
-        </ul>
-      </div>
+              <div class="info" @click="fileListItemClick(item)">
+                <div class="title">{{ item.title }}</div>
+                <div class="desc">{{ item.desc }}</div>
+                <div class="day">
+                  {{ dayjs(item.updatedAt).format('YYYY-MM-DD HH:mm') }}
+                </div>
+              </div>
+              <div class="action">
+                <pkm-dropdown position="br">
+                  <pkm-button-group>
+                    <pkm-button type="text" class="btn-info">
+                      <template #icon>
+                        <icon-more />
+                      </template>
+                    </pkm-button>
+                  </pkm-button-group>
+                  <template #content>
+                    <pkm-doption @click="edit(item)">
+                      <template #icon>
+                        <icon-edit />
+                      </template>
+                      编辑
+                    </pkm-doption>
+                    <pkm-doption @click="remove(item._id)">
+                      <template #icon>
+                        <icon-delete />
+                      </template>
+                      删除
+                    </pkm-doption>
+                  </template>
+                </pkm-dropdown>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <template #content>
+          <pkm-doption @click="creatDocument">
+            <template #icon>
+              <icon-file />
+            </template>
+            <template #default>
+              新建文档
+            </template>
+          </pkm-doption>
+          <pkm-doption @click="creatFolder">
+            <template #icon>
+              <icon-folder />
+            </template>
+            <template #default>
+              新建目录
+            </template>
+          </pkm-doption>
+        </template>
+      </pkm-dropdown>
     </div>
   </pkm-layout-sider>
 </template>
@@ -111,22 +133,15 @@ export default defineComponent({
     const { parents, list, id, keyword, fileFormVisible, fileFormType, fileFormInitValue  } = storeToRefs(storeDoc)
     const loading = ref(false)
 
-    const isDisplayAddList = ref(false)
-    const toggleDisplayAddList = () => {
-      isDisplayAddList.value = !isDisplayAddList.value
-    }
-
     const creatDocument = () => {
       storeDoc.setTypeDoc()
       storeDoc.setFormDefault()
       fileFormVisible.value = true
-      isDisplayAddList.value = false
     }
     const creatFolder = () => {
       storeDoc.setTypeFolder()
       storeDoc.setFormDefault()
       fileFormVisible.value = true
-      isDisplayAddList.value = false
     }
     const getList = () => {
       DocumentList({
@@ -208,8 +223,6 @@ export default defineComponent({
       fileFormType,
       fileFormInitValue,
 
-      isDisplayAddList,
-      toggleDisplayAddList,
       creatDocument,
       creatFolder,
       backTo,
@@ -249,16 +262,16 @@ export default defineComponent({
       }
     }
     .file-list {
-      max-height: calc(100vh - 142px);
+      height: calc(100vh - 142px);
       overflow: auto;
     }
   }
-  ul, li {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
   .file-list {
+    ul, li {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
     .item {
       display: flex;
       padding: 8px 0;
@@ -307,19 +320,15 @@ export default defineComponent({
     }
   }
 }
+</style>
+<style lang="scss">
 .#{$--prefix}-add-button {
-  position: relative;
-  &-options {
-    width: 100%;
-    background: var(--color-bg-3);
-    position: absolute;
-    left: 0;
-    top: 100%;
-    z-index: 4;
-    button {
-      &:hover {
-        background-color: var(--color-fill-1);
-      }
+  .arco-trigger-popup {
+    width: 264px;
+    box-sizing: border-box;
+    left: 8px !important;
+    .arco-dropdown-option {
+      justify-content: center;
     }
   }
 }

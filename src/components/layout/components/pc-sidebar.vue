@@ -5,7 +5,7 @@
     </pkm-layout-header>
     <pkm-layout-content class="content">
       <pkm-space direction="vertical" fill>
-        <template v-for="(item, index) in navs" :key="index">
+        <template v-for="(item, index) in pcNav" :key="index">
           <pkm-button type="text" :class="[pcCurrent == index ? 'current' : '']" @click="toLink(item.url, index)">
             <component :size="24" :strokeWidth="3" :is="item.icon"></component>
             <strong>{{ item.title }}</strong>
@@ -40,21 +40,12 @@ export default defineComponent({
   setup () {
     const store = useStore()
     const router = useRouter()
-    const { pcCurrent } = storeToRefs(store)
+    const { pcCurrent, pcNav } = storeToRefs(store)
     const logoStyle = {
       width: '40px',
       height: '40px',
       color: '#009844'
     }
-    const navs = [{
-      title: '文档',
-      icon: 'icon-file',
-      url: '/p/file'
-    }, {
-      title: '书架',
-      icon: 'icon-bookmark',
-      url: '/p/book'
-    }]
     const footer = [{
       title: '系统',
       icon: 'icon-settings',
@@ -66,7 +57,7 @@ export default defineComponent({
     return {
       pcCurrent,
       logoStyle,
-      navs,
+      pcNav,
       footer,
       toLink
     }
