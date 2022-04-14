@@ -134,9 +134,10 @@ export default defineComponent({
     const getFormValue = () => {
       return form
     }
-
     if (props.id) {
       getInfo(props.id)
+    } else {
+      setFormValue(formDefault)
     }
 
     return {

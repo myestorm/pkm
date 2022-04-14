@@ -276,7 +276,7 @@ export default defineComponent({
       display: flex;
       padding: 8px 0;
       cursor: pointer;
-      align-items: flex-start;
+      align-items: stretch;
       transition: all 300ms ease;
       border-top: 1px solid transparent;
       border-bottom: 1px solid transparent;

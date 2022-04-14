@@ -10,7 +10,6 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, PropType } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
 
 import BookForm from './index.vue'
 
@@ -31,15 +30,12 @@ export default defineComponent({
       default: false
     },
     id: {
-      type: Object as PropType<BookFormDrawerProps['id']>,
-      default: {}
+      type: String as PropType<BookFormDrawerProps['id']>,
+      default: ''
     }
   },
-  setup () {
-    const router = useRouter()
-    const route = useRoute()
-    const id = (route.params.id || '') as string
-
+  emits: ['update:modelValue', 'success'],
+  setup (props, ctx) {
     const formRef = ref<null | InstanceType<typeof BookForm>>(null)
     const loading = ref(false)
     const title = ref('添加书籍')
@@ -50,13 +46,13 @@ export default defineComponent({
       formRef.value?.save()
     }
     const successHandler = () => {
-      router.back()
+      ctx.emit('update:modelValue', false)
+      ctx.emit('success')
     }
     const handleCancel = () => {
-      router.back()
+      ctx.emit('update:modelValue', false)
     }
     return {
-      id,
       formRef,
       loading,
       title,

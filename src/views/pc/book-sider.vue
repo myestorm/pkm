@@ -12,7 +12,7 @@
                 新建
               </template>
             </pkm-button>
-            <book-form-drawer width="420px" v-model="fileFormVisible" :initValue="fileFormInitValue" />
+            <book-form-drawer width="420px" v-model="fileFormVisible" :id="formId" @success="getList" />
           </div>
           <pkm-input-search flex="auto" v-model="keyword" class="search-input block" placeholder="试试搜索书籍" :allow-clear="true" :loading=" loading" @input="searchHandler" @search="searchHandler" @clear="searchClear" />
         </pkm-space>
@@ -82,9 +82,10 @@ export default defineComponent({
     const router = useRouter()
     const { list, id, keyword, fileFormVisible, fileFormInitValue } = storeToRefs(storeBook)
     const loading = ref(false)
+    const formId = ref('')
 
     const creat = () => {
-      storeBook.setFormDefault()
+      formId.value = ''
       fileFormVisible.value = true
     }
     const getList = () => {
@@ -98,7 +99,7 @@ export default defineComponent({
       router.push(`/p/book/view/${item._id}`)
     }
     const edit = (item: IBookDataApiType) => {
-      storeBook.setFormValue(item)
+      formId.value = item._id
       fileFormVisible.value = true
     }
     const remove = (id: string) => {
@@ -140,7 +141,10 @@ export default defineComponent({
       fileFormVisible,
       fileFormInitValue,
 
+      getList,
+
       creat,
+      formId,
 
       list,
       fileListItemClick,
@@ -191,7 +195,7 @@ export default defineComponent({
       display: flex;
       padding: 8px 0;
       cursor: pointer;
-      align-items: flex-start;
+      align-items: stretch;
       transition: all 300ms ease;
       border-top: 1px solid transparent;
       border-bottom: 1px solid transparent;
