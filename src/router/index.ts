@@ -6,7 +6,7 @@ import mobile from './mobile/index'
 
 
 import empty from '../components/layout/empty.vue'
-import signin from '../views/user/signin.vue'
+import signin from '../views/comm/signin.vue'
 import error404 from '../views/error/404.vue'
 
 import NProgress from 'nprogress'

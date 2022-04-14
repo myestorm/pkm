@@ -5,6 +5,8 @@ import file from '../../views/pc/file.vue'
 import fileEditor from '../../views/pc/file-editor.vue'
 import book from '../../views/pc/book.vue'
 import bookView from '../../views/pc/book-view.vue'
+import setting from '../../views/pc/setting.vue'
+import userinfo from '../../views/pc/userinfo.vue'
 
 const prefix = '/p'
 
@@ -69,5 +71,25 @@ export default {
         keepAlive: false
       }
     }]
+  }, {
+    path: `${prefix}/userinfo`,
+    name: 'PcUserinfo',
+    component: userinfo,
+    meta: {
+      title: '我的信息',
+      icon: 'icon-info-circle',
+      nav: false,
+      keepAlive: false
+    }
+  }, {
+    path: `${prefix}/setting`,
+    name: 'PcSetting',
+    component: setting,
+    meta: {
+      title: '设置',
+      icon: 'icon-setting',
+      nav: false,
+      keepAlive: false
+    }
   }]
 }

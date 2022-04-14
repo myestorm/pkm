@@ -32,7 +32,7 @@
                 </pkm-doption>
               </template>
             </pkm-dropdown>
-            <file-form-drawer width="420px" v-model="fileFormVisible" :type="fileFormType" :initValue="fileFormInitValue" />
+            <file-form-drawer width="420px" v-model="fileFormVisible" :type="fileFormType" :initValue="fileFormInitValue" @success="getList" />
           </div>
           <pkm-space class="flex">
             <pkm-button type="text" class="backto" @click="backTo" :disabled="parents.length == 0">
@@ -229,6 +229,7 @@ export default defineComponent({
 
       list,
       fileListItemClick,
+      getList,
       edit,
       remove,
 

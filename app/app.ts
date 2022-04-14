@@ -15,7 +15,7 @@ import getRootDir from './utils/getRootDir'
 
 const app = new Koa()
 const rootDir = getRootDir()
-const uploadDir = `${rootDir}/resource/uploads`
+const uploadDir = path.normalize(`${rootDir}/resource/uploads`)
 
 mongoose.connect(mongoConfig)
 mongoose.connection.on('error', console.error)
@@ -62,7 +62,7 @@ app.use(koaBody({
     onFileBegin (name, file) {
       // 设置上传位置
       const dirName = dayjs(new Date()).format('YYYYMMDD')
-      const dir = `${uploadDir}/${dirName}`
+      const dir = path.normalize(`${uploadDir}/${dirName}`)
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir)
       }

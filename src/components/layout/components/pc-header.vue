@@ -20,7 +20,7 @@
       <pkm-space>
         <pkm-dropdown>
           <div class="user-info">
-            <pkm-avatar :size="28">
+            <pkm-avatar :size="28" shape="square">
               <img
                 v-if="userinfo.avatar"
                 alt="avatar"
@@ -34,6 +34,12 @@
             <icon-down />
           </div>
           <template #content>
+            <pkm-doption @click="toLink('/p/userinfo')">
+              <template #icon>
+                <icon-info-circle />
+              </template>
+              <template #default>我的信息</template>
+            </pkm-doption>
             <pkm-doption @click="visible = true">
               <template #icon>
                 <icon-edit />
@@ -48,14 +54,10 @@
             </pkm-doption>
           </template>
         </pkm-dropdown>
-        <pkm-switch v-model="isDark" @change="changeHandler">
-          <template #checked>
-            开灯
-          </template>
-          <template #unchecked>
-            关灯
-          </template>
-        </pkm-switch>
+        <pkm-button shape="circle" @click="changeHandler(!isDark)">
+          <icon-sun-fill v-if="isDark" />
+          <icon-moon-fill v-else />
+        </pkm-button>
       </pkm-space>
       <admin-self v-model="visible" width="360px" :initValue="userinfo" @success="successHandler" />
     </div>
@@ -93,6 +95,7 @@ export default defineComponent({
         document.body.removeAttribute('arco-theme')
       }
       store.setTheme(val ? 'dark' : 'light')
+      isDark.value = val
     }
     const successHandler = (data: IApiAdminUpdateSelfType) => {
       if (data.password) {

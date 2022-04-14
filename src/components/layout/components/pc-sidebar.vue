@@ -49,7 +49,7 @@ export default defineComponent({
     const footer = [{
       title: '系统',
       icon: 'icon-settings',
-      url: '/m/setting'
+      url: '/p/setting'
     }]
     const toLink = (url: string, index?: number) => {
       router.push(url)
