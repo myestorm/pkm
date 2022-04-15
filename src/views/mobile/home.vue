@@ -20,8 +20,9 @@
         </pkm-card>
         <pkm-card title="书架更新" class="pkm-card">
           <pkm-row :gutter="[8, 8]">
-            <pkm-col :span="12" v-for="item in bookList" :key="item._id" @click="bookInfo(item._id)">
+            <pkm-col :span="8" v-for="item in bookList" :key="item._id" @click="bookInfo(item._id)">
               <pkm-image :src="item.cover || '/images/no-book.png'" width="100%" />
+              <div class="book-title">{{ subStr(item.title, 24) }}</div>
             </pkm-col>
           </pkm-row>
         </pkm-card>
@@ -38,6 +39,7 @@ import { DocumentListPage } from '../../apis/document'
 import { IDocumentPageListItemType, IDocumentTypeType } from '../../../types/document'
 import { BookListPage } from '../../apis/book'
 import { IBookDataApiType } from '../../../types/book'
+import { subStr } from '../../utils/index'
 
 export default defineComponent({
   components: {
@@ -52,7 +54,7 @@ export default defineComponent({
     const documentList = ref<IDocumentPageListItemType[]>([])
     DocumentListPage({
       page: 1,
-      pagesize: 10,
+      pagesize: 6,
       conditions: {
         type: IDocumentTypeType.DOC
       }
@@ -81,7 +83,7 @@ export default defineComponent({
     const bookList = ref<IBookDataApiType[]>([])
     BookListPage({
       page: 1,
-      pagesize: 10
+      pagesize: 9
     }).then(res => {
       bookList.value = res.data.list || []
     })
@@ -94,7 +96,8 @@ export default defineComponent({
       itemClickHandler,
       bookList,
       bookInfo,
-      dayjs
+      dayjs,
+      subStr
     }
   }
 })

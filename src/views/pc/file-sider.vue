@@ -53,7 +53,7 @@
               </div>
               <div class="info" @click="fileListItemClick(item)">
                 <div class="title">{{ item.title }}</div>
-                <div class="desc">{{ item.desc }}</div>
+                <div class="desc">{{ subStr(item.desc, 54) }}</div>
                 <div class="day">
                   {{ dayjs(item.updatedAt).format('YYYY-MM-DD HH:mm') }}
                 </div>
@@ -61,7 +61,7 @@
               <div class="action">
                 <pkm-dropdown position="br">
                   <pkm-button-group>
-                    <pkm-button type="text" class="btn-info">
+                    <pkm-button type="text" class="btn-info" size="mini">
                       <template #icon>
                         <icon-more />
                       </template>
@@ -118,6 +118,7 @@ import FileFormDrawer from '../../components/file-form/drawer.vue'
 
 import { DocumentList, DocumentRemove, DocumentSearch } from '../../apis/document'
 import { IDocumentFormType, IDocumentTypeType } from '../../../types/document'
+import { subStr } from '../../utils/index'
 
 export default defineComponent({
   components: {
@@ -232,6 +233,7 @@ export default defineComponent({
       getList,
       edit,
       remove,
+      subStr,
 
       loading,
       searchHandler,
@@ -281,10 +283,20 @@ export default defineComponent({
       transition: all 300ms ease;
       border-top: 1px solid transparent;
       border-bottom: 1px solid transparent;
-      border-left: 1px solid transparent;
-      &:hover, &.current {
+      &:nth-child(odd) {
         background-color: var(--color-fill-1);
+      }
+      // &:hover, &.current {
+      //   background-color: var(--color-fill-1);
+      //   border-color: var(--color-neutral-3);
+      // }
+      &:hover {
+        background-color: rgb(var(--gray-3)) !important;
+      }
+      &.current {
+        background-color: var(--color-fill-1) !important;
         border-color: var(--color-neutral-3);
+        box-shadow: 0 0 16px 0 rgba(0,0,0,0.12) inset;
       }
       .icon {
         flex: 0 0 36px;
@@ -294,6 +306,7 @@ export default defineComponent({
       .info {
         flex: 1;
         padding: 0 8px;
+        line-height: 1.4;
         .day {
           color: var(--color-text-4);
           font-size: 12px;

@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory, Router, RouteRecordRaw, RouteLocationNormalized } from 'vue-router'
+import useStore from '../store/index'
 import useNavigationStore from '../store/modules/navigation/index'
+import useAdminStore from '../store/modules/admin/index'
 import { breadcrumbType } from '../store/modules/navigation/types'
 import pc from './pc/index'
 import mobile from './mobile/index'
@@ -147,10 +149,55 @@ const setNavigation = (route: RouteLocationNormalized) => {
   document.title = pageTitle ? `${pageTitle} - ${sitename}` : sitename
 }
 
+// 动态加载路由
+const addRoute = () => {
+  authorizeRoutes.forEach(item => {
+    router.addRoute(item)
+  })
+}
+
+let isMounted = false
+// 动态挂载路由
+const mountAuthorizeRoutes = () => {
+  return new Promise<void>((reslove, reject) => {
+    const store = useStore()
+    const storeAdmin = useAdminStore()
+    const isMobile = store.system.isMobile
+    const defaultHome = isMobile ? '/m/home' : '/p/home'
+    let pathName = window.location.pathname
+      if (!pathName || pathName === '/' || /^\/signin/.test(pathName)) {
+        pathName = defaultHome
+      }
+    const fullPath = pathName + window.location.search
+
+    storeAdmin.getUserinfo().then(() => {
+      addRoute()
+      router.push(fullPath)
+      reslove()
+    }).catch(() => {
+      router.push({
+        path: '/signin',
+        query: {
+          refer: encodeURIComponent(fullPath)
+        }
+      })
+      reject()
+    }).finally(() => {
+      isMounted = true
+    })
+  })
+}
+
 router.beforeEach((to, from, next) => {
-  setNavigation(to)
-  NProgress.start()
-  next()
+  if (!isMounted) {
+    mountAuthorizeRoutes().finally(() => {
+      next()
+    })
+  } else {
+    setNavigation(to)
+    NProgress.start()
+    next()
+  }
 })
 router.afterEach(() => {
   NProgress.done()

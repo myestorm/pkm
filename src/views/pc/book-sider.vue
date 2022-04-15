@@ -24,14 +24,14 @@
               <img :src="item.cover || '/images/no-book.png'">
             </div>
             <div class="info" @click="fileListItemClick(item)">
-              <div class="title">{{ item.title }}</div>
-              <div class="author">{{ item.author }}</div>
-              <div class="desc">{{ item.desc }}</div>
+              <div class="title" :title="item.title">{{ subStr(item.title, 16) }}</div>
+              <div class="author" :title="item.author">{{ subStr(item.author, 20) }}</div>
+              <div class="desc">{{ subStr(item.desc, 58) }}</div>
             </div>
             <div class="action">
               <pkm-dropdown position="br">
                 <pkm-button-group>
-                  <pkm-button type="text" class="btn-info">
+                  <pkm-button type="text" class="btn-info" size="mini">
                     <template #icon>
                       <icon-more />
                     </template>
@@ -64,11 +64,10 @@ import { defineComponent, ref, getCurrentInstance, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import useBookStore from '../../store/modules/book/index'
-
 import BookFormDrawer from '../../components/book-form/drawer.vue'
-
 import { BookList, BookRemove, BookSearch } from '../../apis/book'
 import { IBookDataApiType } from '../../../types/book'
+import { subStr } from '../../utils/index'
 
 export default defineComponent({
   components: {
@@ -150,6 +149,7 @@ export default defineComponent({
       fileListItemClick,
       edit,
       remove,
+      subStr,
 
       loading,
       searchHandler,
@@ -199,36 +199,48 @@ export default defineComponent({
       transition: all 300ms ease;
       border-top: 1px solid transparent;
       border-bottom: 1px solid transparent;
-      border-left: 1px solid transparent;
-      &:hover, &.current {
+      &:nth-child(odd) {
         background-color: var(--color-fill-1);
+      }
+      &:hover {
+        background-color: rgb(var(--gray-3)) !important;
+      }
+      &.current {
+        background-color: var(--color-fill-1) !important;
         border-color: var(--color-neutral-3);
+        box-shadow: 0 0 16px 0 rgba(0,0,0,0.12) inset;
       }
       .icon {
         flex: 0 0 30%;
-        color: var(--color-text-3);
         padding-left: 8px;
         img {
           width: 100%;
+          box-sizing: border-box;
+          border: 1px solid var(--color-neutral-3);
+          padding: 2px;
+          border-radius: var(--border-radius-small);
         }
       }
       .info {
         flex: 1;
         padding: 0 8px;
-        .day {
-          color: var(--color-text-4);
-          font-size: 12px;
-          padding-top: 4px;
-        }
         .title {
+          color: rgb(var(--primary-6));
+          font-size: 14px;
+          // font-weight: bold;
+          padding: 4px 0;
+        }
+        .author {
           color: var(--color-text-2);
           font-size: 14px;
-          font-weight: bold;
+          padding: 4px 0;
         }
         .desc {
           color: var(--color-text-3);
           font-size: 12px;
           padding: 4px 0;
+          // text-align: justify;
+          line-height: 1.4;
         }
       }
       .action {

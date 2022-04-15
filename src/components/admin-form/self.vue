@@ -104,6 +104,7 @@ export default defineComponent({
           loading.value = true
           AdminUpdateSelf(postData).then(() => {
             handleCancel()
+            msg.success('更新成功，需重新登录后生效！')
             ctx.emit('success', postData)
           }).catch(err => {
             msg.error(err.message)

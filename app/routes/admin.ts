@@ -183,53 +183,63 @@ export default class User {
     const { userinfo } = ctx.state
     const id = userinfo._id as string
     if (id) {
-      const _body = ctx.request.body as IApiAdminUpdateSelfType
-      // 更新密码
-      if (_body.password && _body.oldPassword) {
-        const postData: IApiAdminUpdateSelfType = {
-          password: _body.password,
-          avatar: _body.avatar,
-          nickname: _body.nickname,
-          oldPassword: _body.oldPassword,
-          repeatPassword: _body.repeatPassword,
-        }
-        if (postData.password !== postData.repeatPassword) {
-          ctx.body = {
-            code: 2,
-            msg: '两次输入的密码不一致'
+      const info = await admin.info(id)
+      if (info && info._id.toString() === id) {
+        const _body = ctx.request.body as IApiAdminUpdateSelfType
+        // 更新密码
+        if (_body.password && _body.oldPassword) {
+          const postData: IApiAdminUpdateSelfType = {
+            password: _body.password,
+            avatar: _body.avatar,
+            nickname: _body.nickname,
+            oldPassword: _body.oldPassword,
+            repeatPassword: _body.repeatPassword,
           }
-        } else {
-          const isChecked = await admin.checkOldPassword(id, postData.oldPassword as string)
-          if (isChecked) {
-            const _postData = {
-              password: postData.password,
-              avatar: postData.avatar,
-              nickname: postData.nickname
-            }
-            const result = await admin.updateSelf(id, _postData)
-            ctx.body = {
-              code: 0,
-              msg: 'success',
-              data: result
-            }
-            
-          } else {
+          if (postData.password !== postData.repeatPassword) {
             ctx.body = {
               code: 2,
-              msg: '旧密码不正确'
+              msg: '两次输入的密码不一致'
             }
+          } else {
+            const isChecked = await admin.checkOldPassword(id, postData.oldPassword as string)
+            if (isChecked) {
+              const _postData = {
+                password: postData.password,
+                avatar: postData.avatar,
+                nickname: postData.nickname
+              }
+              const result = await admin.updateSelf(id, _postData)
+              ctx.body = {
+                code: 0,
+                msg: 'success',
+                data: result
+              }
+              
+            } else {
+              ctx.body = {
+                code: 2,
+                msg: '旧密码不正确'
+              }
+            }
+          }
+        } else {
+          const _postData: IApiAdminUpdateSelfType = {
+            avatar: _body.avatar,
+            nickname: _body.nickname
+          }
+          console.log(id, _postData)
+          // const result = await admin.updateSelf(id, _postData)
+          ctx.body = {
+            code: 0,
+            msg: 'success',
+            // data: result
+            data: ''
           }
         }
       } else {
-        const _postData: IApiAdminUpdateSelfType = {
-          avatar: _body.avatar,
-          nickname: _body.nickname
-        }
-        const result = await admin.updateSelf(id, _postData)
         ctx.body = {
-          code: 0,
-          msg: 'success',
-          data: result
+          code: 2,
+          msg: '状态异常，请重新登录'
         }
       }
     } else {

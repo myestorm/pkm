@@ -9,7 +9,6 @@ import Utils from './plugins/utils'
 
 import Router from './router/index'
 import { createPinia } from 'pinia'
-// import { store, key } from './store/index'
 
 import App from './App.vue'
 

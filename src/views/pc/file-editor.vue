@@ -61,6 +61,7 @@ export default defineComponent({
       DocumentInfo(id).then(res => {
         value.value = res.data?.content || ''
         title.value = res.data?.title || ''
+        storeDoc.parents = res.data?.parents || []
         if (res.data) {
           form = {
             ...res.data

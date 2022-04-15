@@ -42,6 +42,7 @@ const useStore = defineStore('document', {
     setFormDefault () {
       this.fileFormInitValue = {
         ...formDefault,
+        type: this.fileFormType,
         parents: this.parents
       }
     },

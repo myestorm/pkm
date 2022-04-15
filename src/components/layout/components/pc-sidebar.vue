@@ -68,6 +68,8 @@ export default defineComponent({
 .#{$--prefix}-side-bar {
   width: 100%;
   height: 100%;
+  box-sizing: border-box;
+  border-right: 1px solid var(--color-neutral-3);
   .header {
     text-align: center;
     padding: 4px 0;

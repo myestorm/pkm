@@ -25,7 +25,7 @@
               <li class="item" v-for="item in list" :key="item._id">
                 <div class="link" @click="info(item._id)">
                   <img :src="item.cover" style="width: 100%; height: 140px;" />
-                  <div class="title">{{ item.title }}</div>
+                  <div class="title">{{subStr(item.title, 24)}}</div>
                 </div>
                 <div class="action">
                   <pkm-dropdown position="br">
@@ -70,6 +70,7 @@ import SearchList, { ListItemType } from '../../components/search-list/index.vue
 import { BookList, BookRemove } from '../../apis/book'
 import { useRouter } from 'vue-router'
 import { IBookDataApiType } from '../../../types/book'
+import { subStr } from '../../utils/index'
 
 export default defineComponent({
   components: {
@@ -131,7 +132,8 @@ export default defineComponent({
       edit,
       remove,
       info,
-      itemClickHandler
+      itemClickHandler,
+      subStr
     }
   }
 })
