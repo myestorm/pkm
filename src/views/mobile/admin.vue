@@ -47,8 +47,8 @@ import { useRouter } from 'vue-router'
 import MobileLayout from '../../components/layout/mobile-layout.vue'
 import AdminForm from '../../components/admin-form/index.vue'
 
-import { IApiAdminReurnType } from '../../../types/admin'
-import { AdminList, AdminResetPassword, AdminDisabled } from '../../apis/admin'
+import * as TypesAdmin from '../../../types/admin'
+import useAdminStore from '../../store/modules/admin/index'
 
 export default defineComponent({
   components: {
@@ -60,13 +60,14 @@ export default defineComponent({
     const msg = app?.appContext.config.globalProperties.$message
     const modal = app?.appContext.config.globalProperties.$modal
     const router = useRouter()
-    const list = ref<IApiAdminReurnType[]>([])
+    const storeAdmin = useAdminStore()
+    const list = ref<TypesAdmin.IApiAdminReurnType[]>([])
     const visible = ref(false)
     const pageBack = () => {
       router.push('/m/setting')
     }
     const getList = () => {
-      AdminList().then(res => {
+      storeAdmin.list().then(res => {
         list.value = res.data || []
       }).catch(err => {
         msg.error(err.message)
@@ -86,7 +87,7 @@ export default defineComponent({
         simple: true,
         modalClass: ['pkm-modal-simple'],
         onOk () {
-          AdminResetPassword(id).then(res => {
+          storeAdmin.resetPassword(id).then(res => {
             msg.success(`密码已经重置为：${res.data}`)
           }).catch(err => {
             msg.error(err.message)
@@ -102,7 +103,7 @@ export default defineComponent({
         simple: true,
         modalClass: ['pkm-modal-simple'],
         onOk () {
-          AdminDisabled(id, status).then(res => {
+          storeAdmin.disabled(id, status).then(res => {
             msg.success(`${ status === 0 ? '禁用' : '启用' }用户成功`)
             getList()
           }).catch(err => {

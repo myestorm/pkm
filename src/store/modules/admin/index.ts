@@ -69,6 +69,22 @@ const useStore = defineStore('admin', {
       })
     },
 
+    list () {
+      return ApiAdmin.AdminList()
+    },
+
+    add (postData: TypesAdmin.IApiAdminAddType) {
+      return ApiAdmin.AdminAdd(postData)
+    },
+
+    resetPassword (id: string) {
+      return ApiAdmin.AdminResetPassword(id)
+    },
+
+    disabled (id: string, status: number) {
+      return ApiAdmin.AdminDisabled(id, status)
+    },
+
     updateSelfPassword (postData: TypesAdmin.IApiAdminUpdateSelfPasswordType) {
       return ApiAdmin.AdminUpdateSelfPassword(postData)
     },
