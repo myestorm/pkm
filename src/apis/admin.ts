@@ -2,7 +2,7 @@ import { axios } from '../plugins/axios'
 import { AxiosRequestConfig } from 'axios'
 
 import { IResponeBodyType } from '../../types/index'
-import { IUserInfoType, ISigninType, IApiAdminReurnType, IApiAdminAddType, IApiAdminUpdateSelfType } from '../../types/admin'
+import { IUserInfoType, ISigninType, IApiAdminReurnType, IApiAdminAddType, IApiAdminUpdateSelfPasswordType, IApiAdminUpdateSelfInfoType } from '../../types/admin'
 
 const prefix = '/admin'
 
@@ -55,9 +55,16 @@ export const AdminDisabled = (id: string, status: number, options?: AxiosRequest
   })
 }
 
-// 启用禁用
-export const AdminUpdateSelf = (postData: IApiAdminUpdateSelfType, options?: AxiosRequestConfig): Promise<IResponeBodyType<string>> => {
-  return axios.post(`${prefix}/update/self`, postData, {
+// 修改密码
+export const AdminUpdateSelfPassword = (postData: IApiAdminUpdateSelfPasswordType, options?: AxiosRequestConfig): Promise<IResponeBodyType<string>> => {
+  return axios.post(`${prefix}/self/password`, postData, {
+    ...options
+  })
+}
+
+// 修改信息
+export const AdminUpdateSelfInfo = (postData: IApiAdminUpdateSelfInfoType, options?: AxiosRequestConfig): Promise<IResponeBodyType<string>> => {
+  return axios.post(`${prefix}/self/info`, postData, {
     ...options
   })
 }

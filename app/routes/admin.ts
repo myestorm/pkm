@@ -1,7 +1,14 @@
 import { Context, Next } from 'koa'
 import { prefix, get, post } from '../core/router'
 
-import { ISigninType, IUserInfoType, IControllerAdminAddType, IControllerAdminReurnType, IApiAdminUpdateSelfType, IControllerUpdateSelfType } from '../../types/admin'
+import { 
+  ISigninType,
+  IUserInfoType,
+  IControllerAdminAddType,
+  IControllerAdminReurnType,
+  IApiAdminUpdateSelfPasswordType,
+  IApiAdminUpdateSelfInfoType
+} from '../../types/admin'
 import { IResponeBodyType } from '../../types/index'
 import Admin from '../controllers/admin'
 
@@ -63,19 +70,6 @@ export default class User {
       signed: true,
       httpOnly: true
     })
-    ctx.body = body
-    await next()
-  }
-
-  @post('/signup')
-  async Signup (ctx: Context, next: Next) {
-    const _body = ctx.request.body as IControllerAdminAddType
-    const result = await admin.add(_body)
-    const body: IResponeBodyType<string> = {
-      code: 0,
-      msg: 'success',
-      data: result
-    }
     ctx.body = body
     await next()
   }
@@ -178,63 +172,60 @@ export default class User {
     await next()
   }
 
-  @post('/update/self')
-  async AdminUpdateSelf (ctx: Context, next: Next) {
+  @post('/self/password')
+  async AdminSelfPassword (ctx: Context, next: Next) {
+    const { userinfo } = ctx.state
+    const id = userinfo._id as string
+    const _body = ctx.request.body as IApiAdminUpdateSelfPasswordType
+    console.log(_body, userinfo)
+    if (id && _body.password && _body.oldPassword && _body.repeatPassword && _body.password === _body.repeatPassword) {
+      const info = await admin.infoCondition({
+        _id: id,
+        password: _body.oldPassword,
+        status: 1
+      })
+      console.log(_body, info)
+      if (info && info._id.toString() === id) {
+        const result = await admin.updateSelfPassword(id, _body.password)
+        ctx.body = {
+          code: 0,
+          msg: 'success',
+          data: result
+        }
+      } else {
+        ctx.body = {
+          code: 2,
+          msg: '状态异常，请重新登录'
+        }
+      }
+    } else {
+      ctx.body = {
+        code: 1,
+        msg: '参数不正确'
+      }
+    }
+    await next()
+  }
+
+  @post('/self/info')
+  async AdminSelfInfo (ctx: Context, next: Next) {
     const { userinfo } = ctx.state
     const id = userinfo._id as string
     if (id) {
       const info = await admin.info(id)
       if (info && info._id.toString() === id) {
-        const _body = ctx.request.body as IApiAdminUpdateSelfType
-        // 更新密码
-        if (_body.password && _body.oldPassword) {
-          const postData: IApiAdminUpdateSelfType = {
-            password: _body.password,
-            avatar: _body.avatar,
-            nickname: _body.nickname,
-            oldPassword: _body.oldPassword,
-            repeatPassword: _body.repeatPassword,
-          }
-          if (postData.password !== postData.repeatPassword) {
-            ctx.body = {
-              code: 2,
-              msg: '两次输入的密码不一致'
-            }
-          } else {
-            const isChecked = await admin.checkOldPassword(id, postData.oldPassword as string)
-            if (isChecked) {
-              const _postData = {
-                password: postData.password,
-                avatar: postData.avatar,
-                nickname: postData.nickname
-              }
-              const result = await admin.updateSelf(id, _postData)
-              ctx.body = {
-                code: 0,
-                msg: 'success',
-                data: result
-              }
-              
-            } else {
-              ctx.body = {
-                code: 2,
-                msg: '旧密码不正确'
-              }
-            }
-          }
-        } else {
-          const _postData: IApiAdminUpdateSelfType = {
-            avatar: _body.avatar,
-            nickname: _body.nickname
-          }
-          console.log(id, _postData)
-          // const result = await admin.updateSelf(id, _postData)
-          ctx.body = {
-            code: 0,
-            msg: 'success',
-            // data: result
-            data: ''
-          }
+        const _body = ctx.request.body as IApiAdminUpdateSelfInfoType
+        const _postData: IApiAdminUpdateSelfInfoType = {
+          avatar: _body.avatar,
+          nickname: _body.nickname,
+          email: _body.email,
+          mobile: _body.mobile
+        }
+        const result = await admin.updateSelf(id, _postData)
+        ctx.body = {
+          code: 0,
+          msg: 'success',
+          data: result
         }
       } else {
         ctx.body = {

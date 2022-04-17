@@ -16,8 +16,10 @@
             </pkm-avatar>
             {{ userinfo.nickname || userinfo.username }}
           </div>
-          <pkm-button type="text" status="success" @click="visible = true"><icon-edit /></pkm-button>
-          <admin-self v-model="visible" :initValue="userinfo" @success="successHandler" />
+          <pkm-button type="text" status="success" @click="visible = true"><icon-lock /></pkm-button>
+          <pkm-button type="text" status="success" @click="visibleInfo = true"><icon-edit /></pkm-button>
+          <admin-self-password v-model="visible" @success="successHandler" />
+          <admin-self-info v-model="visibleInfo" :initValue="userinfo" @success="successInfoHandler" />
         </div>
         <pkm-collapse :default-active-key="activeKey" expand-icon-position="right">
           <pkm-collapse-item header="系统设置" key="1" disabled :show-expand-icon="false">
@@ -40,15 +42,17 @@ import { defineComponent, ref, reactive, getCurrentInstance } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import MobileLayout from '../../components/layout/mobile-layout.vue'
-import AdminSelf from '../../components/admin-form/self.vue'
+import AdminSelfPassword from '../../components/admin-form/self-password.vue'
+import AdminSelfInfo from '../../components/admin-form/self-info.vue'
 import useCommonStore from '../../store/index'
 import useAdminStore from '../../store/modules/admin/index'
-import { IApiAdminUpdateSelfType } from '../../../types/admin'
+import * as TypesAmin from '../../../types/admin'
 
 export default defineComponent({
   components: {
     MobileLayout,
-    AdminSelf
+    AdminSelfPassword,
+    AdminSelfInfo
   },
   setup () {
     const app = getCurrentInstance()
@@ -60,6 +64,7 @@ export default defineComponent({
     const isDark = ref(store.theme === 'dark')
     const activeKey = reactive(['1'])
     const visible = ref(false)
+    const visibleInfo = ref(false)
 
     const { userinfo } = storeToRefs(storeAdmin)
     const changeHandler = (val: boolean) => {
@@ -92,14 +97,18 @@ export default defineComponent({
     const adminHandler = () => {
       router.push('/m/admin')
     }
-    const successHandler = (data: IApiAdminUpdateSelfType) => {
-      if (data.password) {
-        storeAdmin.signout().then(_ => {
-          router.push('/signin')
-        }).catch(err => {
-          msg.error(err.message)
-        })
-      }
+    const successHandler = (data: TypesAmin.IApiAdminUpdateSelfPasswordType) => {
+      storeAdmin.signout().then(_ => {
+        router.push('/signin')
+      }).catch(err => {
+        msg.error(err.message)
+      })
+    }
+    const successInfoHandler = (data: TypesAmin.IApiAdminUpdateSelfInfoType) => {
+      userinfo.value.avatar = data.avatar || userinfo.value.avatar
+      userinfo.value.nickname = data.nickname || userinfo.value.nickname
+      userinfo.value.email = data.email || userinfo.value.email
+      userinfo.value.mobile = data.mobile || userinfo.value.mobile
     }
     return {
       userinfo,
@@ -110,7 +119,9 @@ export default defineComponent({
       logoutHandler,
       adminHandler,
       visible,
-      successHandler
+      visibleInfo,
+      successHandler,
+      successInfoHandler
     }
   }
 })

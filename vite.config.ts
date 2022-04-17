@@ -14,7 +14,7 @@ export default defineConfig({
         name: 'Totonoo - Personal Knowledge Management',
         short_name: 'Totonoo-PKM',
         description: 'Totonoo Personal Knowledge Management',
-        theme_color: '#000000',
+        theme_color: '#ffffff',
         icons: [
           {
             src: 'pwa/192x192.png',

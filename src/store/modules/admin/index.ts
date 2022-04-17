@@ -2,8 +2,8 @@ import { defineStore } from 'pinia'
 import { AdminState } from './types'
 
 import { localStorageToken } from '../../../config'
-import { ISigninType } from '../../../../types/admin'
-import { AdminInfo, AdminSignin, AdminSignout } from '../../../apis/admin'
+import * as TypesAdmin from '../../../../types/admin'
+import * as ApiAdmin from '../../../apis/admin'
 
 const emptyUserinfo = {
   _id: '',
@@ -29,9 +29,9 @@ const useStore = defineStore('admin', {
   }),
 
   actions: {
-    signin (postData: ISigninType) {
+    signin (postData: TypesAdmin.ISigninType) {
       return new Promise((resolve, reject) => {
-        AdminSignin(postData).then(res => {
+        ApiAdmin.AdminSignin(postData).then(res => {
           this.token = res.data || ''
           localStorage.setItem(localStorageToken, this.token)
           resolve(res.data)
@@ -43,7 +43,7 @@ const useStore = defineStore('admin', {
 
     signout () {
       return new Promise((resolve, reject) => {
-        AdminSignout().then(res => {
+        ApiAdmin.AdminSignout().then(res => {
           this.token = ''
           this.userinfo = emptyUserinfo
           localStorage.setItem(localStorageToken, this.token)
@@ -56,7 +56,7 @@ const useStore = defineStore('admin', {
 
     getUserinfo () {
       return new Promise((resolve, reject) => {
-        AdminInfo().then(res => {
+        ApiAdmin.AdminInfo().then(res => {
           const token = res.data.token
           const userinfo = res.data.userinfo
           this.token = token
@@ -67,6 +67,14 @@ const useStore = defineStore('admin', {
           reject(err)
         })
       })
+    },
+
+    updateSelfPassword (postData: TypesAdmin.IApiAdminUpdateSelfPasswordType) {
+      return ApiAdmin.AdminUpdateSelfPassword(postData)
+    },
+
+    updateSelfInfo (postData: TypesAdmin.IApiAdminUpdateSelfInfoType) {
+      return ApiAdmin.AdminUpdateSelfInfo(postData)
     }
   }
 })

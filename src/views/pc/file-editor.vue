@@ -21,7 +21,7 @@
     </div>
     <pkm-spin dot :loading="loading" class="block">
       <div class="markdown-editor">
-        <markdown-editor v-model="value" @toolbarItemAction="toolbarItemAction" height="calc(100vh - 95px)" />
+        <markdown-editor v-model="value" @toolbarItemAction="toolbarItemAction" height="calc(100vh - 98px)" />
       </div>
     </pkm-spin>
   </div>

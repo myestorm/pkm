@@ -1,22 +1,19 @@
 <template>
   <pkm-drawer :width="width" :visible="modelValue" :ok-loading="loading" @ok="save" @cancel="handleCancel" unmountOnClose>
     <template #title>
-      用户管理
+      修改用户信息
     </template>
     <pkm-form ref="formRef" :model="form" label-align="right" :label-col-props="{ span: 6 }" :wrapper-col-props="{ span: 18 }">
-      <pkm-form-item field="username" label="登录账号" required :rules="[{ required: true, message: '请填写登录账号'}]">
-        <pkm-input v-model="form.username" placeholder="请填写登录账号" />
-      </pkm-form-item>
-      <pkm-form-item field="password" label="初始密码" required :rules="checkPassword">
-        <pkm-input-password v-model="form.password" placeholder="请填写初始密码" />
-      </pkm-form-item>
-      <pkm-form-item field="nickname" label="用户昵称" required :rules="[{ required: true, message: '请填写用户昵称'}]">
+      <pkm-form-item field="nickname" label="用户昵称" :rules="[{
+        required: true,
+        message:'用户昵称不能为空'
+      }]">
         <pkm-input v-model="form.nickname" placeholder="请填写用户昵称" />
       </pkm-form-item>
-      <pkm-form-item field="email" label="电子邮箱" required :rules="checkEmail">
+      <pkm-form-item field="email" label="电子邮箱" :rules="checkEmail">
         <pkm-input v-model="form.email" placeholder="请填写电子邮箱" />
       </pkm-form-item>
-      <pkm-form-item field="mobile" label="手机号码" required :rules="checkMobile">
+      <pkm-form-item field="mobile" label="手机号码" :rules="checkMobile">
         <pkm-input v-model="form.mobile" placeholder="请填写手机号码" />
       </pkm-form-item>
       <pkm-form-item field="avatar" label="用户头像">
@@ -27,18 +24,16 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType, ref, reactive, CSSProperties, getCurrentInstance } from 'vue'
-import { MD5 } from 'crypto-js'
 import { FormInstance } from '@arco-design/web-vue/es/form'
 import { ValidatedError } from '@arco-design/web-vue/es/form/interface'
-import { IApiAdminAddType } from '../../../types/admin'
-import UploadImage from '../../components/upload/upload-image.vue'
-
-import { AdminAdd } from '../../apis/admin'
+import useAdminStore from '../../store/modules/admin/index'
+import * as TypesAdmin from '../../../types/admin'
+import UploadImage from '../upload/upload-image.vue'
 
 export interface FileFormDrawerProps {
   width: CSSProperties['width'],
   modelValue: boolean,
-  initValue: IApiAdminAddType
+  initValue: TypesAdmin.IApiAdminUpdateSelfInfoType
 }
 
 export default defineComponent({
@@ -64,18 +59,16 @@ export default defineComponent({
   setup (props, ctx) {
     const app = getCurrentInstance()
     const msg = app?.appContext.config.globalProperties.$message
+    const store = useAdminStore()
     const formRef = ref<FormInstance | null>(null)
     const formDefault = {
-      username: '',
-      password: '',
-      avatar: '',
-      nickname: '',
-      mobile: '',
-      email: ''
+      avatar: props.initValue?.avatar || '',
+      nickname: props.initValue?.nickname || '',
+      email: props.initValue?.email || '',
+      mobile: props.initValue?.mobile || ''
     }
-    const form = reactive<IApiAdminAddType>({
+    const form = reactive<TypesAdmin.IApiAdminUpdateSelfInfoType>({
       ...formDefault,
-      ...props.initValue
     })
     const loading = ref(false)
     const getFormValue = () => {
@@ -91,11 +84,11 @@ export default defineComponent({
           const postData = {
             ...form
           }
-          postData.password = MD5(postData.password).toString()
           loading.value = true
-          AdminAdd(postData).then(() => {
+          store.updateSelfInfo(postData).then(() => {
             handleCancel()
-            ctx.emit('success')
+            msg.success('更新成功，需重新登录后生效！')
+            ctx.emit('success', postData)
           }).catch(err => {
             msg.error(err.message)
           }).finally(() => {
@@ -107,7 +100,7 @@ export default defineComponent({
 
     const checkEmail = [{
       required: true,
-      message:'请填写电子邮箱'
+      message:'电子邮箱不能为空'
     }, {
       validator: (value: string, cb: (err?: string) => void) => {
         const reg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
@@ -120,7 +113,7 @@ export default defineComponent({
 
     const checkMobile = [{
       required: true,
-      message:'请填写手机号码'
+      message:'手机号码不能为空'
     }, {
       validator: (value: string, cb: (err?: string) => void) => {
         const reg = /^1(3[0-9]|5[0-3,5-9]|7[1-3,5-8]|8[0-9])\d{8}$/
@@ -131,14 +124,6 @@ export default defineComponent({
       }
     }]
 
-    const checkPassword = [{
-      required: true,
-      message:'请填写初始密码'
-    }, {
-      minLength: 6,
-      message:'密码最少6个字符'
-    }]
-
     return {
       formRef,
       form,
@@ -147,8 +132,7 @@ export default defineComponent({
       loading,
       handleCancel,
       checkEmail,
-      checkMobile,
-      checkPassword
+      checkMobile
     }
   }
 })

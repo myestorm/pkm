@@ -44,7 +44,7 @@
               <template #icon>
                 <icon-edit />
               </template>
-              <template #default>修改信息</template>
+              <template #default>修改密码</template>
             </pkm-doption>
             <pkm-doption @click="logoutHandler">
               <template #icon>
@@ -59,7 +59,7 @@
           <icon-moon-fill v-else />
         </pkm-button>
       </pkm-space>
-      <admin-self v-model="visible" width="360px" :initValue="userinfo" @success="successHandler" />
+      <admin-self-password v-model="visible" width="380px" @success="successHandler" />
     </div>
   </pkm-layout-header>
 </template>
@@ -67,14 +67,15 @@
 import { defineComponent, ref, getCurrentInstance } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
-import AdminSelf from '../../admin-form/self.vue'
+import AdminSelfPassword from '../../admin-form/self-password.vue'
 import useCommonStore from '../../../store/index'
 import useNavigationStore from '../../../store/modules/navigation/index'
 import useAdminStore from '../../../store/modules/admin/index'
-import { IApiAdminUpdateSelfType } from '../../../../types/admin'
+import * as TypesAdmin from '../../../../types/admin'
+
 export default defineComponent({
   components: {
-    AdminSelf
+    AdminSelfPassword
   },
   setup () {
     const app = getCurrentInstance()
@@ -97,14 +98,12 @@ export default defineComponent({
       store.setTheme(val ? 'dark' : 'light')
       isDark.value = val
     }
-    const successHandler = (data: IApiAdminUpdateSelfType) => {
-      if (data.password) {
-        storeAdmin.signout().then(_ => {
-          router.push('/signin')
-        }).catch(err => {
-          msg.error(err.message)
-        })
-      }
+    const successHandler = (data: TypesAdmin.IApiAdminUpdateSelfPasswordType) => {
+      storeAdmin.signout().then(_ => {
+        router.push('/signin')
+      }).catch(err => {
+        msg.error(err.message)
+      })
     }
     const logoutHandler = () => {
       modal.open({

@@ -49,7 +49,7 @@ app.use(config({
 app.use(authorization({
   blackList: [
     '^\/api\/',
-    '^\/admin\/(info|add|signup|signout|reset\/password|disabled|update\/self)'
+    '^\/admin\/(info|add|signup|signout|reset\/password|disabled|self\/password|self\/info)'
   ]
 }))
 app.use(koaBody({
