@@ -1,14 +1,13 @@
 import { MD5 } from 'crypto-js'
 import jwt from 'jsonwebtoken'
 import Admin from '../models/admin'
-import { IControllerAdminReurnType, IControllerAdminAddType, ISigninType, IControllerQueryCondition, IApiAdminUpdateSelfInfoType } from '../../types/admin'
-
+import * as TypesAdmin from '../../types/admin'
 import BaseController from '../core/controller'
 
 class AdminController extends BaseController {
 
   // 登录
-  async signin (data: ISigninType, secret: string): Promise<string | null> {
+  async signin (data: TypesAdmin.ISigninType, secret: string): Promise<string | null> {
     const result = await Admin.findOne({
       username: data.username,
       password: MD5(data.password).toString(),
@@ -41,7 +40,7 @@ class AdminController extends BaseController {
   }
 
   // 添加
-  async add (data: IControllerAdminAddType): Promise<string> {
+  async add (data: TypesAdmin.IControllerAdminAddType): Promise<string> {
     data.password = MD5(data.password).toString()
     const item = await Admin.create(data)
     return item._id.toString()
@@ -54,7 +53,7 @@ class AdminController extends BaseController {
   }
 
   // 更新
-  async update (id: string, data: IControllerAdminAddType): Promise<string> {
+  async update (id: string, data: TypesAdmin.IControllerAdminAddType): Promise<string> {
     const result = await Admin.findByIdAndUpdate(id, data, { 
       new: true, 
       upsert: true,
@@ -65,14 +64,14 @@ class AdminController extends BaseController {
   }
 
   // 查询信息
-  async info (id: string): Promise<IControllerAdminReurnType | null> {
+  async info (id: string): Promise<TypesAdmin.IControllerAdminReurnType | null> {
     return await Admin.findById(id, {
       password: 0
     })
   }
 
   // 条件查询用户
-  async infoCondition (condition: IControllerQueryCondition): Promise<IControllerAdminReurnType | null> {
+  async infoCondition (condition: TypesAdmin.IControllerQueryCondition): Promise<TypesAdmin.IControllerAdminReurnType | null> {
     if (condition.password) {
       condition.password = MD5(condition.password).toString()
     }
@@ -82,7 +81,7 @@ class AdminController extends BaseController {
   }
 
   // 所有用户
-  async list (): Promise<IControllerAdminReurnType[]> {
+  async list (): Promise<TypesAdmin.IControllerAdminReurnType[]> {
     const list = await Admin.find({}, '-password').sort({
       _id: -1
     })
@@ -129,8 +128,8 @@ class AdminController extends BaseController {
   }
 
   // 修改自己的账号信息
-  async updateSelf (id: string, data: IApiAdminUpdateSelfInfoType): Promise<string> {
-    const _data: IApiAdminUpdateSelfInfoType = {}
+  async updateSelf (id: string, data: TypesAdmin.IApiAdminUpdateSelfInfoType): Promise<string> {
+    const _data: TypesAdmin.IApiAdminUpdateSelfInfoType = {}
     if (data.avatar) {
       _data.avatar = data.avatar
     }

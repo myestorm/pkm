@@ -3,7 +3,7 @@ import { prefix, get, post, put, del } from '../core/router'
 
 import Document from '../controllers/document'
 import { IResponeBodyType, IPageType, IResponePageBodyType } from '../../types/index'
-import { IDocumentRouteAddType, IDocumentRouteUpdateType, IDocumentFilterType, IDocumentDataType } from '../../types/document'
+import * as TypesDocument from '../../types/document'
 
 const document = new Document()
 
@@ -13,12 +13,10 @@ export default class DocumentRouter {
   @post('/add')
   async DocumentAdd (ctx: Context, next: Next) {
     const { userinfo } = ctx.state
-    const _body = ctx.request.body as IDocumentRouteAddType
+    const _body = ctx.request.body as TypesDocument.IDocumentRouteAddType
     _body.authorId = userinfo._id
-    _body.createdBy = userinfo._id
-    _body.updatedBy = userinfo._id
     const result = await document.add(_body)
-    const body: IResponeBodyType<IDocumentDataType> = {
+    const body: IResponeBodyType<TypesDocument.IDocumentDataType> = {
       code: 0,
       msg: 'success',
       data: result
@@ -29,14 +27,12 @@ export default class DocumentRouter {
 
   @put('/update')
   async DocumentUpdate (ctx: Context, next: Next) {
-    const { userinfo } = ctx.state
-    const _body = ctx.request.body as IDocumentRouteUpdateType
-    _body.updatedBy = userinfo._id
+    const _body = ctx.request.body as TypesDocument.IDocumentRouteUpdateType
     const info = await document.info(_body._id)
     if (info) {
       const __body = Object.assign(info, _body)
       const result = await document.update(__body)
-      const body: IResponeBodyType<IDocumentDataType | null> = {
+      const body: IResponeBodyType<TypesDocument.IDocumentDataType | null> = {
         code: 0,
         msg: 'success',
         data: result
@@ -92,7 +88,7 @@ export default class DocumentRouter {
     const { id = '' } = ctx.params
     if (id) {
       const result = await document.info(id)
-      const body: IResponeBodyType<IDocumentDataType | null> = {
+      const body: IResponeBodyType<TypesDocument.IDocumentDataType | null> = {
         code: 0,
         msg: 'success',
         data: result
@@ -109,9 +105,9 @@ export default class DocumentRouter {
 
   @post('/list')
   async DocumentList (ctx: Context, next: Next) {
-    const _body = ctx.request.body as IDocumentFilterType
+    const _body = ctx.request.body as TypesDocument.IDocumentFilterType
     const result = await document.list(_body)
-    const body: IResponeBodyType<IDocumentDataType[]> = {
+    const body: IResponeBodyType<TypesDocument.IDocumentDataType[]> = {
       code: 0,
       msg: 'success',
       data: result
@@ -122,10 +118,10 @@ export default class DocumentRouter {
 
   @post('/list/page')
   async DocumentListPage (ctx: Context, next: Next) {
-    const _body = ctx.request.body as IPageType<IDocumentFilterType>
-    const conditions = _body.conditions as IDocumentFilterType
+    const _body = ctx.request.body as IPageType<TypesDocument.IDocumentFilterType>
+    const conditions = _body.conditions as TypesDocument.IDocumentFilterType
     const result = await document.listPage(_body.page, _body.pagesize, conditions)
-    const body: IResponeBodyType<IResponePageBodyType<IDocumentDataType>> = {
+    const body: IResponeBodyType<IResponePageBodyType<TypesDocument.IDocumentDataType>> = {
       code: 0,
       msg: 'success',
       data: result
@@ -139,7 +135,7 @@ export default class DocumentRouter {
     const { keyword = '' } = ctx.params
     const _body = ctx.request.body as { parents: string[] }
     const result = await document.search(keyword, _body.parents)
-    const body: IResponeBodyType<IDocumentDataType[]> = {
+    const body: IResponeBodyType<TypesDocument.IDocumentDataType[]> = {
       code: 0,
       msg: 'success',
       data: result

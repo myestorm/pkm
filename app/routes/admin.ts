@@ -1,14 +1,7 @@
 import { Context, Next } from 'koa'
 import { prefix, get, post } from '../core/router'
 
-import { 
-  ISigninType,
-  IUserInfoType,
-  IControllerAdminAddType,
-  IControllerAdminReurnType,
-  IApiAdminUpdateSelfPasswordType,
-  IApiAdminUpdateSelfInfoType
-} from '../../types/admin'
+import * as TypesAdmin from '../../types/admin'
 import { IResponeBodyType } from '../../types/index'
 import Admin from '../controllers/admin'
 
@@ -20,7 +13,7 @@ export default class User {
   @get('/info')
   async Admininfo (ctx: Context, next: Next) {
     const { userinfo, token } = ctx.state
-    const body: IResponeBodyType<IUserInfoType> = {
+    const body: IResponeBodyType<TypesAdmin.IUserInfoType> = {
       code: 0,
       msg: 'success',
       data: {
@@ -35,7 +28,7 @@ export default class User {
   @post('/signin')
   async Signin (ctx: Context, next: Next) {
     const { jwtSecret = '', cookieToken } = ctx.state.config
-    const _body = ctx.request.body as ISigninType
+    const _body = ctx.request.body as TypesAdmin.ISigninType
     const token = await admin.signin(_body, jwtSecret)
     const body: IResponeBodyType<string> = {
       code: 0,
@@ -77,7 +70,7 @@ export default class User {
   @get('/list')
   async AdminList (ctx: Context, next: Next) {
     const list = await admin.list()
-    const body: IResponeBodyType<IControllerAdminReurnType[]> = {
+    const body: IResponeBodyType<TypesAdmin.IControllerAdminReurnType[]> = {
       code: 0,
       msg: 'success',
       data: list
@@ -89,7 +82,7 @@ export default class User {
   @post('/add')
   async AdminAdd (ctx: Context, next: Next) {
     const { userinfo } = ctx.state
-    const _body = ctx.request.body as IControllerAdminAddType
+    const _body = ctx.request.body as TypesAdmin.IControllerAdminAddType
     const info = await admin.checkUnique('username', _body.username)
     if (!info) {
       _body.createdBy = userinfo._id
@@ -176,7 +169,7 @@ export default class User {
   async AdminSelfPassword (ctx: Context, next: Next) {
     const { userinfo } = ctx.state
     const id = userinfo._id as string
-    const _body = ctx.request.body as IApiAdminUpdateSelfPasswordType
+    const _body = ctx.request.body as TypesAdmin.IApiAdminUpdateSelfPasswordType
     console.log(_body, userinfo)
     if (id && _body.password && _body.oldPassword && _body.repeatPassword && _body.password === _body.repeatPassword) {
       const info = await admin.infoCondition({
@@ -214,8 +207,8 @@ export default class User {
     if (id) {
       const info = await admin.info(id)
       if (info && info._id.toString() === id) {
-        const _body = ctx.request.body as IApiAdminUpdateSelfInfoType
-        const _postData: IApiAdminUpdateSelfInfoType = {
+        const _body = ctx.request.body as TypesAdmin.IApiAdminUpdateSelfInfoType
+        const _postData: TypesAdmin.IApiAdminUpdateSelfInfoType = {
           avatar: _body.avatar,
           nickname: _body.nickname,
           email: _body.email,

@@ -4,21 +4,17 @@ import fs from 'fs'
 import { Context, Next } from 'koa'
 import koaStatic from 'koa-static'
 import koaBody from 'koa-body'
-import mongoose from 'mongoose'
 import dayjs from 'dayjs'
 import historyApiFallback from 'koa2-connect-history-api-fallback'
-import mongoConfig from './.mongo.config'
 import config from './middleware/config'
 import authorization from './middleware/authorization'
+import mogoose from './middleware/mogoose'
 import router from './routes/index'
 import getRootDir from './utils/getRootDir'
 
 const app = new Koa()
 const rootDir = getRootDir()
 const uploadDir = path.normalize(`${rootDir}/resource/uploads`)
-
-mongoose.connect(mongoConfig)
-mongoose.connection.on('error', console.error)
 
 app.keys = ['totonoo-pkm', 'totonoo.com']
 
@@ -49,7 +45,7 @@ app.use(config({
 app.use(authorization({
   blackList: [
     '^\/api\/',
-    '^\/admin\/(info|add|signup|signout|reset\/password|disabled|self\/password|self\/info)'
+    '^\/admin\/(info|add|signup|signout|list|reset\/password|disabled|self\/password|self\/info)'
   ]
 }))
 app.use(koaBody({
@@ -76,6 +72,8 @@ app.use(koaBody({
 }))
 
 app.use(router.routes()).use(router.allowedMethods())
+
+app.use(mogoose())
 
 app.on('error', async (err, ctx) => {
   let status = ''
