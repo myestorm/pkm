@@ -20,6 +20,13 @@ export const DocumentUpdate = (postData: TypesDocumnet.IDocumentUpdateType, opti
   })
 }
 
+// 修改目录
+export const DocumentUpdateParents = (postData: { id: string, parents: string[] }, options?: AxiosRequestConfig): Promise<IResponeBodyType<TypesDocumnet.IDocumentUpdateType[]>> => {
+  return axios.put(`${prefix}/update/parents`, postData, {
+    ...options
+  })
+}
+
 // 删除文档
 export const DocumentRemove = (id: string, options?: AxiosRequestConfig): Promise<IResponeBodyType<string>> => {
   return axios.delete(`${prefix}/remove/${id}`, {

@@ -159,13 +159,14 @@ export default defineComponent({
     const drop = (event: DragEvent, index: number) => {
       const _target = event.target as HTMLElement
       const target = getDragTarget(_target)
+      const oldList = JSON.parse(JSON.stringify(props.modelValue))
       if (target !== dragging) {
         const dropPosition = calcDropPosition(event)
         target.classList.remove(...dragzoneClassList)
         ctx.emit('beforeEnd', dragIndex, index, dropPosition)
         const list = sortData(dragIndex, index, dropPosition)
         ctx.emit('update:modelValue', list)
-        ctx.emit('end', list)
+        ctx.emit('end', { dragIndex, dropIndex: index, dropPosition, oldList, list })
       }
     }
 
@@ -196,7 +197,7 @@ export default defineComponent({
     box-sizing: border-box;
     &::before, &::after {
       width: 100%;
-      height: 2px;
+      height: 4px;
       content: "";
       display: none;
       background-color: blueviolet;
@@ -221,9 +222,9 @@ export default defineComponent({
     }
   }
   .dragzone-0 {
-    background-color: transparentize($color: blueviolet, $amount: 0.8);
+    background-color: transparentize($color: blueviolet, $amount: 0.9);
     .item, .item.current {
-      background-color: transparentize($color: blueviolet, $amount: 0.8) !important;
+      background-color: transparentize($color: blueviolet, $amount: 0.9) !important;
     }
   }
   .dragzone-1 {

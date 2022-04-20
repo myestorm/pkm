@@ -43,8 +43,8 @@
           </pkm-space>
         </pkm-space>
       </div>
-      <pkm-dropdown trigger="contextMenu" alignPoint :style="{ display:'block' }">
-        <drag-sort v-model="list" class="file-list" :calcDropPosition="calcDropPosition">
+      <pkm-dropdown trigger="contextMenu" alignPoint class="pkm-contextmenu-dropdown" @select="test">
+        <drag-sort v-model="list" class="file-list" :calcDropPosition="calcDropPosition" @end="dragEndHandler" @contextmenu="test($event, null)">
           <template #default="{ item, index }">
             <div class="item" :key="item._id" :class="[item._id == id ? 'current' : '', index % 2 == 0 ? 'odd' : '']">
               <div class="icon" @click="fileListItemClick(item)">
@@ -87,22 +87,50 @@
           </template>
         </drag-sort>
         <template #content>
-          <pkm-doption @click="creatDocument">
-            <template #icon>
-              <icon-file />
-            </template>
-            <template #default>
-              新建文档
-            </template>
-          </pkm-doption>
-          <pkm-doption @click="creatFolder">
-            <template #icon>
-              <icon-folder />
-            </template>
-            <template #default>
-              新建目录
-            </template>
-          </pkm-doption>
+          <pkm-dgroup title="操作">
+            <pkm-doption @click="creatDocument">
+              <template #icon>
+                <icon-copy />
+              </template>
+              <template #default>
+                复制
+              </template>
+            </pkm-doption>
+            <pkm-doption @click="creatFolder" disabled>
+              <template #icon>
+                <icon-scissor />
+              </template>
+              <template #default>
+                剪切
+              </template>
+            </pkm-doption>
+            <pkm-doption @click="creatFolder">
+              <template #icon>
+                <icon-paste />
+              </template>
+              <template #default>
+                粘贴
+              </template>
+            </pkm-doption>
+          </pkm-dgroup>
+          <pkm-dgroup title="新建">
+            <pkm-doption @click="creatDocument">
+              <template #icon>
+                <icon-file />
+              </template>
+              <template #default>
+                文档
+              </template>
+            </pkm-doption>
+            <pkm-doption @click="creatFolder">
+              <template #icon>
+                <icon-folder />
+              </template>
+              <template #default>
+                目录
+              </template>
+            </pkm-doption>
+          </pkm-dgroup>
         </template>
       </pkm-dropdown>
     </div>
@@ -117,8 +145,8 @@ import useDocStore from '../../store/modules/document/index'
 import FileFormDrawer from '../../components/file-form/drawer.vue'
 import DragSort, { CalcDropPositionType, DropPositionType } from '../../components/drag-sort/index.vue'
 
-import { DocumentList, DocumentRemove, DocumentSearch } from '../../apis/document'
-import { IDocumentFormType, IDocumentTypeType } from '../../../types/document'
+import { DocumentList, DocumentRemove, DocumentSearch, DocumentUpdateParents } from '../../apis/document'
+import { IDocumentFormType, IDocumentTypeType, IDocumentPageListItemType } from '../../../types/document'
 import { subStr } from '../../utils/index'
 
 export default defineComponent({
@@ -220,20 +248,54 @@ export default defineComponent({
 
     const calcDropPosition = (data : CalcDropPositionType) => {
       const { clientX, clientY, left, top, width, height, startClientX, dragIndex, dropIndex } = data
-      const h = height / 4
+      // const dragItem = list.value[dragIndex]
+      const dropItem = list.value[dropIndex]
       let dropPosition: DropPositionType = 0
-      if (clientX - startClientX > 4) {
-        dropPosition = 0
-      } else {
+      if (dropItem.type === IDocumentTypeType.DOC) {
+        const h = height / 2
         if (clientY < top + h) {
           dropPosition = -1
-        } else if (clientY > top + (h * 3)) {
-          dropPosition = 1
         } else {
+          dropPosition = 1
+        }
+      } else {
+        const h = height / 4
+        if (clientX - startClientX > 4) {
           dropPosition = 0
+        } else {
+          if (clientY < top + h) {
+            dropPosition = -1
+          } else if (clientY > top + (h * 3)) {
+            dropPosition = 1
+          } else {
+            dropPosition = 0
+          }
         }
       }
       return dropPosition
+    }
+
+    const dragEndHandler = (data: {
+      dragIndex: number, 
+      dropIndex: number, 
+      dropPosition: DropPositionType, 
+      oldList: IDocumentPageListItemType[], 
+      list: IDocumentPageListItemType[]
+    }) => {
+      const { dragIndex, dropIndex, dropPosition, oldList, list } = data
+      const dragItem = oldList[dragIndex]
+      const dropItem = oldList[dropIndex]
+      if (dropPosition === 0) { // 转移目录
+        const _parents = [...dropItem.parents]
+        _parents.push(dropItem._id)
+        DocumentUpdateParents({ id: dragItem._id, parents: _parents }).then(_ => {
+          getList()
+        }).catch(err => {
+          msg.error(err.message)
+        })
+      } else { // 排序
+
+      }
     }
     return {
       dayjs,
@@ -258,7 +320,11 @@ export default defineComponent({
       loading,
       searchHandler,
       searchClear,
-      calcDropPosition
+      calcDropPosition,
+      dragEndHandler,
+      test (a: Event, b: any) {
+        console.log(a, b)
+      }
     }
   }
 })

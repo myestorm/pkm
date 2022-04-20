@@ -33,6 +33,16 @@ class DocumentController extends BaseController {
     })
   }
 
+  async updateParents (id: string, parents: string[]): Promise<TypesDocument.IDocumentDataType | null> {
+    return await Document.findByIdAndUpdate(id, { parents }, { 
+      new: true, 
+      upsert: true,
+      setDefaultsOnInsert: true,
+      runValidators: true, 
+      findByIdAndUpdate: 'after' 
+    })
+  }
+
   async remove (id: string): Promise<TypesDocument.IDocumentDataType | null> {
     return await Document.findByIdAndRemove(id)
   }

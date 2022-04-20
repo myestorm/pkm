@@ -47,6 +47,27 @@ export default class DocumentRouter {
     await next()
   }
 
+  @put('/update/parents')
+  async DocumentUpdateParents (ctx: Context, next: Next) {
+    const _body = ctx.request.body as { id: string, parents: string[] }
+    const info = await document.info(_body.id)
+    if (info) {
+      const result = await document.updateParents(_body.id, _body.parents)
+      const body: IResponeBodyType<TypesDocument.IDocumentDataType | null> = {
+        code: 0,
+        msg: 'success',
+        data: result
+      }
+      ctx.body = body
+    } else {
+      ctx.body = {
+        code: 1,
+        msg: '参数不正确'
+      }
+    }
+    await next()
+  }
+
   @del('/remove/:id')
   async DocumentRemove (ctx: Context, next: Next) {
     const { id = '' } = ctx.params
