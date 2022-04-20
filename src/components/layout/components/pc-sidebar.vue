@@ -73,7 +73,7 @@ export default defineComponent({
   .header {
     text-align: center;
     padding: 4px 0;
-    margin: 0 0 4px 0;
+    margin: 2px 0 4px 0;
     cursor: pointer;
   }
   .content, .footer {

@@ -44,9 +44,9 @@
         </pkm-space>
       </div>
       <pkm-dropdown trigger="contextMenu" alignPoint :style="{ display:'block' }">
-        <div class="file-list">
-          <ul>
-            <li class="item" v-for="item in list" :key="item._id" :class="[item._id == id ? 'current' : '']">
+        <drag-sort v-model="list" class="file-list" :calcDropPosition="calcDropPosition">
+          <template #default="{ item, index }">
+            <div class="item" :key="item._id" :class="[item._id == id ? 'current' : '', index % 2 == 0 ? 'odd' : '']">
               <div class="icon" @click="fileListItemClick(item)">
                 <icon-file :size="24" :strokeWidth="2" v-if="item.type == 'document'" />
                 <icon-folder :size="24" :strokeWidth="2" v-else />
@@ -83,9 +83,9 @@
                   </template>
                 </pkm-dropdown>
               </div>
-            </li>
-          </ul>
-        </div>
+            </div>
+          </template>
+        </drag-sort>
         <template #content>
           <pkm-doption @click="creatDocument">
             <template #icon>
@@ -115,6 +115,7 @@ import { useRouter } from 'vue-router'
 import useDocStore from '../../store/modules/document/index'
 
 import FileFormDrawer from '../../components/file-form/drawer.vue'
+import DragSort, { CalcDropPositionType, DropPositionType } from '../../components/drag-sort/index.vue'
 
 import { DocumentList, DocumentRemove, DocumentSearch } from '../../apis/document'
 import { IDocumentFormType, IDocumentTypeType } from '../../../types/document'
@@ -122,7 +123,8 @@ import { subStr } from '../../utils/index'
 
 export default defineComponent({
   components: {
-    FileFormDrawer
+    FileFormDrawer,
+    DragSort
   },
   setup () {
     const app = getCurrentInstance()
@@ -215,6 +217,24 @@ export default defineComponent({
       }
     })
     getList()
+
+    const calcDropPosition = (data : CalcDropPositionType) => {
+      const { clientX, clientY, left, top, width, height, startClientX, dragIndex, dropIndex } = data
+      const h = height / 4
+      let dropPosition: DropPositionType = 0
+      if (clientX - startClientX > 4) {
+        dropPosition = 0
+      } else {
+        if (clientY < top + h) {
+          dropPosition = -1
+        } else if (clientY > top + (h * 3)) {
+          dropPosition = 1
+        } else {
+          dropPosition = 0
+        }
+      }
+      return dropPosition
+    }
     return {
       dayjs,
       id,
@@ -237,7 +257,8 @@ export default defineComponent({
 
       loading,
       searchHandler,
-      searchClear
+      searchClear,
+      calcDropPosition
     }
   }
 })
@@ -270,12 +291,8 @@ export default defineComponent({
     }
   }
   .file-list {
-    ul, li {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
     .item {
+      width: 100%;
       display: flex;
       padding: 8px 0;
       cursor: pointer;
@@ -283,20 +300,38 @@ export default defineComponent({
       transition: all 300ms ease;
       border-top: 1px solid transparent;
       border-bottom: 1px solid transparent;
-      &:nth-child(odd) {
+      &::before {
+        width: 3px;
+        height: 0;
+        content: "";
+        display: block;
+        background-color: rgb(var(--primary-6));
+        position: absolute;
+        top: 50%;
+        left: 0;
+        z-index: 3;
+        transition: all 200ms ease;
+        overflow: hidden;
+      }
+      &.odd {
         background-color: var(--color-fill-1);
       }
-      // &:hover, &.current {
-      //   background-color: var(--color-fill-1);
-      //   border-color: var(--color-neutral-3);
-      // }
+      &:hover, &.current {
+        background-color: var(--color-fill-1);
+        border-color: var(--color-neutral-3);
+      }
       &:hover {
-        background-color: rgb(var(--gray-3)) !important;
+        background-color: rgb(var(--gray-3));
       }
       &.current {
-        background-color: var(--color-fill-1) !important;
+        background-color: var(--color-fill-1);
         border-color: var(--color-neutral-3);
         box-shadow: 0 0 16px 0 rgba(0,0,0,0.12) inset;
+        position: relative;
+        &::before {
+          top: 0;
+          height: 100%;
+        }
       }
       .icon {
         flex: 0 0 36px;

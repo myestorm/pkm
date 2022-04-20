@@ -1,17 +1,12 @@
 <template>
   <div class="home">
-    <drag-sort style="width: 300px" />
     <pkm-typography-title :heading="1">{{ title }}</pkm-typography-title>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
-import DragSort from '../../components/drag-sort/index.vue'
 export default defineComponent({
   name: 'Home',
-  components: {
-    DragSort
-  },
   setup () {
     const title: string = 'Personal Knowledge Management'
     return {

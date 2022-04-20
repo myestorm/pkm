@@ -1,64 +1,109 @@
 <template>
   <div class="pkm-drag-list" ref="dragList">
-    <transition-group name="flip-list">
-      <div class="pkm-drag-item" draggable="true" v-for="(item, index) in list" :key="index"
-        @dragstart="dragstart($event, index)"
-        @drag="drag($event, index)"
-        @dragend="dragend($event, index)"
+    <div class="pkm-drag-item" draggable="true" v-for="(item, index) in modelValue" :key="index"
+      :data-index="index"
+      @dragstart="dragstart($event, index)"
+      @drag="drag($event, index)"
+      @dragend="dragend($event, index)"
 
-        @dragenter="dragenter($event, index)"
-        @dragover.prevent="dragover($event, index)"
-        @dragleave="dragleave($event, index)"
-        @drop.prevent="drop($event, index)"
-      >
-        <a draggable="false" href="#">{{item}} --- {{ index }}</a>
-        <img draggable="false" src="../../assets/logo/logo.png">
-      </div>
-    </transition-group>
+      @dragenter="dragenter($event, index)"
+      @dragover.prevent="dragover($event, index)"
+      @dragleave="dragleave($event, index)"
+      @drop.prevent="drop($event, index)"
+    >
+      <slot :index="index" :item="item">
+      </slot>
+    </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue'
-import gsap from 'gsap'
+import { defineComponent, ref } from 'vue'
+export type DropPositionType = -1 | 0 | 1
+export interface CalcDropPositionType {
+  clientX: number,
+  clientY: number,
+  left: number,
+  top: number,
+  width: number,
+  height: number,
+  dragIndex: number,
+  dropIndex: number,
+  startClientX: number
+}
 export default defineComponent({
-  setup () {
-    const list = ref(['a', 'b', 'c', 'e', 'f'])
+  props: {
+    modelValue: {
+      type: Array,
+      default: []
+    },
+    calcDropPosition: {
+      type: Function,
+      default: (data: CalcDropPositionType): DropPositionType => {
+        const { clientX, clientY, left, top, width, height, startClientX } = data
+        const h = height / 4
+        let dropPosition: DropPositionType = 0
+        if (clientX - startClientX > 4) {
+          dropPosition = 0
+        } else {
+          if (clientY < top + h) {
+            dropPosition = -1
+          } else if (clientY > top + (h * 3)) {
+            dropPosition = 1
+          } else {
+            dropPosition = 0
+          }
+        }
+        return dropPosition
+      }
+    }
+  },
+  emits: ['start', 'move', 'beforeEnd', 'end', 'update:modelValue'],
+  setup (props, ctx) {
     const dragList = ref()
     const dragClass = 'drag'
     const dragzoneClass = 'dragzone-'
     const dragzoneClassList = [`${dragzoneClass}-1`, `${dragzoneClass}0`, `${dragzoneClass}1`]
 
     let startClientX: number = 0
-    let dargIndex = -1
+    let dragIndex = -1
+    let dragging: HTMLElement
+
+    // 获取节点
+    const getDragTarget = (target: HTMLElement): HTMLElement => {
+      return target.closest('.pkm-drag-item') || target
+    }
 
     // 计算位置
-    const calcDropPosition = (event: DragEvent): -1 | 0 | 1 => {
+    const calcDropPosition = (event: DragEvent): DropPositionType => {
       let dropPosition: -1 | 0 | 1 = 0
-      const target = event.target as HTMLElement
+      const _target = event.target as HTMLElement
+      const target = getDragTarget(_target)
       const { clientX, clientY } = event
       const { left, top, width, height } = target.getBoundingClientRect()
-      const h = height / 4
-      if (clientX - startClientX > 4) {
-        dropPosition = 0
-      } else {
-        if (clientY < top + h) {
-          dropPosition = -1
-        } else if (clientY > top + (h * 3)) {
-          dropPosition = 1
-        } else {
-          dropPosition = 0
-        }
+      const dropIndex = Number(target.dataset.index)
+      if (typeof props.calcDropPosition === 'function') {
+        dropPosition = props.calcDropPosition({
+          clientX,
+          clientY,
+          left,
+          top,
+          width,
+          height,
+          dragIndex,
+          dropIndex,
+          startClientX
+        })
       }
       return dropPosition
     }
 
-    // 交换数据
-    const makeData = (form: number, to: number, position: -1 | 0 | 1) => {
-      const _list = [...list.value]
-      const _from = _list[form]
+    // 数据排序
+    const sortData = (from: number, to: number, position: DropPositionType) => {
+      const _list = [...props.modelValue]
+      const _from = _list[from]
 
-      _list.splice(form, 1)
-      to = form < to ? to - 1 : to
+      _list.splice(from, 1)
+      to = from < to ? to - 1 : to
 
       if (position === -1) {
         const _to = to
@@ -66,19 +111,18 @@ export default defineComponent({
       } else if (position === 1) {
         _list.splice(to + 1, 0, _from)
       }
-      list.value = [..._list]
+
+      return _list
     }
 
-    
-
-    // 拖拽对象
-    let dragging: HTMLElement
-
     const dragstart = (event: DragEvent, index: number) => {
+      const dataTransfer = event.dataTransfer as DataTransfer
+      dataTransfer.dropEffect = 'move'
       dragging = event.target as HTMLElement
       dragging.classList.add(dragClass)
       startClientX = event.clientX
-      dargIndex = index
+      dragIndex = index
+      ctx.emit('start', index, props.modelValue[index])
     }
     const drag = (event: DragEvent, index: number) => {
     }
@@ -88,7 +132,8 @@ export default defineComponent({
 
     // 进入对象
     const dragenter = (event: DragEvent, index: number) => {
-      const target = event.target as HTMLElement
+      const _target = event.target as HTMLElement
+      const target = getDragTarget(_target)
       const dropPosition = calcDropPosition(event)
       if (target !== dragging) {
         target.classList.add(dragzoneClass + dropPosition)
@@ -96,32 +141,33 @@ export default defineComponent({
     }
     const dragover = (event: DragEvent, index: number) => {
       const dropPosition = calcDropPosition(event)
-      const target = event.target as HTMLElement
+      const _target = event.target as HTMLElement
+      const target = getDragTarget(_target)
       if (target !== dragging) {
         target.classList.remove(...dragzoneClassList)
         target.classList.add(dragzoneClass + dropPosition)
+        ctx.emit('move', dragIndex, props.modelValue[dragIndex], index, props.modelValue[index])
       }
     }
     const dragleave = (event: DragEvent, index: number) => {
-      const target = event.target as HTMLElement
+      const _target = event.target as HTMLElement
+      const target = getDragTarget(_target)
       if (target !== dragging) {
         target.classList.remove(...dragzoneClassList)
       }
     }
     const drop = (event: DragEvent, index: number) => {
-      const target = event.target as HTMLElement
+      const _target = event.target as HTMLElement
+      const target = getDragTarget(_target)
       if (target !== dragging) {
         const dropPosition = calcDropPosition(event)
         target.classList.remove(...dragzoneClassList)
-        makeData(dargIndex, index, dropPosition)
+        ctx.emit('beforeEnd', dragIndex, index, dropPosition)
+        const list = sortData(dragIndex, index, dropPosition)
+        ctx.emit('update:modelValue', list)
+        ctx.emit('end', list)
       }
     }
-
-
-    const init = () => {
-      
-    }
-    onMounted(init)
 
     return {
       dragList,
@@ -133,47 +179,57 @@ export default defineComponent({
       dragenter,
       dragover,
       dragleave,
-      drop,
-
-      list
+      drop
     }
   }
 })
 </script>
-<style lang="scss" scoped>
-.pkm-drag-list {
-  position: relative;
-  .pkm-drag-item {
+<style lang="scss">
+.#{$--prefix}-drag-list {
+  width: 100%;
+  .#{$--prefix}-drag-item {
+    width: 100%;
     display: flex;
-    flex-direction: row-reverse;
-    align-items: center;
-    border: 2px #ddd solid;
-    justify-content: left;
+    cursor: pointer;
+    align-items: stretch;
+    position: relative;
     box-sizing: border-box;
-    background-color: #f5f5f5;
-    img {
-      width: 60px;
+    &::before, &::after {
+      width: 100%;
+      height: 2px;
+      content: "";
+      display: none;
+      background-color: blueviolet;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 3;
+    }
+    &::after {
+      top: auto;
+      bottom: 0;
     }
   }
   .drag {
-    border: 2px dotted red;
     cursor: move;
-    opacity: 0.6;
+    border: 2px dotted rgb(var(--danger-6));
+    opacity: 0.8;
   }
   .dragzone--1 {
-    border-color: transparent;
-    border-top-color: blue;
+    &::before {
+      display: block;
+    }
   }
   .dragzone-0 {
-    border-color: blue;
-    background-color: blueviolet;
+    background-color: transparentize($color: blueviolet, $amount: 0.8);
+    .item, .item.current {
+      background-color: transparentize($color: blueviolet, $amount: 0.8) !important;
+    }
   }
   .dragzone-1 {
-    border-color: transparent;
-    border-bottom-color: blue;
-  }
-  .flip-list-move {
-    transition: transform 0.8s ease;
+    &::after {
+      display: block;
+    }
   }
 }
 </style>
