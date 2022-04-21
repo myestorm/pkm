@@ -1,23 +1,21 @@
 import { Schema, model, now } from 'mongoose'
+import { IDocumentModelType } from '../../types/document'
+import * as BaseTypes from '../../types/base'
+
 import commentSchema from './comment'
-import { IDocumentModelType, IDocumentTypeType } from '../../types/document'
 
 const schema = new Schema({
   title: {
     type: String,
     required: true
   },
-  parents: {
+  directory: {
     type: [String],
     default: []
   },
   type: {
     type: String,
-    default: IDocumentTypeType.DOC
-  },
-  authorId: {
-    type: String,
-    default: ''
+    default: BaseTypes.IBaseTypesType.FILE
   },
   cover: {
     type: String,
@@ -38,6 +36,10 @@ const schema = new Schema({
   top: {
     type: Boolean,
     default: false
+  },
+  order: {
+    type: Number,
+    default: 99
   },
   comments: [commentSchema],
   createdBy: {

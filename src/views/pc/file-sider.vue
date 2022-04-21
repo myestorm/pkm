@@ -35,7 +35,7 @@
             <file-form-drawer width="420px" v-model="fileFormVisible" :type="fileFormType" :initValue="fileFormInitValue" @success="getList" />
           </div>
           <pkm-space class="flex">
-            <pkm-button type="text" class="backto" @click="backTo" :disabled="parents.length == 0">
+            <pkm-button type="text" class="backto" @click="backTo" :disabled="directory.length == 0">
               <icon-left />
               后退
             </pkm-button>
@@ -48,7 +48,7 @@
           <template #default="{ item, index }">
             <div class="item" :key="item._id" :class="[item._id == id ? 'current' : '', index % 2 == 0 ? 'odd' : '']">
               <div class="icon" @click="fileListItemClick(item)">
-                <icon-file :size="24" :strokeWidth="2" v-if="item.type == 'document'" />
+                <icon-file :size="24" :strokeWidth="2" v-if="item.type == 'file'" />
                 <icon-folder :size="24" :strokeWidth="2" v-else />
               </div>
               <div class="info" @click="fileListItemClick(item)">
@@ -145,8 +145,9 @@ import useDocStore from '../../store/modules/document/index'
 import FileFormDrawer from '../../components/file-form/drawer.vue'
 import DragSort, { CalcDropPositionType, DropPositionType } from '../../components/drag-sort/index.vue'
 
-import { DocumentList, DocumentRemove, DocumentSearch, DocumentUpdateParents } from '../../apis/document'
-import { IDocumentFormType, IDocumentTypeType, IDocumentPageListItemType } from '../../../types/document'
+import { DocumentList, DocumentRemove, DocumentSearch, DocumentUpdateDirectory, DocumentUpdateOrder } from '../../apis/document'
+import * as TypesBase from '../../../types/base'
+import * as TypesDocument from '../../../types/document'
 import { subStr } from '../../utils/index'
 
 export default defineComponent({
@@ -161,7 +162,7 @@ export default defineComponent({
     const dayjs = app?.appContext.config.globalProperties.$dayjs
     const storeDoc = useDocStore()
     const router = useRouter()
-    const { parents, list, id, keyword, fileFormVisible, fileFormType, fileFormInitValue  } = storeToRefs(storeDoc)
+    const { directory, list, id, keyword, fileFormVisible, fileFormType, fileFormInitValue  } = storeToRefs(storeDoc)
     const loading = ref(false)
 
     const creatDocument = () => {
@@ -176,30 +177,30 @@ export default defineComponent({
     }
     const getList = () => {
       DocumentList({
-        parents: parents.value || []
+        directory: directory.value || []
       }).then(res => {
         list.value = res.data || []
       }).catch(err => {
         msg.error(err.message)
       })
     }
-    const fileListItemClick = (item: IDocumentFormType) => {
+    const fileListItemClick = (item: TypesDocument.IDocumentFormType) => {
       const type = item.type
-      if (type === IDocumentTypeType.FOLDER) {
-        const _parents = [...item.parents]
+      if (type === TypesBase.IBaseTypesType.FOLDER) {
+        const _directory = [...item.directory]
         const _id = (item._id || '') as string
-        _parents.push(_id)
-        parents.value = _parents
-      } else if (type === IDocumentTypeType.DOC) {
+        _directory.push(_id)
+        directory.value = _directory
+      } else if (type === TypesBase.IBaseTypesType.FILE) {
         router.push(`/p/file/editor/${item._id}`)
       }
     }
     const backTo = () => {
       storeDoc.backTo()
     }
-    const edit = (item: IDocumentFormType) => {
+    const edit = (item: TypesDocument.IDocumentFormType) => {
       storeDoc.setFormValue(item)
-      if (item.type === IDocumentTypeType.FOLDER) {
+      if (item.type === TypesBase.IBaseTypesType.FOLDER) {
         storeDoc.setTypeFolder()
       } else {
         storeDoc.setTypeDoc()
@@ -225,7 +226,7 @@ export default defineComponent({
     const searchHandler = () => {
       if (keyword.value) {
         loading.value = true
-        const conditions = [...parents.value]
+        const conditions = [...directory.value]
         DocumentSearch(keyword.value, conditions).then(res => {
           list.value = res.data || []
         }).catch(_ => {
@@ -239,7 +240,7 @@ export default defineComponent({
       getList()
     }
 
-    watch(parents, (val, old) => {
+    watch(directory, (val, old) => {
       if (val.join('/') !== old.join('/')) {
         getList()
       }
@@ -251,7 +252,7 @@ export default defineComponent({
       // const dragItem = list.value[dragIndex]
       const dropItem = list.value[dropIndex]
       let dropPosition: DropPositionType = 0
-      if (dropItem.type === IDocumentTypeType.DOC) {
+      if (dropItem.type === TypesBase.IBaseTypesType.FILE) {
         const h = height / 2
         if (clientY < top + h) {
           dropPosition = -1
@@ -279,29 +280,34 @@ export default defineComponent({
       dragIndex: number, 
       dropIndex: number, 
       dropPosition: DropPositionType, 
-      oldList: IDocumentPageListItemType[], 
-      list: IDocumentPageListItemType[]
+      oldList: TypesDocument.IDocumentPageListItemType[], 
+      list: TypesDocument.IDocumentPageListItemType[]
     }) => {
       const { dragIndex, dropIndex, dropPosition, oldList, list } = data
       const dragItem = oldList[dragIndex]
       const dropItem = oldList[dropIndex]
       if (dropPosition === 0) { // 转移目录
-        const _parents = [...dropItem.parents]
-        _parents.push(dropItem._id)
-        DocumentUpdateParents({ id: dragItem._id, parents: _parents }).then(_ => {
+        const _directory = [...dropItem.directory]
+        _directory.push(dropItem._id)
+        DocumentUpdateDirectory({ id: dragItem._id, directory: _directory }).then(_ => {
           getList()
         }).catch(err => {
           msg.error(err.message)
         })
       } else { // 排序
-
+        const _order = dropItem.order + dropPosition
+        DocumentUpdateOrder({ id: dragItem._id, order: _order }).then(_ => {
+          getList()
+        }).catch(err => {
+          msg.error(err.message)
+        })
       }
     }
     return {
       dayjs,
       id,
       keyword,
-      parents,
+      directory,
       fileFormVisible,
       fileFormType,
       fileFormInitValue,

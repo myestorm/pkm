@@ -12,9 +12,7 @@ export default class DocumentRouter {
 
   @post('/add')
   async DocumentAdd (ctx: Context, next: Next) {
-    const { userinfo } = ctx.state
     const _body = ctx.request.body as TypesDocument.IDocumentRouteAddType
-    _body.authorId = userinfo._id
     const result = await document.add(_body)
     const body: IResponeBodyType<TypesDocument.IDocumentDataType> = {
       code: 0,
@@ -47,12 +45,33 @@ export default class DocumentRouter {
     await next()
   }
 
-  @put('/update/parents')
-  async DocumentUpdateParents (ctx: Context, next: Next) {
-    const _body = ctx.request.body as { id: string, parents: string[] }
+  @put('/update/directory')
+  async DocumentUpdateDirectory (ctx: Context, next: Next) {
+    const _body = ctx.request.body as { id: string, directory: string[] }
     const info = await document.info(_body.id)
     if (info) {
-      const result = await document.updateParents(_body.id, _body.parents)
+      const result = await document.updateDirectory(_body.id, _body.directory)
+      const body: IResponeBodyType<TypesDocument.IDocumentDataType | null> = {
+        code: 0,
+        msg: 'success',
+        data: result
+      }
+      ctx.body = body
+    } else {
+      ctx.body = {
+        code: 1,
+        msg: '参数不正确'
+      }
+    }
+    await next()
+  }
+
+  @put('/update/order')
+  async DocumentUpdateOrder (ctx: Context, next: Next) {
+    const _body = ctx.request.body as { id: string, order: number }
+    const info = await document.info(_body.id)
+    if (info) {
+      const result = await document.updateOrder(_body.id, _body.order)
       const body: IResponeBodyType<TypesDocument.IDocumentDataType | null> = {
         code: 0,
         msg: 'success',
@@ -154,8 +173,8 @@ export default class DocumentRouter {
   @post('/search/:keyword')
   async DocumentSearch (ctx: Context, next: Next) {
     const { keyword = '' } = ctx.params
-    const _body = ctx.request.body as { parents: string[] }
-    const result = await document.search(keyword, _body.parents)
+    const _body = ctx.request.body as { directory: string[] }
+    const result = await document.search(keyword, _body.directory)
     const body: IResponeBodyType<TypesDocument.IDocumentDataType[]> = {
       code: 0,
       msg: 'success',

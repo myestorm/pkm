@@ -20,7 +20,8 @@ import MobileLayout from '../../components/layout/mobile-layout.vue'
 import MarkdownEditor from '../../components/editor/markdown.vue'
 import { DocumentInfo, DocumentUpdate } from '../../apis/document'
 import type { ToolbarItemType } from '@totonoo/vue-codemirror/dist_types/components/editor/markdown/toolbar'
-import { IDocumentUpdateType, IDocumentTypeType } from '../../../types/document'
+import * as TypesBase from '../../../types/base'
+import * as TypesDocument from '../../../types/document'
 
 export default defineComponent({
   components: {
@@ -39,17 +40,18 @@ export default defineComponent({
     const title = ref(id ? '' : '添加文档')
     const formDefault = {
       _id: '',
-      parents: [],
+      directory: [],
       title: '',
-      type: IDocumentTypeType.DOC,
+      type: TypesBase.IBaseTypesType.FILE,
       authorId: '',
       cover: '',
       desc: '',
       content: '',
       tags: [],
-      top: false
+      top: false,
+      order: 99
     }
-    let form = reactive<IDocumentUpdateType>({
+    let form = reactive<TypesDocument.IDocumentUpdateType>({
       ...formDefault
     })
 

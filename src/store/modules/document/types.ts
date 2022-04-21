@@ -1,12 +1,14 @@
-import { IDocumentPageListItemType, IDocumentFormType, IDocumentTypeType } from '../../../../types/document'
-export import FileFormType = IDocumentTypeType
-export type FormType = IDocumentFormType
+import * as TypesBase from '../../../../types/base'
+import * as TypesDocument from '../../../../types/document'
+
+export import FileFormType = TypesBase.IBaseTypesType
+export type FormType = TypesDocument.IDocumentFormType
 export type DocumentState = {
-  parents: string[],
-  list: IDocumentPageListItemType[],
+  directory: string[],
+  list: TypesDocument.IDocumentPageListItemType[],
   keyword: string,
   id: string,
   fileFormVisible: boolean,
-  fileFormType: IDocumentTypeType,
-  fileFormInitValue: IDocumentFormType
+  fileFormType: FileFormType,
+  fileFormInitValue: TypesDocument.IDocumentFormType
 }

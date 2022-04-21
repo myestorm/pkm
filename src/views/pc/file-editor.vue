@@ -34,7 +34,8 @@ import useDocStore from '../../store/modules/document/index'
 import MarkdownEditor from '../../components/editor/markdown.vue'
 import { DocumentInfo, DocumentUpdate } from '../../apis/document'
 import type { ToolbarItemType } from '@totonoo/vue-codemirror/dist_types/components/editor/markdown/toolbar'
-import { IDocumentUpdateType, IDocumentTypeType } from '../../../types/document'
+import * as TypesBase from '../../../types/base'
+import * as TypesDocument from '../../../types/document'
 
 export default defineComponent({
   components: {
@@ -52,7 +53,7 @@ export default defineComponent({
     const value = ref('')
     const loading = ref(false)
     const title = ref('')
-    let form = reactive<IDocumentUpdateType>({
+    let form = reactive<TypesDocument.IDocumentUpdateType>({
       ...storeDoc.getFormDefault
     })
 
@@ -61,7 +62,7 @@ export default defineComponent({
       DocumentInfo(id).then(res => {
         value.value = res.data?.content || ''
         title.value = res.data?.title || ''
-        storeDoc.parents = res.data?.parents || []
+        storeDoc.directory = res.data?.directory || []
         if (res.data) {
           form = {
             ...res.data
@@ -93,7 +94,7 @@ export default defineComponent({
 
     const info = () => {
       storeDoc.setFormValue(form)
-      if (form.type === IDocumentTypeType.FOLDER) {
+      if (form.type === TypesBase.IBaseTypesType.FOLDER) {
         storeDoc.setTypeFolder()
       } else {
         storeDoc.setTypeDoc()

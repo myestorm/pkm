@@ -36,7 +36,9 @@ import { useRouter } from 'vue-router'
 import MobileLayout from '../../components/layout/mobile-layout.vue'
 import SearchList, { ListItemType } from '../../components/search-list/index.vue'
 import { DocumentListPage } from '../../apis/document'
-import { IDocumentPageListItemType, IDocumentTypeType } from '../../../types/document'
+import * as TypesBase from '../../../types/base'
+import * as TypesDocument from '../../../types/document'
+
 import { BookListPage } from '../../apis/book'
 import { IBookDataApiType } from '../../../types/book'
 import { subStr } from '../../utils/index'
@@ -51,21 +53,21 @@ export default defineComponent({
     const dayjs = app?.appContext.config.globalProperties.$dayjs
     const router = useRouter()
 
-    const documentList = ref<IDocumentPageListItemType[]>([])
+    const documentList = ref<TypesDocument.IDocumentPageListItemType[]>([])
     DocumentListPage({
       page: 1,
       pagesize: 6,
       conditions: {
-        type: IDocumentTypeType.DOC
+        type: TypesBase.IBaseTypesType.FILE
       }
     }).then(res => {
       documentList.value = res.data.list || []
     })
-    const documentInfo = (item: IDocumentPageListItemType) => {
+    const documentInfo = (item: TypesDocument.IDocumentPageListItemType) => {
       router.push({
         name: 'MobileMrkdown',
         params: {
-          parents: item.parents,
+          parents: item.directory,
           id: item._id
         }
       })

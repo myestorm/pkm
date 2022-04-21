@@ -10,13 +10,14 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue'
-import { IDocumentTypeType, IDocumentFormType } from '../../../types/document'
+import * as TypesBase from '../../../types/base'
+import * as TypesDocument from '../../../types/document'
 import FileForm from './form.vue'
 
 export interface FileFormDrawerProps {
   modelValue: boolean,
-  type: IDocumentTypeType,
-  initValue: IDocumentFormType
+  type: TypesBase.IBaseTypesType,
+  initValue: TypesDocument.IDocumentFormType
 }
 
 export default defineComponent({
@@ -28,7 +29,7 @@ export default defineComponent({
     },
     type: {
       type: String as PropType<FileFormDrawerProps['type']>,
-      default: IDocumentTypeType.DOC
+      default: TypesBase.IBaseTypesType.FILE
     },
     initValue: {
       type: Object as PropType<FileFormDrawerProps['initValue']>,

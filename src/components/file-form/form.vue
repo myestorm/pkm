@@ -1,6 +1,6 @@
 <template>
   <pkm-form ref="formRef" :model="form" label-align="right" :label-col-props="{ span: 4 }" :wrapper-col-props="{ span: 20 }">
-    <template v-if="type == 'document'">
+    <template v-if="type == 'file'">
       <pkm-form-item field="title" label="名称" required :rules="[{ required: true, message: '请填写名称'}]">
         <pkm-input v-model="form.title" placeholder="请填写名称" />
       </pkm-form-item>
@@ -30,16 +30,17 @@ import { FormInstance } from '@arco-design/web-vue/es/form'
 import { ValidatedError } from '@arco-design/web-vue/es/form/interface'
 import UploadImage from '../../components/upload/upload-image.vue'
 
-import { IDocumentFormType, IDocumentAddType, IDocumentUpdateType, IDocumentTypeType } from '../../../types/document'
+import * as TypesBase from '../../../types/base'
+import * as TypesDocument from '../../../types/document'
 import { DocumentAdd, DocumentUpdate } from '../../apis/document'
 
 export interface FileFormProps {
   loading: boolean;
-  type: IDocumentTypeType,
-  initVal: IDocumentFormType
+  type: TypesBase.IBaseTypesType,
+  initVal: TypesDocument.IDocumentFormType
 }
 
-export type SetFormValueType = Partial<IDocumentUpdateType>
+export type SetFormValueType = Partial<TypesDocument.IDocumentUpdateType>
 
 export default defineComponent({
   name: 'FileForm',
@@ -50,7 +51,7 @@ export default defineComponent({
     },
     type: {
       type: String as PropType<FileFormProps['type']>,
-      default: IDocumentTypeType.DOC
+      default: TypesBase.IBaseTypesType.FILE
     },
     initValue: {
       type: Object as PropType<FileFormProps['initVal']>,
@@ -68,17 +69,17 @@ export default defineComponent({
     const formRef = ref<FormInstance | null>(null)
     const formDefault = {
       _id: '',
-      parents: [],
+      directory: [],
       title: '',
       type: props.type,
-      authorId: '',
       cover: '',
       desc: '',
       content: '',
       tags: [],
-      top: false
+      top: false,
+      order: 0
     }
-    const form = reactive<IDocumentFormType>({
+    const form = reactive<TypesDocument.IDocumentFormType>({
       ...formDefault
     })
 
@@ -92,7 +93,7 @@ export default defineComponent({
           if (!postData._id) {
             delete postData._id
           }
-          const action = postData._id ? DocumentUpdate(postData as IDocumentUpdateType) : DocumentAdd(postData as IDocumentAddType)
+          const action = postData._id ? DocumentUpdate(postData as TypesDocument.IDocumentUpdateType) : DocumentAdd(postData as TypesDocument.IDocumentAddType)
           action.then(() => {
             ctx.emit('success', true)
           }).catch(err => {
@@ -122,14 +123,11 @@ export default defineComponent({
       if (data.tags) {
         form.tags = data.tags
       }
-      if (data.parents) {
-        form.parents = data.parents
+      if (data.directory) {
+        form.directory = data.directory
       }
       if (data.type) {
         form.type = data.type
-      }
-      if (data.content) {
-        form.content = data.content
       }
       if (data.top) {
         form.top = data.top

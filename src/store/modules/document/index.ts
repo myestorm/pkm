@@ -3,25 +3,26 @@ import { DocumentState, FileFormType, FormType } from './types'
 
 const formDefault = {
   _id: '',
-  parents: [],
+  directory: [],
   title: '',
-  type: FileFormType.DOC,
+  type: FileFormType.FILE,
   authorId: '',
   cover: '',
   desc: '',
   content: '',
   tags: [],
-  top: false
+  top: false,
+  order: 99
 }
 
 const useStore = defineStore('document', {
   state: (): DocumentState => ({
-    parents: [],
+    directory: [],
     list: [],
     keyword: '',
     id: '',
     fileFormVisible: false,
-    fileFormType: FileFormType.DOC,
+    fileFormType: FileFormType.FILE,
     fileFormInitValue: {
       ...formDefault
     }
@@ -35,15 +36,15 @@ const useStore = defineStore('document', {
 
   actions: {
     backTo () {
-      let _parents = [...this.parents]
-      _parents.pop()
-      this.parents = [..._parents]
+      let _directory = [...this.directory]
+      _directory.pop()
+      this.directory = [..._directory]
     },
     setFormDefault () {
       this.fileFormInitValue = {
         ...formDefault,
         type: this.fileFormType,
-        parents: this.parents
+        directory: this.directory
       }
     },
     setFormValue (data: FormType) {
@@ -52,7 +53,7 @@ const useStore = defineStore('document', {
       }
     },
     setTypeDoc () {
-      this.fileFormType = FileFormType.DOC
+      this.fileFormType = FileFormType.FILE
     },
     setTypeFolder () {
       this.fileFormType = FileFormType.FOLDER

@@ -9,7 +9,7 @@
             <ul v-if="list.length > 0">
               <li class="item" v-for="item in list" :key="item._id">
                 <div class="icon" @click="clickHandler(item)">
-                  <icon-file :size="24" :strokeWidth="2" v-if="item.type == 'document'" />
+                  <icon-file :size="24" :strokeWidth="2" v-if="item.type == 'file'" />
                   <icon-folder :size="24" :strokeWidth="2" v-else />
                 </div>
                 <div class="info" @click="clickHandler(item)">
@@ -70,7 +70,8 @@ import FileFormDrawer from '../../components/file-form/drawer.vue'
 import SearchList, { ListItemType } from '../../components/search-list/index.vue'
 import { useRouter, useRoute } from 'vue-router'
 import { DocumentList, DocumentRemove, DocumentInfo } from '../../apis/document'
-import { IDocumentPageListItemType, IDocumentFormType, IDocumentTypeType } from '../../../types/document'
+import * as TypesBase from '../../../types/base'
+import * as TypesDocument from '../../../types/document'
 
 export default defineComponent({
   components: {
@@ -91,13 +92,13 @@ export default defineComponent({
     const drawerVisible = ref(false)
     const type = ref()
 
-    const list = ref<IDocumentPageListItemType[]>([])
-    const drawerData = ref<IDocumentFormType>()
+    const list = ref<TypesDocument.IDocumentPageListItemType[]>([])
+    const drawerData = ref<TypesDocument.IDocumentFormType>()
     const filePath = ref<string[]>([])
 
     const getList = () => {
       DocumentList({
-        parents: [...filePath.value]
+        directory: [...filePath.value]
       }).then(res => {
         list.value = res.data || []
       }).catch(err => {
@@ -111,19 +112,19 @@ export default defineComponent({
       type.value = _type
       drawerData.value = {
         _id: '',
-        parents: [...filePath.value],
+        directory: [...filePath.value],
         title: '',
-        type: _type as IDocumentTypeType,
-        authorId: '',
+        type: _type as TypesBase.IBaseTypesType,
         cover: '',
         desc: '',
         content: '',
         tags: [],
-        top: false
+        top: false,
+        order: 99
       }
       drawerVisible.value = true
     }
-    const edit = (item: IDocumentFormType) => {
+    const edit = (item: TypesDocument.IDocumentFormType) => {
       type.value = item.type
       drawerData.value = item
       drawerVisible.value = true
@@ -144,21 +145,21 @@ export default defineComponent({
         }
       })
     }
-    const clickHandler = (item: IDocumentFormType) => {
-      const _parents = [...item.parents]
-      if (item.type === IDocumentTypeType.DOC) {
+    const clickHandler = (item: TypesDocument.IDocumentFormType) => {
+      const _directory = [...item.directory]
+      if (item.type === TypesBase.IBaseTypesType.FILE) {
         router.push({
           name: 'MobileMrkdown',
           params: {
-            parents: item.parents,
+            parents: item.directory,
             id: item._id
           }
         })
       } else {
         if (item._id) {
-          _parents.push(item._id)
+          _directory.push(item._id)
         }
-        router.push(`/m/file/${_parents.join('/')}`)
+        router.push(`/m/file/${_directory.join('/')}`)
       }
     }
 

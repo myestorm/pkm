@@ -21,8 +21,15 @@ export const DocumentUpdate = (postData: TypesDocumnet.IDocumentUpdateType, opti
 }
 
 // 修改目录
-export const DocumentUpdateParents = (postData: { id: string, parents: string[] }, options?: AxiosRequestConfig): Promise<IResponeBodyType<TypesDocumnet.IDocumentUpdateType[]>> => {
-  return axios.put(`${prefix}/update/parents`, postData, {
+export const DocumentUpdateDirectory = (postData: { id: string, directory: string[] }, options?: AxiosRequestConfig): Promise<IResponeBodyType<TypesDocumnet.IDocumentUpdateType[]>> => {
+  return axios.put(`${prefix}/update/directory`, postData, {
+    ...options
+  })
+}
+
+// 修改排序
+export const DocumentUpdateOrder = (postData: { id: string, order: number }, options?: AxiosRequestConfig): Promise<IResponeBodyType<TypesDocumnet.IDocumentUpdateType[]>> => {
+  return axios.put(`${prefix}/update/order`, postData, {
     ...options
   })
 }

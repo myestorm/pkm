@@ -1,21 +1,8 @@
 import BaseController from '../core/controller'
 import Document from '../models/document'
-import * as TypesDocument from '../../types/document'
-import { IResponePageBodyType } from '../../types/index'
 
-const sortMethod = (a: TypesDocument.IDocumentDataType, b: TypesDocument.IDocumentDataType): number => {
-  if (a.type === b.type) {
-    if (a.top) {
-      return -1
-    } else {
-      const _a = a.title.charCodeAt(0)
-      const _b = b.title.charCodeAt(0)
-      return _a - _b > 0 ? 1 : -1
-    }
-  } else {
-    return a.type === TypesDocument.IDocumentTypeType.DOC ? 1 : -1
-  }
-}
+import * as TypesDocument from '../../types/document'
+import * as TypesIndex from '../../types/index'
 
 class DocumentController extends BaseController {
 
@@ -33,8 +20,18 @@ class DocumentController extends BaseController {
     })
   }
 
-  async updateParents (id: string, parents: string[]): Promise<TypesDocument.IDocumentDataType | null> {
-    return await Document.findByIdAndUpdate(id, { parents }, { 
+  async updateDirectory (id: string, directory: string[]): Promise<TypesDocument.IDocumentDataType | null> {
+    return await Document.findByIdAndUpdate(id, { directory }, { 
+      new: true, 
+      upsert: true,
+      setDefaultsOnInsert: true,
+      runValidators: true, 
+      findByIdAndUpdate: 'after' 
+    })
+  }
+
+  async updateOrder (id: string, order: number): Promise<TypesDocument.IDocumentDataType | null> {
+    return await Document.findByIdAndUpdate(id, { order }, { 
       new: true, 
       upsert: true,
       setDefaultsOnInsert: true,
@@ -55,17 +52,17 @@ class DocumentController extends BaseController {
     const list = await Document.find(filter).sort({
       _id: -1
     })
-    list.sort(sortMethod)
+    list.sort(this.sortMethod)
     return list
   }
 
-  async listPage (page: number, pagesize: number, filter: TypesDocument.IDocumentFilterType): Promise<IResponePageBodyType<TypesDocument.IDocumentDataType>> {
+  async listPage (page: number, pagesize: number, filter: TypesDocument.IDocumentFilterType): Promise<TypesIndex.IResponePageBodyType<TypesDocument.IDocumentDataType>> {
     const start = (page - 1) * pagesize
     const total = await Document.find(filter).count()
     const list: TypesDocument.IDocumentDataType[] = await Document.find(filter).skip(start).limit(pagesize).sort({
       _id: -1
     })
-    list.sort(sortMethod)
+    list.sort(this.sortMethod)
     const res = {
       list,
       page,
@@ -75,16 +72,16 @@ class DocumentController extends BaseController {
     return res
   }
 
-  async search (keyword: string, parents: string[] = []): Promise<TypesDocument.IDocumentDataType[]> {
+  async search (keyword: string, directory: string[] = []): Promise<TypesDocument.IDocumentDataType[]> {
     const reg = new RegExp(keyword, 'gmi')
     const and = []
     and.push({
       type: 'document'
     })
-    if (parents.length > 0) {
+    if (directory.length > 0) {
       and.push({
-        parents: {
-          $in: parents
+        directory: {
+          $in: directory
         }
       })
     }
@@ -101,13 +98,13 @@ class DocumentController extends BaseController {
     const list = await Document.find(params).sort({
       _id: -1
     })
-    list.sort(sortMethod)
+    list.sort(this.sortMethod)
     return list
   }
 
   async count (id: string): Promise<number> {
     const total = await Document.find({
-      parents: {
+      directory: {
         $in: [id]
       }
     }).count()
