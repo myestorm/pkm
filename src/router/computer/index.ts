@@ -1,12 +1,14 @@
-import Pclayout from '../../components/layout/pc-layout.vue'
+import Pclayout from '@/components/layout/pc-layout.vue'
 
-import home from '../../views/pc/home.vue'
-import file from '../../views/pc/file.vue'
-import fileEditor from '../../views/pc/file-editor.vue'
-import book from '../../views/pc/book.vue'
-import bookView from '../../views/pc/book-view.vue'
-import setting from '../../views/pc/setting.vue'
-import userinfo from '../../views/pc/userinfo.vue'
+import home from '@/views/computer/home.vue'
+import document from '@/views/computer/document.vue'
+
+import file from '../../views/computer/file.vue'
+import fileEditor from '../../views/computer/file-editor.vue'
+import book from '../../views/computer/book.vue'
+import bookView from '../../views/computer/book-view.vue'
+import setting from '../../views/computer/setting.vue'
+import userinfo from '../../views/computer/userinfo.vue'
 
 const prefix = '/p'
 
@@ -50,6 +52,17 @@ export default {
         keepAlive: false
       }
     }]
+  }, {
+    path: `${prefix}/document/:id?`,
+    name: 'PcDocument',
+    component: document,
+    meta: {
+      title: '文档',
+      icon: 'icon-file',
+      nav: true,
+      keepAlive: false
+    },
+    children: []
   }, {
     path: `${prefix}/book`,
     name: 'PcBook',

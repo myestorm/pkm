@@ -5,9 +5,9 @@ const useStore = defineStore('navigation', {
   state: (): NavigationState => ({
     sitename: 'Personal Knowledge Management - Totonoo',
     breadcrumbs: [],
-    pcNav: [],
+    computerNav: [],
     mobileNav: [],
-    pcCurrent: -1,
+    computerCurrent: -1,
     mobileCurrent: 0
   }),
 

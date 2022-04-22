@@ -3,7 +3,7 @@ import useStore from '../store/index'
 import useNavigationStore from '../store/modules/navigation/index'
 import useAdminStore from '../store/modules/admin/index'
 import { breadcrumbType } from '../store/modules/navigation/types'
-import pc from './pc/index'
+import computer from './computer/index'
 import mobile from './mobile/index'
 
 
@@ -26,7 +26,7 @@ export const authorizeRoutes: RouteRecordRaw[] = [
       keepAlive: false
     },
     children: [
-      pc,
+      computer,
       mobile
     ]
   }
@@ -57,7 +57,7 @@ const router: Router = createRouter({
 
 // get root menu
 let isInitialized = false
-const pcNav: breadcrumbType[] = []
+const computerNav: breadcrumbType[] = []
 const mobileNav: breadcrumbType[] = []
 authorizeRoutes[0].children?.map(item => {
   const _path = item.path
@@ -74,7 +74,7 @@ authorizeRoutes[0].children?.map(item => {
       if (_path === '/m') {
         mobileNav.push(_item)
       } else {
-        pcNav.push(_item)
+        computerNav.push(_item)
       }
     }
   })
@@ -85,13 +85,13 @@ const findIndex = (_path: string): { type: string, index: number } => {
   const inPc = /^\/p/.test(_path)
   const inMobile = /^\/m/.test(_path)
   const res = {
-    type: 'pc',
+    type: 'computer',
     index: -1
   }
   if (inPc) {
-    res.type = 'pc'
-    for (let i = 0; i < pcNav.length; i++) {
-      const reg = new RegExp(`^${pcNav[i].url}`, 'gmi')
+    res.type = 'computer'
+    for (let i = 0; i < computerNav.length; i++) {
+      const reg = new RegExp(`^${computerNav[i].url}`, 'gmi')
       if (reg.test(_path)) {
         res.index = i
         break
@@ -129,7 +129,7 @@ const setNavigation = (route: RouteLocationNormalized) => {
 
   // nav
   if (!isInitialized) {
-    storeNavigation.pcNav = pcNav
+    storeNavigation.computerNav = computerNav
     storeNavigation.mobileNav = mobileNav
     isInitialized = true
   }
@@ -137,8 +137,8 @@ const setNavigation = (route: RouteLocationNormalized) => {
   // set nav current
   const _path = route.path
   const current = findIndex(_path)
-  if (current.type === 'pc') {
-    storeNavigation.pcCurrent = current.index
+  if (current.type === 'computer') {
+    storeNavigation.computerCurrent = current.index
   } else if (current.type === 'mobile') {
     storeNavigation.mobileCurrent = current.index
   }

@@ -6,8 +6,8 @@ export interface breadcrumbType {
 export type NavigationState = {
   sitename: string,
   breadcrumbs: breadcrumbType[],
-  pcNav: breadcrumbType[],
+  computerNav: breadcrumbType[],
   mobileNav: breadcrumbType[],
-  pcCurrent: number,
+  computerCurrent: number,
   mobileCurrent: number
 }

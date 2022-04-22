@@ -21,7 +21,10 @@
 			"./node_modules/@arco-design/web-vue",
       "./node_modules/@types",
       "./app/types"
-    ]
+    ],
+    "paths": {
+      "@/*": ["./src/*", "./dist/*"]
+    }
   },
   "exclude": [
     "node_modules",

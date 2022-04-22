@@ -1,18 +1,27 @@
 import { defineStore } from 'pinia'
-import { DocumentState, FileFormType, FormType } from './types'
+import { DocumentState } from './types'
 
-const formDefault = {
+import * as TypesBase from '@/types/base'
+import * as TypesDocument from '@/types/document'
+
+import * as ApiDocument from '@/apis/document'
+
+const formDefault: TypesDocument.IDocumentType = {
   _id: '',
-  directory: [],
   title: '',
-  type: FileFormType.FILE,
-  authorId: '',
+  directory: [],
+  type: TypesBase.IBaseTypesType.FILE,
   cover: '',
   desc: '',
-  content: '',
   tags: [],
   top: false,
-  order: 99
+  order: 99,
+  content: '',
+  comments: [],
+  createdAt: new Date(),
+  createdBy: '',
+  updatedAt: new Date(),
+  updatedBy: ''
 }
 
 const useStore = defineStore('document', {
@@ -21,16 +30,14 @@ const useStore = defineStore('document', {
     list: [],
     keyword: '',
     id: '',
-    fileFormVisible: false,
-    fileFormType: FileFormType.FILE,
-    fileFormInitValue: {
-      ...formDefault
-    }
+    documentFormDrawerVisible: false
   }),
 
   getters: {
     getFormDefault: () => {
-      return formDefault
+      return {
+        ...formDefault
+      }
     }
   },
 
@@ -40,23 +47,29 @@ const useStore = defineStore('document', {
       _directory.pop()
       this.directory = [..._directory]
     },
-    setFormDefault () {
-      this.fileFormInitValue = {
-        ...formDefault,
-        type: this.fileFormType,
-        directory: this.directory
-      }
+    submitForm (postData: TypesDocument.IDocumentFileFormType) {
+      return ApiDocument.DocumentForm(postData)
     },
-    setFormValue (data: FormType) {
-      this.fileFormInitValue = {
-        ...data
-      }
+    remove (id: string) {
+      return ApiDocument.DocumentRemove(id)
     },
-    setTypeDoc () {
-      this.fileFormType = FileFormType.FILE
+    search (keyword: string, directory?: string[]) {
+      return ApiDocument.DocumentSearch(keyword, directory)
     },
-    setTypeFolder () {
-      this.fileFormType = FileFormType.FOLDER
+    getList (postData: TypesDocument.IDocumentListType) {
+      return ApiDocument.DocumentList(postData)
+    },
+    getInfo (id: string) {
+      return ApiDocument.DocumentInfo(id)
+    },
+    move (postData: { id: string, directory: string[] }) {
+      return ApiDocument.DocumentUpdateDirectory(postData)
+    },
+    order (postData: { id: string, order: number }) {
+      return ApiDocument.DocumentUpdateOrder(postData)
+    },
+    saveContent (postData: { id: string, content: string }) {
+      return ApiDocument.DocumentUpdateContent(postData)
     }
   }
 })

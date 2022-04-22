@@ -5,8 +5,8 @@
     </pkm-layout-header>
     <pkm-layout-content class="content">
       <pkm-space direction="vertical" fill>
-        <template v-for="(item, index) in pcNav" :key="index">
-          <pkm-button type="text" :class="[pcCurrent == index ? 'current' : '']" @click="toLink(item.url, index)">
+        <template v-for="(item, index) in computerNav" :key="index">
+          <pkm-button type="text" :class="[computerCurrent == index ? 'current' : '']" @click="toLink(item.url, index)">
             <component :size="24" :strokeWidth="3" :is="item.icon"></component>
             <strong>{{ item.title }}</strong>
           </pkm-button>
@@ -40,7 +40,7 @@ export default defineComponent({
   setup () {
     const store = useStore()
     const router = useRouter()
-    const { pcCurrent, pcNav } = storeToRefs(store)
+    const { computerCurrent, computerNav } = storeToRefs(store)
     const logoStyle = {
       width: '40px',
       height: '40px',
@@ -55,9 +55,9 @@ export default defineComponent({
       router.push(url)
     }
     return {
-      pcCurrent,
+      computerCurrent,
       logoStyle,
-      pcNav,
+      computerNav,
       footer,
       toLink
     }

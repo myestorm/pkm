@@ -19,7 +19,7 @@ export type IDocumentModelType = HydratedDocument<
 export type IDocumentDataType = IDocumentType<Types.ObjectId>
 export type IDocumentAddType = Omit<IDocumentType<string>, '_id' | 'createdAt' | 'updatedAt' | 'comments' | 'createdBy' | 'updatedBy'>
 export type IDocumentUpdateType = IDocumentAddType & { _id: string }
-export type IDocumentFilterType = Partial<IDocumentType<string>>
+
 
 export type IDocumentFormType = IDocumentAddType & { _id?: string }
 export type IDocumentPageListItemType = IDocumentType<string>
@@ -28,3 +28,7 @@ export type IDocumentSearchType = Pick<IDocumentType<string>, '_id' | 'title' | 
 // route
 export type IDocumentRouteAddType = Omit<IDocumentType<string>, '_id' | 'createdAt' | 'updatedAt' | 'comments'>
 export type IDocumentRouteUpdateType = IDocumentRouteAddType & { _id: string }
+
+// apis
+export type IDocumentStringIdType = IDocumentType<string>
+export type IDocumentFilterType = Partial<IDocumentType<string>>
