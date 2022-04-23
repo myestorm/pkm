@@ -5,7 +5,8 @@ export interface IDocumentType extends BaseTypes.IBaseFieldsType {
   comments: BaseTypes.ICommentType[]
 }
 
-export type IDocumentFileFormType = Pick<IDocumentType, '_id' | 'title' | 'cover' | 'desc' | 'tags' | 'type'>
-export type IDocumentFolderFormType = Pick<IDocumentType, '_id' | 'title' | 'desc' | 'type'>
+export type IDocumentFileFormType = Pick<IDocumentType, '_id' | 'directory' | 'title' | 'cover' | 'desc' | 'tags' | 'type'>
+export type IDocumentFolderFormType = Pick<IDocumentType, '_id' | 'directory' | 'title' | 'desc' | 'type'>
 
 export type IDocumentListType = Partial<IDocumentType>
+export type IDocumentBreadcrumbType = Pick<IDocumentType, '_id' | 'directory' | 'title'>

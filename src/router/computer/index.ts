@@ -3,8 +3,8 @@ import Pclayout from '@/components/layout/pc-layout.vue'
 import home from '@/views/computer/home.vue'
 import document from '@/views/computer/document.vue'
 
-import file from '../../views/computer/file.vue'
-import fileEditor from '../../views/computer/file-editor.vue'
+// import file from '../../views/computer/file.vue'
+// import fileEditor from '../../views/computer/file-editor.vue'
 import book from '../../views/computer/book.vue'
 import bookView from '../../views/computer/book-view.vue'
 import setting from '../../views/computer/setting.vue'
@@ -31,7 +31,7 @@ export default {
       icon: 'home',
       keepAlive: false
     }
-  }, {
+  }, /* {
     path: `${prefix}/file`,
     name: 'PcFile',
     component: file,
@@ -52,8 +52,8 @@ export default {
         keepAlive: false
       }
     }]
-  }, {
-    path: `${prefix}/document/:id?`,
+  },*/ {
+    path: `${prefix}/document/:type?/:id?`,
     name: 'PcDocument',
     component: document,
     meta: {

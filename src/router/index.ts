@@ -27,7 +27,7 @@ export const authorizeRoutes: RouteRecordRaw[] = [
     },
     children: [
       computer,
-      mobile
+      // mobile
     ]
   }
 ]

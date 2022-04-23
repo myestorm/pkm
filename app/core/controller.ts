@@ -1,8 +1,21 @@
+import { Types } from 'mongoose'
 import dayjs from 'dayjs'
 import * as TypesBase from '../../types/base'
 
 class BaseController {
   dayjs = dayjs
+
+  updateOption = { 
+    new: true, 
+    upsert: true,
+    setDefaultsOnInsert: true,
+    runValidators: true, 
+    findByIdAndUpdate: 'after' 
+  }
+
+  createObjectId = () => {
+    return new Types.ObjectId()
+  }
 
   sortMethod = (a: TypesBase.IBaseFieldsObjectIdType, b: TypesBase.IBaseFieldsObjectIdType): 1 | -1 => {
     if (a.type === b.type) {

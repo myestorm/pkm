@@ -1,5 +1,5 @@
 <template>
-  <pkm-layout-sider class="menu">
+  <pkm-layout-sider class="pkm-side-list">
     <div class="menu-layout">
       <div class="header">
         <pkm-space direction="vertical" fill>
@@ -32,7 +32,6 @@
                 </pkm-doption>
               </template>
             </pkm-dropdown>
-            <document-form-drawer ref="documentFormDrawer" width="420px" v-model="documentFormDrawerVisible" />
           </div>
           <pkm-space class="flex">
             <pkm-button type="text" class="backto" @click="backTo" :disabled="directory.length == 0">
@@ -41,12 +40,25 @@
             </pkm-button>
             <pkm-input-search flex="auto" v-model="keyword" class="search-input" placeholder="试试搜索文档" :allow-clear="true" :loading=" loading" @input="searchHandler" @search="searchHandler" @clear="searchClear" />
           </pkm-space>
+          <pkm-breadcrumb :style="{ fontSize: `14px` }" :max-count="3">
+            <pkm-breadcrumb-item>
+              <pkm-button type="text" size="mini" style="padding: 0" @click="directory = []">
+                <icon-folder />
+              </pkm-button>
+            </pkm-breadcrumb-item>
+            <pkm-breadcrumb-item v-for="item in breadcrumbs" :key="item._id">
+              <pkm-button type="text" size="mini" style="padding: 0" @click="breadcrumbClick(item)">{{ item.title }}</pkm-button>
+            </pkm-breadcrumb-item>
+            <template #separator>
+              <icon-right />
+            </template>
+          </pkm-breadcrumb>
         </pkm-space>
       </div>
-      <pkm-dropdown trigger="contextMenu" alignPoint class="pkm-contextmenu-dropdown" @select="test">
-        <pkm-drag-sort v-model="list" class="file-list" :calcDropPosition="calcDropPosition" @end="dragEndHandler" @contextmenu="test($event, null)">
+      <pkm-dropdown trigger="contextMenu" alignPoint class="pkm-contextmenu-dropdown">
+        <pkm-drag-sort v-model="list" class="file-list" :calcDropPosition="calcDropPosition" @end="dragEndHandler" @contextmenu="contextmenuHandler($event)">
           <template #default="{ item, index }">
-            <div class="item" :key="item._id" :class="[item._id == id ? 'current' : '', index % 2 == 0 ? 'odd' : '']">
+            <div class="item" :data-index="index" :key="item._id" :class="[item._id == currentId ? 'current' : '', index % 2 == 0 ? 'odd' : '']">
               <div class="icon" @click="fileListItemClick(item)">
                 <icon-file :size="24" :strokeWidth="2" v-if="item.type == 'file'" />
                 <icon-folder :size="24" :strokeWidth="2" v-else />
@@ -88,7 +100,7 @@
         </pkm-drag-sort>
         <template #content>
           <pkm-dgroup title="操作">
-            <pkm-doption @click="creatDocument">
+            <pkm-doption @click="copyHandler" :disabled="tempIndex == -1">
               <template #icon>
                 <icon-copy />
               </template>
@@ -96,7 +108,7 @@
                 复制
               </template>
             </pkm-doption>
-            <pkm-doption @click="creatFolder" disabled>
+            <pkm-doption @click="cutHandler" :disabled="tempIndex == -1">
               <template #icon>
                 <icon-scissor />
               </template>
@@ -104,7 +116,7 @@
                 剪切
               </template>
             </pkm-doption>
-            <pkm-doption @click="creatFolder">
+            <pkm-doption @click="pasteHandler" :disabled="!clipboard">
               <template #icon>
                 <icon-paste />
               </template>
@@ -146,14 +158,13 @@ import * as TypesDocument from '@/types/document'
 
 import useDocumentStore from '@/store/modules/document/index'
 
-import DocumentFormDrawer from '@/components/document/form-drawer.vue'
+
 import PkmDragSort, { CalcDropPositionType, DropPositionType } from '@/components/pkm-drag-sort/index.vue'
 
 import { subStr } from '@/utils/index'
 
 export default defineComponent({
   components: {
-    DocumentFormDrawer,
     PkmDragSort
   },
   setup () {
@@ -163,16 +174,18 @@ export default defineComponent({
     const dayjs = app?.appContext.config.globalProperties.$dayjs
     const documentStore = useDocumentStore()
     const router = useRouter()
-    const { directory, list, id, keyword, documentFormDrawerVisible } = storeToRefs(documentStore)
+    const { currentId, currentType, directory, list, keyword, documentFormDrawerId, documentFormDrawerType, documentFormDrawerVisible, clipboard, clipboardType } = storeToRefs(documentStore)
     const loading = ref(false)
-    const documentFormDrawer = ref()
+    const breadcrumbs = ref<TypesDocument.IDocumentBreadcrumbType[]>([])
 
     const creatDocument = () => {
-      documentFormDrawer.value.creatDocument()
+      documentFormDrawerId.value = ''
+      documentFormDrawerType.value = TypesBase.IBaseTypesType.FILE
       documentFormDrawerVisible.value = true
     }
     const creatFolder = () => {
-      documentFormDrawer.value.creatFolder()
+      documentFormDrawerId.value = ''
+      documentFormDrawerType.value = TypesBase.IBaseTypesType.FOLDER
       documentFormDrawerVisible.value = true
     }
 
@@ -194,14 +207,14 @@ export default defineComponent({
         _directory.push(_id)
         directory.value = _directory
       } else if (type === TypesBase.IBaseTypesType.FILE) {
-        router.push(`/p/file/editor/${item._id}`)
+        router.push(`/p/document/${currentType.value}/${item._id}`)
       }
     }
     const backTo = () => {
       documentStore.backTo()
     }
     const edit = (_id: string) => {
-      id.value = _id
+      documentFormDrawerId.value = _id
       documentFormDrawerVisible.value = true
     }
     const remove = (id: string) => {
@@ -240,6 +253,21 @@ export default defineComponent({
     watch(directory, (val, old) => {
       if (val.join('/') !== old.join('/')) {
         getList()
+      }
+      if (val.length > 0) {
+        documentStore.find(val).then(res => {
+          const _data = (res.data || []) as TypesDocument.IDocumentBreadcrumbType[]
+          const _paths: TypesDocument.IDocumentBreadcrumbType[] = []
+          val.forEach(key => {
+            const item = _data.find((sub: TypesDocument.IDocumentBreadcrumbType) => sub._id === key)
+            if (item) {
+              _paths.push(item)
+            }
+          })
+          breadcrumbs.value = _paths
+        })
+      } else {
+        breadcrumbs.value = []
       }
     })
     getList()
@@ -300,13 +328,79 @@ export default defineComponent({
         })
       }
     }
+
+    const breadcrumbClick = (item: TypesDocument.IDocumentBreadcrumbType) => {
+      const _directory = [...item.directory]
+      _directory.push(item._id)
+      directory.value = _directory
+    }
+
+    const tempIndex = ref(-1)
+    const contextmenuHandler = (event: Event) => {
+      const target = event.target as HTMLElement
+      const _item = target.closest('.item') as HTMLElement
+      if (_item && _item.dataset) {
+        tempIndex.value = Number(_item.dataset.index)
+      } else {
+        tempIndex.value = -1
+      }
+    }
+    
+    const copyHandler = () => {
+      const item = list.value[tempIndex.value]
+      if (item) {
+        clipboard.value = {...item}
+        clipboardType.value = TypesBase.IClipboardType.COPY
+      }
+    }
+    const cutHandler = () => {
+      const item = list.value[tempIndex.value]
+      if (item) {
+        clipboard.value = {...item}
+        clipboardType.value = TypesBase.IClipboardType.CUT
+      }
+    }
+    const pasteHandler = () => {
+      if (clipboard.value?._id) {
+        switch (clipboardType.value) {
+          case TypesBase.IClipboardType.CUT: {
+            documentStore.move({
+              id: clipboard.value._id, 
+              directory: [...directory.value]
+            }).then(_ => {
+              clipboard.value = null
+              clipboardType.value = TypesBase.IClipboardType.NONE
+              getList()
+            }).catch(err => {
+              msg.error(err.message)
+            })
+            break
+          }
+          case TypesBase.IClipboardType.COPY: {
+            const postData = {
+              id: clipboard.value._id, 
+              directory: [...directory.value]
+            }
+            documentStore.copy(postData).then(_ => {
+              clipboard.value = null
+              clipboardType.value = TypesBase.IClipboardType.NONE
+              getList()
+            }).catch(err => {
+              msg.error(err.message)
+            })
+            break
+          }
+        }
+      }
+    }
+
     return {
+      currentId,
+      breadcrumbs,
       dayjs,
-      id,
       keyword,
       directory,
       documentFormDrawerVisible,
-      documentFormDrawer,
 
       creatDocument,
       creatFolder,
@@ -324,117 +418,15 @@ export default defineComponent({
       searchClear,
       calcDropPosition,
       dragEndHandler,
-      test (a: Event, b: any) {
-        console.log(a, b)
-      }
+      breadcrumbClick,
+
+      contextmenuHandler,
+      copyHandler,
+      cutHandler,
+      pasteHandler,
+      tempIndex,
+      clipboard
     }
   }
 })
 </script>
-<style lang="scss" scoped>
-.#{$--prefix}-file-layout {
-  .menu {
-    width: 280px !important;
-    background-color: var(--color-fill-2);
-    box-shadow: none;
-    border-right: 1px solid var(--color-neutral-3);
-  }
-  .menu-layout {
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    .header {
-      padding: 8px;
-      .search-input {
-        background-color: var(--color-bg-1);
-      }
-      .backto {
-        padding-left: 0;
-        padding-right: 8px;
-      }
-    }
-    .file-list {
-      height: calc(100vh - 142px);
-      overflow: auto;
-    }
-  }
-  .file-list {
-    .item {
-      width: 100%;
-      display: flex;
-      padding: 8px 0;
-      cursor: pointer;
-      align-items: stretch;
-      transition: all 300ms ease;
-      border-top: 1px solid transparent;
-      border-bottom: 1px solid transparent;
-      &::before {
-        width: 3px;
-        height: 0;
-        content: "";
-        display: block;
-        background-color: rgb(var(--primary-6));
-        position: absolute;
-        top: 50%;
-        left: 0;
-        z-index: 3;
-        transition: all 200ms ease;
-        overflow: hidden;
-      }
-      &.odd {
-        background-color: var(--color-fill-1);
-      }
-      &:hover, &.current {
-        background-color: var(--color-fill-1);
-        border-color: var(--color-neutral-3);
-      }
-      &:hover {
-        background-color: rgb(var(--gray-3));
-      }
-      &.current {
-        background-color: var(--color-fill-1);
-        border-color: var(--color-neutral-3);
-        box-shadow: 0 0 16px 0 rgba(0,0,0,0.12) inset;
-        position: relative;
-        &::before {
-          top: 0;
-          height: 100%;
-        }
-      }
-      .icon {
-        flex: 0 0 36px;
-        color: var(--color-text-3);
-        padding-left: 8px;
-      }
-      .info {
-        flex: 1;
-        padding: 0 8px;
-        line-height: 1.4;
-        .day {
-          color: var(--color-text-4);
-          font-size: 12px;
-          padding-top: 4px;
-        }
-        .title {
-          color: var(--color-text-2);
-          font-size: 14px;
-          font-weight: bold;
-        }
-        .desc {
-          color: var(--color-text-3);
-          font-size: 12px;
-          padding: 4px 0;
-        }
-      }
-      .action {
-        flex: 0 0 32px;
-        margin-right: 8px;
-        text-align: right;
-        .btn-info {
-          color: var(--color-text-3);
-        }
-      }
-    }
-  }
-}
-</style>

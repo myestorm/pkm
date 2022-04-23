@@ -26,11 +26,16 @@ const formDefault: TypesDocument.IDocumentType = {
 
 const useStore = defineStore('document', {
   state: (): DocumentState => ({
+    currentId: '',
+    currentType: 'view',
     directory: [],
     list: [],
     keyword: '',
-    id: '',
-    documentFormDrawerVisible: false
+    documentFormDrawerId: '',
+    documentFormDrawerType: TypesBase.IBaseTypesType.FILE,
+    documentFormDrawerVisible: false,
+    clipboard: null,
+    clipboardType: TypesBase.IClipboardType.NONE
   }),
 
   getters: {
@@ -63,10 +68,16 @@ const useStore = defineStore('document', {
       return ApiDocument.DocumentInfo(id)
     },
     move (postData: { id: string, directory: string[] }) {
-      return ApiDocument.DocumentUpdateDirectory(postData)
+      return ApiDocument.DocumentMove(postData)
+    },
+    copy (postData: { id: string, directory: string[] }) {
+      return ApiDocument.DocumentCopy(postData)
     },
     order (postData: { id: string, order: number }) {
       return ApiDocument.DocumentUpdateOrder(postData)
+    },
+    find (ids: string[]) {
+      return ApiDocument.DocumentFind(ids)
     },
     saveContent (postData: { id: string, content: string }) {
       return ApiDocument.DocumentUpdateContent(postData)

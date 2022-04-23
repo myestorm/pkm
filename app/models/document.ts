@@ -1,6 +1,6 @@
 import { Schema, model, now } from 'mongoose'
-import { IDocumentModelType } from '../../types/document'
-import * as BaseTypes from '../../types/base'
+import * as TypesBase from '../types/base'
+import * as TypesDocument  from '../types/document'
 
 import commentSchema from './comment'
 
@@ -15,7 +15,7 @@ const schema = new Schema({
   },
   type: {
     type: String,
-    default: BaseTypes.IBaseTypesType.FILE
+    default: TypesBase.IBaseTypesType.FILE
   },
   cover: {
     type: String,
@@ -65,6 +65,6 @@ const schema = new Schema({
   }
 })
 
-const DocumentModel = model<IDocumentModelType>('Document', schema)
+const DocumentModel = model<TypesDocument.IDocumentModelType>('Document', schema)
 
 export default DocumentModel

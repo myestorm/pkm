@@ -2,6 +2,11 @@ export enum IBaseTypesType {
   FILE = 'file',
   FOLDER = 'folder'
 }
+export enum IClipboardType {
+  NONE,
+  COPY,
+  CUT
+}
 export interface IBaseFieldsType {
   _id: string,
   title: string, // 标题
