@@ -56,16 +56,15 @@ app.use(koaBody({
     keepExtensions: true,
     maxFieldsSize: 5 * 1024 * 1024,
     onFileBegin (name, file) {
-      // 设置上传位置
       const dirName = dayjs(new Date()).format('YYYYMMDD')
       const dir = path.normalize(`${uploadDir}/${dirName}`)
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir)
       }
-      let fileName = path.parse(file.path).base
+      let fileName = path.parse(file.newFilename).base
       fileName = fileName.replace(/^upload_/, '')
-      file.name = fileName
-      file.path = `${dir}/${fileName}`
+      file.newFilename = fileName
+      file.filepath = `${dir}/${fileName}`
     }
   },
   parsedMethods: ['POST', 'PUT', 'PATCH', 'GET', 'HEAD', 'DELETE']

@@ -1,7 +1,7 @@
 import { Context, Next } from 'koa'
 import mongoose, { Schema } from 'mongoose'
 import mongoConfig from '../.mongo.config'
-import * as TypesAdmin from '../../types/admin'
+import * as TypesAdmin from '../types/admin'
 
 interface IUserType {
   id: string
@@ -34,9 +34,9 @@ mongoose.connection.on('error', console.error)
 
 export default () => {
   return async (ctx: Context, next: Next) => {
-    const userinfo = ctx.state.userinfo as TypesAdmin.IApiAdminReurnType
+    const userinfo = ctx.state.userinfo as TypesAdmin.IAdminType
     if (userinfo?._id) {
-      user.id = userinfo._id
+      user.id = userinfo._id.toString()
     }
     await next()
   }
