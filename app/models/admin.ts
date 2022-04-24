@@ -1,5 +1,5 @@
 import { Schema, model, now } from 'mongoose'
-import { IModelAdminType } from '../../types/admin'
+import * as TypesAdmin from '../types/admin'
 
 const schema = new Schema({
   username: {
@@ -56,6 +56,6 @@ const schema = new Schema({
   }
 })
 
-const AdminModel = model<IModelAdminType>('Admin', schema)
+const AdminModel = model<TypesAdmin.IAdminModelType>('Admin', schema)
 
 export default AdminModel

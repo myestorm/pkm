@@ -194,7 +194,7 @@ export default class DocumentRouter {
   @post('/copy')
   async DocumentCopy (ctx: Context, next: Next) {
     const { id, directory } = ctx.request.body as { id: string, directory: string[] }
-    const result = await document.copy(id, directory)
+    const result = await document.copyDocument(id, directory)
     const body: TypesBase.IResponeBodyType<boolean> = {
       code: 0,
       msg: 'success',

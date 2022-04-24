@@ -1,14 +1,20 @@
 import { MD5 } from 'crypto-js'
 import jwt from 'jsonwebtoken'
 import Admin from '../models/admin'
-import * as TypesAdmin from '../../types/admin'
+
+import * as TypesAdmin from '../types/admin'
+
 import BaseController from '../core/controller'
 
-class AdminController extends BaseController {
+class AdminController extends BaseController<TypesAdmin.IAdminModelType> {
+
+  constructor () {
+    super(Admin)
+  }
 
   // 登录
   async signin (data: TypesAdmin.ISigninType, secret: string): Promise<string | null> {
-    const result = await Admin.findOne({
+    const result = await this.model.findOne({
       username: data.username,
       password: MD5(data.password).toString(),
       status: 1
@@ -35,43 +41,19 @@ class AdminController extends BaseController {
       [key: string]: unknown
     } = {}
     condition[key] = value
-    const info = await Admin.findOne(condition)
+    const info = await this.model.findOne(condition)
     return Boolean(info && info._id)
   }
 
   // 添加
-  async add (data: TypesAdmin.IControllerAdminAddType): Promise<string> {
+  async addAdmin (data: TypesAdmin.IAdminAddType): Promise<string> {
     data.password = MD5(data.password).toString()
-    const item = await Admin.create(data)
+    const item = await this.model.create(data)
     return item._id.toString()
   }
 
-  // 删除
-  async remove (id: string): Promise<string> {
-    const result = await Admin.findByIdAndRemove(id)
-    return result?._id.toString() || ''
-  }
-
-  // 更新
-  async update (id: string, data: TypesAdmin.IControllerAdminAddType): Promise<string> {
-    const result = await Admin.findByIdAndUpdate(id, data, { 
-      new: true, 
-      upsert: true,
-      runValidators: true, 
-      findByIdAndUpdate: 'after' 
-    })
-    return result._id.toString()
-  }
-
-  // 查询信息
-  async info (id: string): Promise<TypesAdmin.IControllerAdminReurnType | null> {
-    return await Admin.findById(id, {
-      password: 0
-    })
-  }
-
   // 条件查询用户
-  async infoCondition (condition: TypesAdmin.IControllerQueryCondition): Promise<TypesAdmin.IControllerAdminReurnType | null> {
+  async infoCondition (condition: TypesAdmin.IQueryCondition): Promise<TypesAdmin.IAdminType | null> {
     if (condition.password) {
       condition.password = MD5(condition.password).toString()
     }
@@ -80,20 +62,20 @@ class AdminController extends BaseController {
     })
   }
 
-  // 所有用户
-  async list (): Promise<TypesAdmin.IControllerAdminReurnType[]> {
-    const list = await Admin.find({}, '-password').sort({
-      _id: -1
-    })
-    return list
-  }
+  // // 所有用户
+  // async list (): Promise<TypesAdmin.IAdminType[]> {
+  //   const list = await Admin.find({}, '-password').sort({
+  //     _id: -1
+  //   })
+  //   return list
+  // }
 
   // 重置密码
   async resetPassword (id: string, updatedBy: string): Promise<string> {
     const pwd = '123456!@#$'
     let password = MD5(pwd).toString()
     password = MD5(password).toString()
-    await Admin.findByIdAndUpdate(id, { password, updatedBy }, { 
+    await this.model.findByIdAndUpdate(id, { password, updatedBy }, { 
       new: true, 
       upsert: true,
       runValidators: true, 
@@ -104,7 +86,7 @@ class AdminController extends BaseController {
 
   // 修改用户状态 0 禁用 1 启用
   async disabled (id: string, status: number, updatedBy: string): Promise<string> {
-    await Admin.findByIdAndUpdate(id, { status, updatedBy }, { 
+    await this.model.findByIdAndUpdate(id, { status, updatedBy }, { 
       new: true, 
       upsert: true,
       runValidators: true, 
@@ -116,7 +98,7 @@ class AdminController extends BaseController {
   // 修改自己的密码
   async updateSelfPassword (id: string, password: string): Promise<string> {
     const _password = MD5(password).toString()
-    await Admin.findByIdAndUpdate(id, {
+    await this.model.findByIdAndUpdate(id, {
       password: _password
     }, { 
       new: true, 
@@ -128,8 +110,8 @@ class AdminController extends BaseController {
   }
 
   // 修改自己的账号信息
-  async updateSelf (id: string, data: TypesAdmin.IApiAdminUpdateSelfInfoType): Promise<string> {
-    const _data: TypesAdmin.IApiAdminUpdateSelfInfoType = {}
+  async updateSelf (id: string, data: TypesAdmin.IAdminUpdateSelfInfoType): Promise<string> {
+    const _data: TypesAdmin.IAdminUpdateSelfInfoType = {}
     if (data.avatar) {
       _data.avatar = data.avatar
     }
@@ -142,7 +124,7 @@ class AdminController extends BaseController {
     if (data.email) {
       _data.email = data.email
     }
-    await Admin.findByIdAndUpdate(id, _data, { 
+    await this.model.findByIdAndUpdate(id, _data, { 
       new: true, 
       upsert: true,
       runValidators: true, 

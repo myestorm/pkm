@@ -1,5 +1,8 @@
 import { Schema, model, now } from 'mongoose'
-import { IBookModelType } from '../../types/book'
+
+import * as TypesBook from '../types/book'
+import commentSchema from './base/comment'
+import { baseDef } from './base/base'
 
 export const noteSchema = new Schema({
   content: {
@@ -30,22 +33,8 @@ export const noteSchema = new Schema({
 })
 
 export const schema = new Schema({
-  title: {
-    type: String,
-    required: true
-  },
-  author: {
-    type: String,
-    default: ''
-  },
-  cover: {
-    type: String,
-    default: ''
-  },
-  desc: {
-    type: String,
-    default: ''
-  },
+  ...baseDef,
+
   readed: { // 已读
     type: Boolean,
     default: false
@@ -62,28 +51,12 @@ export const schema = new Schema({
     type: String,
     default: ''
   },
-  tags: [],
   rating: { // 喜欢程度 1 看不懂 2 一般 3 喜欢 4 很喜欢 5 超爱
     type: Number,
     default: 3
   },
   notes: [noteSchema],
-  createdAt: {
-    type: Date,
-    default: now()
-  },
-  createdBy: {
-    type: String,
-    default: ''
-  },
-  updatedAt: {
-    type: Date,
-    default: now()
-  },
-  updatedBy: {
-    type: String,
-    default: ''
-  }
+  comments: [commentSchema]
 }, {
   timestamps: { 
     createdAt: 'createdAt',
@@ -91,6 +64,6 @@ export const schema = new Schema({
   }
 })
 
-const BookModel = model<IBookModelType>('Book', schema)
+const BookModel = model<TypesBook.IBookModelType>('Book', schema)
 
 export default BookModel

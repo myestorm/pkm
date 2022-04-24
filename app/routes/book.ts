@@ -1,8 +1,9 @@
 import { Context, Next } from 'koa'
 import { prefix, get, post, put, del } from '../core/router'
 
-import * as TypesBook from '../../types/book'
-import { IResponeBodyType, IResponePageBodyType, IPageType } from '../../types/index'
+import * as TypesBase from '../types/base'
+import * as TypesBook from '../types/book'
+
 import Book from '../controllers/book'
 
 const book = new Book()
@@ -12,9 +13,9 @@ export default class User {
 
   @post('/add')
   async BookAdd (ctx: Context, next: Next) {
-    const _body = ctx.request.body as TypesBook.IBookRouteAddType
+    const _body = ctx.request.body as TypesBook.IBookAddType
     const result = await book.add(_body)
-    const body: IResponeBodyType<TypesBook.IBookDataType> = {
+    const body: TypesBase.IResponeBodyType<TypesBook.IBookType> = {
       code: 0,
       msg: 'success',
       data: result
@@ -25,12 +26,12 @@ export default class User {
 
   @put('/update')
   async BookUpdate (ctx: Context, next: Next) {
-    const _body = ctx.request.body as TypesBook.IBookRouteUpdateType
+    const _body = ctx.request.body as TypesBook.IDocumentAddRouteType
     const info = await book.info(_body._id)
     if (info) {
       const __body = Object.assign(info, _body)
-      const result = await book.update(__body)
-      const body: IResponeBodyType<TypesBook.IBookDataType | null> = {
+      const result = await book.update(_body._id, __body)
+      const body: TypesBase.IResponeBodyType<TypesBook.IBookType | null> = {
         code: 0,
         msg: 'success',
         data: result
@@ -77,7 +78,7 @@ export default class User {
     const { id = '' } = ctx.params
     if (id) {
       const result = await book.info(id)
-      const body: IResponeBodyType<TypesBook.IBookDataType | null> = {
+      const body: TypesBase.IResponeBodyType<TypesBook.IBookType | null> = {
         code: 0,
         msg: 'success',
         data: result
@@ -94,8 +95,8 @@ export default class User {
 
   @post('/list')
   async BookList (ctx: Context, next: Next) {
-    const result = await book.list()
-    const body: IResponeBodyType<TypesBook.IBookDataType[]> = {
+    const result = await book.list({})
+    const body: TypesBase.IResponeBodyType<TypesBook.IBookType[]> = {
       code: 0,
       msg: 'success',
       data: result
@@ -106,9 +107,9 @@ export default class User {
 
   @post('/list/page')
   async BookListPage (ctx: Context, next: Next) {
-    const _body = ctx.request.body as IPageType<{}>
-    const result = await book.listPage(_body.page, _body.pagesize)
-    const body: IResponeBodyType<IResponePageBodyType<TypesBook.IBookDataType>> = {
+    const _body = ctx.request.body as TypesBase.IPageType<{}>
+    const result = await book.listPage(_body.page, _body.pagesize, {})
+    const body: TypesBase.IResponeBodyType<TypesBase.IResponePageBodyType<TypesBook.IBookType>> = {
       code: 0,
       msg: 'success',
       data: result
@@ -121,7 +122,7 @@ export default class User {
   async BookSearch (ctx: Context, next: Next) {
     const { keyword = '' } = ctx.params
     const result = await book.search(keyword)
-    const body: IResponeBodyType<TypesBook.IBookDataType[]> = {
+    const body: TypesBase.IResponeBodyType<TypesBook.IBookType[]> = {
       code: 0,
       msg: 'success',
       data: result
@@ -139,9 +140,9 @@ export default class User {
         msg: '参数不正确'
       }
     } else {
-      const _body = ctx.request.body as TypesBook.INoteControlAddType
+      const _body = ctx.request.body as TypesBook.INoteAddType
       const result = await book.addNote(bookId, _body)
-      const body: IResponeBodyType<TypesBook.INoteControlReurnType | null> = {
+      const body: TypesBase.IResponeBodyType<TypesBook.INoteType | null> = {
         code: 0,
         msg: 'success',
         data: result
@@ -160,11 +161,11 @@ export default class User {
         msg: '参数不正确'
       }
     } else {
-      const _body = ctx.request.body as TypesBook.INoteControlAddType
+      const _body = ctx.request.body as TypesBook.INoteAddType
       const info = await book.noteInfo(bookId, noteId)
       if (info) {
         const result = await book.updateNote(bookId, noteId, _body)
-        const body: IResponeBodyType<TypesBook.INoteControlReurnType | null> = {
+        const body: TypesBase.IResponeBodyType<TypesBook.INoteType | null> = {
           code: 0,
           msg: 'success',
           data: result
