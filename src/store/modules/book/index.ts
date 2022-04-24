@@ -1,48 +1,74 @@
 import { defineStore } from 'pinia'
-import { BookState, FormType } from './types'
+import { BookState } from './types'
 
-const formDefault = {
+import * as TypesBase from '@/types/base'
+import * as TypesBook from '@/types/book'
+
+import * as Apis from '@/apis/book'
+
+const formDefault: TypesBook.IBookFormType = {
   _id: '',
   title: '',
-  author: '',
+  directory: [],
+  type: TypesBase.IBaseTypesType.FILE,
   cover: '',
   desc: '',
+  tags: [],
+  author: '',
   readed: false,
   heard: false,
   purchased: false,
   ISBN: '',
-  tags: [],
   rating: 3
+}
+
+const bookDefault: TypesBook.IBookType = {
+  ...formDefault,
+  top: false,
+  order: 99,
+  notes: [],
+  comments: [],
+  createdAt: new Date(),
+  createdBy: '',
+  updatedAt: new Date(),
+  updatedBy: ''
 }
 
 const useStore = defineStore('book', {
   state: (): BookState => ({
+    currentId: '',
+    directory: [],
     list: [],
     keyword: '',
-    id: '',
-    fileFormVisible: false,
-    fileFormInitValue: {
-      ...formDefault
-    }
+
+    bookFormDrawerId: '',
+    bookFormDrawerType: TypesBase.IBaseTypesType.FILE,
+    bookFormDrawerVisible: false,
+    
+    clipboard: null,
+    clipboardType: TypesBase.IClipboardType.NONE
   }),
 
   getters: {
     getFormDefault: () => {
-      return formDefault
+      return {
+        ...formDefault
+      }
+    },
+    getBookDefault: () => {
+      return {
+        ...bookDefault
+      }
     }
   },
 
   actions: {
-    setFormDefault () {
-      this.fileFormInitValue = {
-        ...formDefault
-      }
+    submit (postData: TypesBook.IBookFormType) {
+      return Apis.BookAdd(postData)
     },
-    setFormValue (data: FormType) {
-      this.fileFormInitValue = {
-        ...data
-      }
-    }
+    info (id: string) {
+      return Apis.BookInfo(id)
+    },
   }
 })
 export default useStore

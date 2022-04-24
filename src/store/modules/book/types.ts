@@ -1,9 +1,16 @@
+import * as TypesBase from '@/types/base'
 import * as TypesBook from '@/types/book'
-export type FormType = TypesBook.IBookDataFormType
+
 export type BookState = {
+  currentId: string,
+  directory: string[],
   list: TypesBook.IBookType[],
   keyword: string,
-  id: string,
-  fileFormVisible: boolean,
-  fileFormInitValue: FormType
+
+  bookFormDrawerId: string,
+  bookFormDrawerType: TypesBase.IBaseTypesType,
+  bookFormDrawerVisible: boolean,
+
+  clipboard: TypesBook.IBookType | null,
+  clipboardType: TypesBase.IClipboardType
 }

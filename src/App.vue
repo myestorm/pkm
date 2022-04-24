@@ -4,7 +4,7 @@
   </div>
 </template>
 <script lang="ts">
-import './assets/scss/app.scss'
+import '@/assets/scss/app.scss'
 import { defineComponent, ref } from 'vue'
 import { useRoute } from 'vue-router'
 

@@ -50,8 +50,8 @@
           <markdown-editor v-model="value" @toolbarItemAction="saveEditor" height="calc(100vh - 98px)" />
         </div>
       </pkm-spin>
-      <document-form-drawer width="420px" :id="documentFormDrawerId" :type="documentFormDrawerType" :directory="directory" v-model="documentFormDrawerVisible" @done="drawerDone" />
     </pkm-layout-content>
+    <document-form-drawer width="420px" :id="documentFormDrawerId" :type="documentFormDrawerType" :directory="directory" v-model="documentFormDrawerVisible" @done="drawerDone" />
   </pkm-layout>
 </template>
 <script lang="ts">
@@ -61,8 +61,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 
 import MarkdownEditor from '@/components/pkm-editor/markdown.vue'
-import DocumentFormDrawer from '@/components/document/form-drawer.vue'
-import DocumentSideList from './document/document-side-list.vue'
+import DocumentFormDrawer from '@/components/pkm-document/form-drawer.vue'
+import DocumentSideList from './document/side-list.vue'
 
 import '@/assets/scss/github-markdown.scss'
 

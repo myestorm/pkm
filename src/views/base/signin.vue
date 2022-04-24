@@ -24,8 +24,8 @@ import { MD5 } from 'crypto-js'
 import { ValidatedError } from '@arco-design/web-vue/es/form/interface'
 import { FormInstance } from '@arco-design/web-vue/es/form'
 import { useRoute } from 'vue-router'
-import useAdminStore from '../../store/modules/admin/index'
-import TotonooLogo from '../../components/totonoo-logo/index.vue'
+import useAdminStore from '@/store/modules/admin/index'
+import TotonooLogo from '@/components/totonoo-logo/index.vue'
 
 export default defineComponent({
   components: {

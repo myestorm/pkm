@@ -7,7 +7,7 @@ import * as TypesBook from '../types/book'
 const prefix = '/api/book'
 
 // 添加书籍
-export const BookAdd = (postData: TypesBook.IBookAddType, options?: AxiosRequestConfig): Promise<TypesBase.IResponeBodyType<TypesBook.IBookType[]>> => {
+export const BookAdd = (postData: TypesBook.IBookFormType, options?: AxiosRequestConfig): Promise<TypesBase.IResponeBodyType<TypesBook.IBookType[]>> => {
   return axios.post(`${prefix}/add`, postData, {
     ...options
   })
