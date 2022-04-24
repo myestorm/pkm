@@ -3,10 +3,10 @@ import Pclayout from '@/components/layout/pc-layout.vue'
 import home from '@/views/computer/home.vue'
 import document from '@/views/computer/document.vue'
 
-import book from '../../views/computer/book.vue'
-import bookView from '../../views/computer/book-view.vue'
-import setting from '../../views/computer/setting.vue'
-import userinfo from '../../views/computer/userinfo.vue'
+import book from '@/views/computer/book.vue'
+import bookView from '@/views/computer/book-view.vue'
+import setting from '@/views/computer/setting.vue'
+import userinfo from '@/views/computer/userinfo.vue'
 
 const prefix = '/p'
 

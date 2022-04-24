@@ -20,7 +20,8 @@
 			"./node_modules/@totonoo/vue-codemirror",
 			"./node_modules/@arco-design/web-vue",
       "./node_modules/@types",
-      "./app/types"
+      "./app/types",
+      "./src/types"
     ],
     "paths": {
       "@/*": ["./src/*", "./dist/*"]

@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia'
 import { AdminState } from './types'
 
-import { localStorageToken } from '../../../config'
-import * as TypesAdmin from '../../../../types/admin'
-import * as ApiAdmin from '../../../apis/admin'
+import { localStorageToken } from '@/config'
+import * as TypesAdmin from '@/types/admin'
+import * as ApiAdmin from '@/apis/admin'
 
 const emptyUserinfo = {
   _id: '',
@@ -73,7 +73,7 @@ const useStore = defineStore('admin', {
       return ApiAdmin.AdminList()
     },
 
-    add (postData: TypesAdmin.IApiAdminAddType) {
+    add (postData: TypesAdmin.IAdminType) {
       return ApiAdmin.AdminAdd(postData)
     },
 
@@ -85,11 +85,11 @@ const useStore = defineStore('admin', {
       return ApiAdmin.AdminDisabled(id, status)
     },
 
-    updateSelfPassword (postData: TypesAdmin.IApiAdminUpdateSelfPasswordType) {
+    updateSelfPassword (postData: TypesAdmin.IAdminUpdateSelfPasswordType) {
       return ApiAdmin.AdminUpdateSelfPassword(postData)
     },
 
-    updateSelfInfo (postData: TypesAdmin.IApiAdminUpdateSelfInfoType) {
+    updateSelfInfo (postData: TypesAdmin.IAdminUpdateSelfInfoType) {
       return ApiAdmin.AdminUpdateSelfInfo(postData)
     }
   }

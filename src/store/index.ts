@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { CommonState } from './types'
-import { localStorageTheme } from '../config/index'
+import { localStorageTheme } from '@/config/index'
 
 const _theme = localStorage.getItem(localStorageTheme) || 'light'
 if (_theme === 'dark') {

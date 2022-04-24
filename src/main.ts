@@ -4,13 +4,13 @@ import ArcoVue from '@arco-design/web-vue'
 import ArcoVueIcon from '@arco-design/web-vue/es/icon'
 import '@arco-design/web-vue/es/index.less'
 
-import Axios from './plugins/axios'
-import Utils from './plugins/utils'
+import Axios from '@/plugins/axios'
+import Utils from '@/plugins/utils'
 
-import Router from './router/index'
+import Router from '@/router/index'
 import { createPinia } from 'pinia'
 
-import App from './App.vue'
+import App from '@/App.vue'
 
 import { registerSW } from 'virtual:pwa-register'
 

@@ -1,15 +1,16 @@
 import { createRouter, createWebHistory, Router, RouteRecordRaw, RouteLocationNormalized } from 'vue-router'
-import useStore from '../store/index'
-import useNavigationStore from '../store/modules/navigation/index'
-import useAdminStore from '../store/modules/admin/index'
-import { breadcrumbType } from '../store/modules/navigation/types'
+import useStore from '@/store/index'
+import useNavigationStore from '@/store/modules/navigation/index'
+import useAdminStore from '@/store/modules/admin/index'
+import { breadcrumbType } from '@/store/modules/navigation/types'
+
 import computer from './computer/index'
 import mobile from './mobile/index'
 
 
-import empty from '../components/layout/empty.vue'
-import signin from '../views/comm/signin.vue'
-import error404 from '../views/error/404.vue'
+import empty from '@/components/layout/empty.vue'
+import signin from '@/views/base/signin.vue'
+import error404 from '@/views/error/404.vue'
 
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'

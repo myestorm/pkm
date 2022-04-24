@@ -1,7 +1,5 @@
-import { HydratedDocument, Types } from 'mongoose'
-
 export interface IAdminType {
-  _id: Types.ObjectId,
+  _id: string,
   username: string,
   password: string,
   avatar: string,
@@ -16,23 +14,19 @@ export interface IAdminType {
   updatedAt: Date
 }
 
-export type ISchemaAdminType = Omit<IAdminType, '_id'>
-export type IAdminModelType = HydratedDocument<
-  ISchemaAdminType
->
-
-export type ISigninType = Pick<IAdminType, 'username' | 'password'>
-export type IAdminAddType = Omit<IAdminType, '_id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'updatedBy'>
-export type IAdminUpdateSelfPasswordType = {
-  oldPassword: string,
-  password: string,
-  repeatPassword: string
-}
-export type IAdminUpdateSelfInfoType = Partial<Pick<IAdminType, 'avatar' | 'nickname' | 'mobile' | 'email'>>
-export type IQueryCondition = Partial<Pick<IAdminType, '_id' | 'username' | 'password' | 'mobile' | 'email' | 'status'>>
-
 export type IUserInfoType = {
   userinfo: IAdminType,
   token: string
 }
 
+export type ISigninType = Pick<IAdminType, 'username' | 'password'>
+
+export type IAdminAddType = Omit<IAdminType, '_id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'updatedBy'>
+
+export type IAdminUpdateSelfPasswordType = {
+  oldPassword: string,
+  password: string,
+  repeatPassword: string
+}
+
+export type IAdminUpdateSelfInfoType = Partial<Pick<IAdminType, 'avatar' | 'nickname' | 'mobile' | 'email'>>

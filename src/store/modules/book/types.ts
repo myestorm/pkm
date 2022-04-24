@@ -1,9 +1,9 @@
-import { IBookDataApiType, IBookDataFormType } from '../../../../types/book'
-export type FormType = IBookDataFormType
+import * as TypesBook from '@/types/book'
+export type FormType = TypesBook.IBookDataFormType
 export type BookState = {
-  list: IBookDataApiType[],
+  list: TypesBook.IBookType[],
   keyword: string,
   id: string,
   fileFormVisible: boolean,
-  fileFormInitValue: IBookDataFormType
+  fileFormInitValue: FormType
 }
