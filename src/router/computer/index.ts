@@ -41,7 +41,7 @@ export default {
     },
     children: []
   }, {
-    path: `${prefix}/book`,
+    path: `${prefix}/book/:id?`,
     name: 'PcBook',
     component: book,
     meta: {
@@ -49,18 +49,7 @@ export default {
       icon: 'icon-bookmark',
       nav: true,
       keepAlive: false
-    },
-    children: [{
-      path: `${prefix}/book/view/:id`,
-      name: 'PcBookView',
-      component: bookView,
-      meta: {
-        title: '查看书籍',
-        icon: 'icon-file',
-        nav: true,
-        keepAlive: false
-      }
-    }]
+    }
   }, {
     path: `${prefix}/userinfo`,
     name: 'PcUserinfo',

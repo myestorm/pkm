@@ -23,3 +23,5 @@ export interface IBookType extends BaseTypes.IBaseFieldsType {
 export type INoteAddType = Pick<INoteType, 'content'>
 export type IBookAddType = Pick<IBookType, 'title' | 'directory' | 'cover' | 'desc' | 'tags' | 'type' | 'author' | 'readed' | 'heard' | 'purchased' | 'ISBN' | 'rating'>
 export type IBookFormType = IBookAddType & { _id: string }
+
+export type IBookQueryType = Partial<IBookType>

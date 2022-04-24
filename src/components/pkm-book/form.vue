@@ -1,34 +1,44 @@
 <template>
   <pkm-spin dot :loading="loading" class="pkm-wh-100">
     <pkm-form ref="formRef" :model="form" label-align="right" :label-col-props="{ span: 4 }" :wrapper-col-props="{ span: 20 }">
-      <pkm-form-item field="title" label="名称" required :rules="[{ required: true, message: '请填写名称'}]">
-        <pkm-input v-model="form.title" placeholder="请填写名称" />
-      </pkm-form-item>
-      <pkm-form-item field="author" label="作者">
-        <pkm-input v-model="form.author" placeholder="请填写作者" />
-      </pkm-form-item>
-      <pkm-form-item field="desc" label="简介">
-        <pkm-textarea v-model="form.desc" placeholder="请填写简介" :max-length="800" show-word-limit />
-      </pkm-form-item>
-      <pkm-form-item field="ISBN" label="ISBN">
-        <pkm-input v-model="form.ISBN" placeholder="请填写ISBN" />
-      </pkm-form-item>
-      <pkm-form-item field="cover" label="封面">
-        <upload-image v-model="form.cover" />
-      </pkm-form-item>
-      <pkm-form-item field="tags" label="标签">
-        <pkm-input-tag v-model="form.tags" placeholder="请填写标签" :max-tag-count="3" allow-clear/>
-      </pkm-form-item>
-      <pkm-form-item field="readed" label="状态">
-        <pkm-space>
-          <pkm-checkbox v-model="form.readed">已读</pkm-checkbox>
-          <pkm-checkbox v-model="form.heard">已听</pkm-checkbox>
-          <pkm-checkbox v-model="form.purchased">已买</pkm-checkbox>
-        </pkm-space>
-      </pkm-form-item>
-      <pkm-form-item field="rating" label="评价">
-        <pkm-rate v-model="form.rating" allow-half allow-clear />
-      </pkm-form-item>
+      <template v-if="formType">
+        <pkm-form-item field="title" label="名称" required :rules="[{ required: true, message: '请填写名称'}]">
+          <pkm-input v-model="form.title" placeholder="请填写名称" />
+        </pkm-form-item>
+        <pkm-form-item field="author" label="作者">
+          <pkm-input v-model="form.author" placeholder="请填写作者" />
+        </pkm-form-item>
+        <pkm-form-item field="desc" label="简介">
+          <pkm-textarea v-model="form.desc" placeholder="请填写简介" :max-length="800" show-word-limit />
+        </pkm-form-item>
+        <pkm-form-item field="ISBN" label="ISBN">
+          <pkm-input v-model="form.ISBN" placeholder="请填写ISBN" />
+        </pkm-form-item>
+        <pkm-form-item field="cover" label="封面">
+          <upload-image v-model="form.cover" />
+        </pkm-form-item>
+        <pkm-form-item field="tags" label="标签">
+          <pkm-input-tag v-model="form.tags" placeholder="请填写标签" :max-tag-count="3" allow-clear/>
+        </pkm-form-item>
+        <pkm-form-item field="readed" label="状态">
+          <pkm-space>
+            <pkm-checkbox v-model="form.readed">已读</pkm-checkbox>
+            <pkm-checkbox v-model="form.heard">已听</pkm-checkbox>
+            <pkm-checkbox v-model="form.purchased">已买</pkm-checkbox>
+          </pkm-space>
+        </pkm-form-item>
+        <pkm-form-item field="rating" label="评价">
+          <pkm-rate v-model="form.rating" allow-half allow-clear />
+        </pkm-form-item>
+      </template>
+      <template v-else>
+        <pkm-form-item field="title" label="名称" required :rules="[{ required: true, message: '请填写名称'}]">
+          <pkm-input v-model="form.title" placeholder="请填写名称" />
+        </pkm-form-item>
+        <pkm-form-item field="desc" label="简介">
+          <pkm-textarea v-model="form.desc" placeholder="请填写简介" :max-length="800" show-word-limit />
+        </pkm-form-item>
+      </template>
     </pkm-form>
   </pkm-spin>
 </template>
@@ -108,7 +118,7 @@ export default defineComponent({
               ...form
             }
             loading.value = true
-            bookStore.submit(postData).then((res) => {
+            bookStore.bookSubmit(postData).then((res) => {
               resolve(res)
             }).catch(err => {
               msg.error(err.message)
@@ -128,7 +138,7 @@ export default defineComponent({
     watchEffect(() => {
       if (props.id) {
         loading.value = true
-        bookStore.info(props.id).then(res => {
+        bookStore.bookInfo(props.id).then(res => {
           if (res.data) {
             setFormValue(res.data)
             ctx.emit('info', res.data)

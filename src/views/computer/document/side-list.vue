@@ -176,7 +176,7 @@ export default defineComponent({
     const router = useRouter()
     const { currentId, currentType, directory, list, keyword, documentFormDrawerId, documentFormDrawerType, documentFormDrawerVisible, clipboard, clipboardType } = storeToRefs(documentStore)
     const loading = ref(false)
-    const breadcrumbs = ref<TypesDocument.IDocumentBreadcrumbType[]>([])
+    const breadcrumbs = ref<TypesBase.IBreadcrumbType[]>([])
 
     const creatDocument = () => {
       documentFormDrawerId.value = ''
@@ -256,10 +256,10 @@ export default defineComponent({
       }
       if (val.length > 0) {
         documentStore.find(val).then(res => {
-          const _data = (res.data || []) as TypesDocument.IDocumentBreadcrumbType[]
-          const _paths: TypesDocument.IDocumentBreadcrumbType[] = []
+          const _data = (res.data || []) as TypesBase.IBreadcrumbType[]
+          const _paths: TypesBase.IBreadcrumbType[] = []
           val.forEach(key => {
-            const item = _data.find((sub: TypesDocument.IDocumentBreadcrumbType) => sub._id === key)
+            const item = _data.find((sub: TypesBase.IBreadcrumbType) => sub._id === key)
             if (item) {
               _paths.push(item)
             }
@@ -329,7 +329,7 @@ export default defineComponent({
       }
     }
 
-    const breadcrumbClick = (item: TypesDocument.IDocumentBreadcrumbType) => {
+    const breadcrumbClick = (item: TypesBase.IBreadcrumbType) => {
       const _directory = [...item.directory]
       _directory.push(item._id)
       directory.value = _directory

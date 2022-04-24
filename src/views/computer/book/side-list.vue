@@ -59,16 +59,20 @@
         <pkm-drag-sort v-model="list" class="file-list" :calcDropPosition="calcDropPosition" @end="dragEndHandler" @contextmenu="contextmenuHandler($event)">
           <template #default="{ item, index }">
             <div class="item" :data-index="index" :key="item._id" :class="[item._id == currentId ? 'current' : '', index % 2 == 0 ? 'odd' : '']">
-              <div class="icon" @click="fileListItemClick(item)">
-                <icon-file :size="24" :strokeWidth="2" v-if="item.type == 'file'" />
+              <div class="icon" :class="[item.type == 'file' ? `image` : '']" @click="fileListItemClick(item)">
+                <img :src="item.cover || '/images/no-book.png'" v-if="item.type == 'file'">
                 <icon-folder :size="24" :strokeWidth="2" v-else />
               </div>
               <div class="info" @click="fileListItemClick(item)">
-                <div class="title">{{ item.title }}</div>
-                <div class="desc">{{ subStr(item.desc, 54) }}</div>
-                <div class="day">
-                  {{ dayjs(item.updatedAt).format('YYYY-MM-DD HH:mm') }}
-                </div>
+                <template v-if="item.type == 'file'">
+                  <div class="title" :title="item.title">{{ subStr(item.title, 16) }}</div>
+                  <div class="author" :title="item.author">{{ subStr(item.author, 20) }}</div>
+                  <div class="desc">{{ subStr(item.desc, 58) }}</div>
+                </template>
+                <template v-else>
+                  <div class="title">{{ item.title }}</div>
+                  <div class="desc">{{ subStr(item.desc, 54) }}</div>
+                </template>
               </div>
               <div class="action">
                 <pkm-dropdown position="br">
@@ -154,9 +158,9 @@ import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 
 import * as TypesBase from '@/types/base'
-import * as TypesDocument from '@/types/document'
+import * as TypesBook from '@/types/book'
 
-import useDocumentStore from '@/store/modules/document/index'
+import useBookStore from '@/store/modules/book/index'
 
 
 import PkmDragSort, { CalcDropPositionType, DropPositionType } from '@/components/pkm-drag-sort/index.vue'
@@ -172,34 +176,30 @@ export default defineComponent({
     const msg = app?.appContext.config.globalProperties.$message
     const modal = app?.appContext.config.globalProperties.$modal
     const dayjs = app?.appContext.config.globalProperties.$dayjs
-    const documentStore = useDocumentStore()
+    const bookStore = useBookStore()
     const router = useRouter()
-    const { currentId, currentType, directory, list, keyword, documentFormDrawerId, documentFormDrawerType, documentFormDrawerVisible, clipboard, clipboardType } = storeToRefs(documentStore)
+    const { currentId, directory, list, keyword, clipboard, clipboardType } = storeToRefs(bookStore)
     const loading = ref(false)
-    const breadcrumbs = ref<TypesDocument.IDocumentBreadcrumbType[]>([])
+    const breadcrumbs = ref<TypesBase.IBreadcrumbType[]>([])
 
     const creatDocument = () => {
-      documentFormDrawerId.value = ''
-      documentFormDrawerType.value = TypesBase.IBaseTypesType.FILE
-      documentFormDrawerVisible.value = true
+      bookStore.create(TypesBase.IBaseTypesType.FILE)
     }
     const creatFolder = () => {
-      documentFormDrawerId.value = ''
-      documentFormDrawerType.value = TypesBase.IBaseTypesType.FOLDER
-      documentFormDrawerVisible.value = true
+      bookStore.create(TypesBase.IBaseTypesType.FOLDER)
     }
 
     const getList = () => {
-      documentStore.getList({
+      bookStore.bookList({
         directory: directory.value || []
       }).then(res => {
-        list.value = res.data || []
+        list.value = res?.data || []
       }).catch(err => {
         msg.error(err.message)
       })
     }
 
-    const fileListItemClick = (item: TypesDocument.IDocumentType) => {
+    const fileListItemClick = (item: TypesBook.IBookType) => {
       const type = item.type
       if (type === TypesBase.IBaseTypesType.FOLDER) {
         const _directory = [...item.directory]
@@ -207,15 +207,14 @@ export default defineComponent({
         _directory.push(_id)
         directory.value = _directory
       } else if (type === TypesBase.IBaseTypesType.FILE) {
-        router.push(`/p/document/${currentType.value}/${item._id}`)
+        router.push(`/p/book/${item._id}`)
       }
     }
     const backTo = () => {
-      documentStore.backTo()
+      bookStore.backTo()
     }
     const edit = (_id: string) => {
-      documentFormDrawerId.value = _id
-      documentFormDrawerVisible.value = true
+      bookStore.edit(_id)
     }
     const remove = (id: string) => {
       modal.open({
@@ -225,7 +224,7 @@ export default defineComponent({
         simple: true,
         modalClass: ['pkm-modal-simple'],
         onOk () {
-          documentStore.remove(id).then(_ => {
+          bookStore.bookRemove(id).then(_ => {
             getList()
           }).catch(err => {
             msg.error(err.message)
@@ -236,8 +235,8 @@ export default defineComponent({
     const searchHandler = () => {
       if (keyword.value) {
         loading.value = true
-        const conditions = [...directory.value]
-        documentStore.search(keyword.value, conditions).then(res => {
+        const _directory = [...directory.value]
+        bookStore.bookSearch(keyword.value, _directory).then(res => {
           list.value = res.data || []
         }).catch(_ => {
           list.value = []
@@ -255,11 +254,11 @@ export default defineComponent({
         getList()
       }
       if (val.length > 0) {
-        documentStore.find(val).then(res => {
-          const _data = (res.data || []) as TypesDocument.IDocumentBreadcrumbType[]
-          const _paths: TypesDocument.IDocumentBreadcrumbType[] = []
+        bookStore.bookBreadcrumbs(val).then(res => {
+          const _data = (res.data || []) as TypesBase.IBreadcrumbType[]
+          const _paths: TypesBase.IBreadcrumbType[] = []
           val.forEach(key => {
-            const item = _data.find((sub: TypesDocument.IDocumentBreadcrumbType) => sub._id === key)
+            const item = _data.find((sub: TypesBase.IBreadcrumbType) => sub._id === key)
             if (item) {
               _paths.push(item)
             }
@@ -305,8 +304,8 @@ export default defineComponent({
       dragIndex: number, 
       dropIndex: number, 
       dropPosition: DropPositionType, 
-      oldList: TypesDocument.IDocumentType[], 
-      list: TypesDocument.IDocumentType[]
+      oldList: TypesBook.IBookType[], 
+      list: TypesBook.IBookType[]
     }) => {
       const { dragIndex, dropIndex, dropPosition, oldList, list } = data
       const dragItem = oldList[dragIndex]
@@ -314,14 +313,14 @@ export default defineComponent({
       if (dropPosition === 0) { // 转移目录
         const _directory = [...dropItem.directory]
         _directory.push(dropItem._id)
-        documentStore.move({ id: dragItem._id, directory: _directory }).then(_ => {
+        bookStore.bookMove({ id: dragItem._id, directory: _directory }).then(_ => {
           getList()
         }).catch(err => {
           msg.error(err.message)
         })
       } else { // 排序
         const _order = dropItem.order + dropPosition
-        documentStore.order({ id: dragItem._id, order: _order }).then(_ => {
+        bookStore.bookOrder({ id: dragItem._id, order: _order }).then(_ => {
           getList()
         }).catch(err => {
           msg.error(err.message)
@@ -329,7 +328,7 @@ export default defineComponent({
       }
     }
 
-    const breadcrumbClick = (item: TypesDocument.IDocumentBreadcrumbType) => {
+    const breadcrumbClick = (item: TypesBase.IBreadcrumbType) => {
       const _directory = [...item.directory]
       _directory.push(item._id)
       directory.value = _directory
@@ -364,7 +363,7 @@ export default defineComponent({
       if (clipboard.value?._id) {
         switch (clipboardType.value) {
           case TypesBase.IClipboardType.CUT: {
-            documentStore.move({
+            bookStore.bookMove({
               id: clipboard.value._id, 
               directory: [...directory.value]
             }).then(_ => {
@@ -381,7 +380,7 @@ export default defineComponent({
               id: clipboard.value._id, 
               directory: [...directory.value]
             }
-            documentStore.copy(postData).then(_ => {
+            bookStore.bookCopy(postData).then(_ => {
               clipboard.value = null
               clipboardType.value = TypesBase.IClipboardType.NONE
               getList()
@@ -400,7 +399,6 @@ export default defineComponent({
       dayjs,
       keyword,
       directory,
-      documentFormDrawerVisible,
 
       creatDocument,
       creatFolder,

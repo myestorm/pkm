@@ -62,35 +62,35 @@ class DocumentController extends BaseController<TypesDocument.IDocumentModelType
   //   return res
   // }
 
-  async search (keyword: string, directory: string[] = []): Promise<TypesDocument.IDocumentType[]> {
-    const reg = new RegExp(keyword, 'gmi')
-    const and = []
-    and.push({
-      type: 'file'
-    })
-    if (directory.length > 0) {
-      and.push({
-        directory: {
-          $in: directory
-        }
-      })
-    }
+  // async search (keyword: string, directory: string[] = []): Promise<TypesDocument.IDocumentType[]> {
+  //   const reg = new RegExp(keyword, 'gmi')
+  //   const and = []
+  //   and.push({
+  //     type: 'file'
+  //   })
+  //   if (directory.length > 0) {
+  //     and.push({
+  //       directory: {
+  //         $in: directory
+  //       }
+  //     })
+  //   }
 
-    const params = {
-      $or: [
-        { title: { $regex : reg } },
-        { desc: { $regex : reg } },
-        { tags: { $regex : reg } }
-        // { content: { $regex : reg } }
-      ],
-      $and: and
-    }
-    const list = await Document.find(params).sort({
-      _id: -1
-    })
-    list.sort(this.sortMethod)
-    return list
-  }
+  //   const params = {
+  //     $or: [
+  //       { title: { $regex : reg } },
+  //       { desc: { $regex : reg } },
+  //       { tags: { $regex : reg } }
+  //       // { content: { $regex : reg } }
+  //     ],
+  //     $and: and
+  //   }
+  //   const list = await Document.find(params).sort({
+  //     _id: -1
+  //   })
+  //   list.sort(this.sortMethod)
+  //   return list
+  // }
 
   async count (id: string): Promise<number> {
     const total = await Document.find({

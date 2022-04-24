@@ -35,6 +35,10 @@ export const noteSchema = new Schema({
 export const schema = new Schema({
   ...baseDef,
 
+  author: {
+    type: String,
+    default: ''
+  },
   readed: { // 已读
     type: Boolean,
     default: false

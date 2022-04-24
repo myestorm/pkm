@@ -32,7 +32,7 @@ export type IBookModelType = HydratedDocument<
 >
 
 export type IBookAddType = Pick<IBookType, 'title' | 'directory' | 'cover' | 'desc' | 'tags' | 'type' | 'author' | 'readed' | 'heard' | 'purchased' | 'ISBN' | 'rating'>
-export type IDocumentPartialType = Partial<IBookType>
+export type IBookQueryType = Partial<IBookType>
 export type INoteAddType = Pick<INoteType, 'content'>
 
-export type IDocumentAddRouteType = IBookAddType & { _id: string }
+export type IBookFormType = IBookAddType & { _id: string }

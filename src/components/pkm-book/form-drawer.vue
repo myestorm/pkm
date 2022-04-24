@@ -58,7 +58,7 @@ export default defineComponent({
 
     const infoHandler = (data: TypesBook.IBookType) => {
       const _prefix = '编辑'
-      const _title = data.type === TypesBase.IBaseTypesType.FILE ? '文档' : '目录'
+      const _title = data.type === TypesBase.IBaseTypesType.FILE ? '书籍' : '目录'
       title.value = _prefix + _title
     }
     const handleOk = () => {
@@ -76,7 +76,7 @@ export default defineComponent({
 
     watchEffect(() => {
       const _prefix = props.id ? '编辑' : '新建'
-      const _title = props.type === TypesBase.IBaseTypesType.FILE ? '文档' : '目录'
+      const _title = props.type === TypesBase.IBaseTypesType.FILE ? '书籍' : '目录'
       title.value = _prefix + _title
     })
 

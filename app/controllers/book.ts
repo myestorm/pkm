@@ -9,22 +9,52 @@ class BookController extends BaseController<TypesBook.IBookModelType> {
     super(Book)
   }
 
-  async search (keyword: string): Promise<TypesBook.IBookType[]> {
-    const reg = new RegExp(keyword, 'gmi')
+  async copyBook (id: string, directory: string[] = []): Promise<boolean> {
+    const result = this.copy(id, directory, (data: TypesBook.IBookType) => {
+      return {
+        _id: data._id,
+        title: data.title,
+        directory: data.directory,
+        type: data.type,
+        cover: data.cover,
+        desc: data.desc,
+        tags: data.tags,
+        top: data.top,
+        order: data.order,
+        comments: [],
+        notes: data.notes,
+        createdBy: data.createdBy,
+        createdAt: data.createdAt,
+        updatedBy: data.updatedBy,
+        updatedAt: data.updatedAt,
 
-    const params = {
-      $or: [
-        { title: { $regex: reg } },
-        { desc: { $regex: reg } },
-        { tags: { $regex: reg } }
-      ]
-    }
-    const list = await this.model.find(params, '_id title desc author cover').sort({
-      _id: -1
+        author: data.author,
+        readed: data.readed,
+        heard: data.heard,
+        purchased: data.purchased,
+        ISBN: data.ISBN,
+        rating: data.rating
+      }
     })
-    list.sort(this.sortMethod)
-    return list
+    return result
   }
+
+  // async search (keyword: string): Promise<TypesBook.IBookType[]> {
+  //   const reg = new RegExp(keyword, 'gmi')
+
+  //   const params = {
+  //     $or: [
+  //       { title: { $regex: reg } },
+  //       { desc: { $regex: reg } },
+  //       { tags: { $regex: reg } }
+  //     ]
+  //   }
+  //   const list = await this.model.find(params, '_id title desc author cover').sort({
+  //     _id: -1
+  //   })
+  //   list.sort(this.sortMethod)
+  //   return list
+  // }
 
   async addNote (bookId: string, data: TypesBook.INoteAddType): Promise<TypesBook.INoteType | null> {
     const book = await this.model.findById(bookId)

@@ -63,10 +63,50 @@ const useStore = defineStore('book', {
   },
 
   actions: {
-    submit (postData: TypesBook.IBookFormType) {
+    backTo () {
+      let _directory = [...this.directory]
+      _directory.pop()
+      this.directory = [..._directory]
+    },
+    create (type: TypesBase.IBaseTypesType) {
+      this.bookFormDrawerId = ''
+      this.bookFormDrawerType = type
+      this.bookFormDrawerVisible = true
+    },
+    edit (id: string) {
+      this.bookFormDrawerId = id
+      this.bookFormDrawerVisible = true
+    },
+    bookList (query: TypesBook.IBookQueryType) {
+      return Apis.BookList(query)
+    },
+    bookRemove (id: string) {
+      return Apis.BookRemove(id)
+    },
+    bookSearch (keyword: string, directory: string[]) {
+      return Apis.BookSearch({
+        keyword, 
+        directory
+      })
+    },
+    bookBreadcrumbs (ids: string[]) {
+      return Apis.BookBreadcrumbs({
+        ids
+      })
+    },
+    bookMove (postData: { id: string, directory: string[] }) {
+      return Apis.BookMove(postData)
+    },
+    bookCopy (postData: { id: string, directory: string[] }) {
+      return Apis.BookCopy(postData)
+    },
+    bookOrder (postData: { id: string, order: number }) {
+      return Apis.BookOrder(postData)
+    },
+    bookSubmit (postData: TypesBook.IBookFormType) {
       return Apis.BookAdd(postData)
     },
-    info (id: string) {
+    bookInfo (id: string) {
       return Apis.BookInfo(id)
     },
   }

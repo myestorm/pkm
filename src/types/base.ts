@@ -56,3 +56,10 @@ export interface IFileUploadType {
   domain: string,
   filepath: string
 }
+
+export interface ISearchParamsType {
+  keyword: string,
+  directory: string[]
+}
+
+export type IBreadcrumbType = Pick<IBaseFieldsType, '_id' | 'directory' | 'title'>

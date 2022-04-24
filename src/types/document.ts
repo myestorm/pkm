@@ -9,4 +9,3 @@ export type IDocumentFileFormType = Pick<IDocumentType, '_id' | 'directory' | 't
 export type IDocumentFolderFormType = Pick<IDocumentType, '_id' | 'directory' | 'title' | 'desc' | 'type'>
 
 export type IDocumentListType = Partial<IDocumentType>
-export type IDocumentBreadcrumbType = Pick<IDocumentType, '_id' | 'directory' | 'title'>

@@ -34,6 +34,44 @@ class BaseController<T> {
     return await this.model.findById(id)
   }
 
+  async search (keyword: string, directory: string[] = []): Promise<T[]> {
+    const reg = new RegExp(keyword, 'gmi')
+    const and = []
+    and.push({
+      type: TypesBase.IBaseTypesType.FILE
+    })
+    if (directory.length > 0) {
+      and.push({
+        directory: {
+          $in: directory
+        }
+      })
+    }
+    const params = {
+      $or: [
+        { title: { $regex : reg } },
+        { desc: { $regex : reg } },
+        { tags: { $regex : reg } }
+        // { content: { $regex : reg } }
+      ],
+      $and: and
+    }
+    const list = await this.model.find(params, '_id title directory tags cover desc').sort({
+      _id: -1
+    })
+    list.sort(this.sortMethod)
+    return list
+  }
+
+  async breadcrumbs (ids: string[]): Promise<T[]> {
+    const list = await this.model.find({
+      _id: {
+        $in: ids
+      }
+    }, '_id title directory')
+    return list
+  }
+
   async list<A> (filter: A): Promise<T[]> {
     const list = await this.model.find(filter).sort({
       _id: -1
