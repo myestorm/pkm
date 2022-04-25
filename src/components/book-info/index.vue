@@ -80,12 +80,11 @@
 import { defineComponent, getCurrentInstance, reactive, ref, PropType, CSSProperties } from 'vue'
 
 import BookForm from '../book-form/index.vue'
-import Md2html from '../editor/parser/md2html'
-import MarkdownEditor from '../editor/markdown.vue'
-import type { ToolbarItemType } from '@totonoo/vue-codemirror/dist_types/components/editor/markdown/toolbar'
-import { IBookDataApiType } from '../../../types/book'
+import MarkdownEditor from '../pkm-editor/markdown.vue'
+import * as MDEditor from '@totonoo/vue-codemirror'
+import * as TypesBook from '@/types/book'
 
-import { BookInfo, NoteAdd, NoteUpdate, NoteRemove } from '../../apis/book'
+import useBookStore from '@/store/modules/book/index'
 
 export interface BookInfoPropType {
   drawerWidth: CSSProperties['width'],
@@ -113,27 +112,12 @@ export default defineComponent({
     const formatTime = app?.appContext.config.globalProperties.$formatTime
     const msg = app?.appContext.config.globalProperties.$message
     const modal = app?.appContext.config.globalProperties.$modal
+    const bookStore = useBookStore()
     
-    const formDefault = {
-      _id: '',
-      title: '',
-      author: '',
-      cover: '',
-      desc: '',
-      readed: false,
-      heard: false,
-      purchased: false,
-      ISBN: '',
-      tags: [],
-      rating: 3,
-      notes: [], 
-      createdAt: new Date(), 
-      createdBy: '', 
-      updatedAt: new Date(), 
-      updatedBy: ''
-    }
-    const pageData = reactive<IBookDataApiType>(formDefault)
-    const setPageDataValue = (data: IBookDataApiType) => {
+    const pageData = reactive<TypesBook.IBookType>({
+      ...bookStore.getBookDefault
+    })
+    const setPageDataValue = (data: TypesBook.IBookType) => {
       pageData._id = data._id
       pageData.title = data.title
       pageData.author = data.author
@@ -152,7 +136,7 @@ export default defineComponent({
       pageData.updatedBy = data.updatedBy
     }
     const getInfo = (id: string) => {
-      BookInfo(id).then(res => {
+      bookStore.bookInfo(id).then(res => {
         if (res.data) {
           setPageDataValue(res.data)
           ctx.emit('getInfo', pageData)
@@ -177,13 +161,13 @@ export default defineComponent({
     const hideDrawer = () => {
       visible.value = false
     }
-    const toolbarItemAction = (item: ToolbarItemType) => {
+    const toolbarItemAction = (item: MDEditor.ToolbarItemType) => {
       if (item.type === 'Save') {
         const postData = {
           content: editorValue.value
         }
         loading.value = true
-        const actions = nid.value ? NoteUpdate(props.id, nid.value, postData) : NoteAdd(props.id, postData)
+        const actions = nid.value ? bookStore.noteUpdate(props.id, nid.value, postData) : bookStore.noteAdd(props.id, postData)
         actions.then(() => {
           msg.success('成功')
           visible.value = false
@@ -210,7 +194,7 @@ export default defineComponent({
         simple: true,
         modalClass: ['pkm-modal-simple'],
         onOk () {
-          NoteRemove(props.id, item._id).then(_ => {
+          bookStore.noteRemove(props.id, item._id).then(_ => {
             getInfo(props.id)
           }).catch(err => {
             msg.error(err.message)
@@ -233,7 +217,7 @@ export default defineComponent({
       hideDrawer,
       toolbarItemAction,
       formatTime,
-      Md2html,
+      Md2html: MDEditor.utils.md2html,
       editBook
     }
   }

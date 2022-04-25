@@ -33,15 +33,16 @@
 <script lang="ts">
 import { defineComponent, ref, getCurrentInstance } from 'vue'
 import { useRouter } from 'vue-router'
-import MobileLayout from '../../components/layout/mobile-layout.vue'
-import SearchList, { ListItemType } from '../../components/search-list/index.vue'
-import { DocumentListPage } from '../../apis/document'
-import * as TypesBase from '../../../types/base'
-import * as TypesDocument from '../../../types/document'
+import MobileLayout from '@/components/layout/mobile-layout.vue'
+import SearchList, { ListItemType } from '@/components/search-list/index.vue'
+import { DocumentListPage } from '@/apis/document'
+import * as TypesBase from '@/types/base'
+import * as TypesDocument from '@/types/document'
+import * as TypesBook from '@/types/book'
 
-import { BookListPage } from '../../apis/book'
-import { IBookDataApiType } from '../../../types/book'
-import { subStr } from '../../utils/index'
+import { BookListPage } from '@/apis/book'
+
+import { subStr } from '@/utils/index'
 
 export default defineComponent({
   components: {
@@ -53,7 +54,7 @@ export default defineComponent({
     const dayjs = app?.appContext.config.globalProperties.$dayjs
     const router = useRouter()
 
-    const documentList = ref<TypesDocument.IDocumentPageListItemType[]>([])
+    const documentList = ref<TypesDocument.IDocumentType[]>([])
     DocumentListPage({
       page: 1,
       pagesize: 6,
@@ -63,7 +64,7 @@ export default defineComponent({
     }).then(res => {
       documentList.value = res.data.list || []
     })
-    const documentInfo = (item: TypesDocument.IDocumentPageListItemType) => {
+    const documentInfo = (item: TypesDocument.IDocumentType) => {
       router.push({
         name: 'MobileMrkdown',
         params: {
@@ -82,7 +83,7 @@ export default defineComponent({
       })
     }
 
-    const bookList = ref<IBookDataApiType[]>([])
+    const bookList = ref<TypesBook.IBookType[]>([])
     BookListPage({
       page: 1,
       pagesize: 9

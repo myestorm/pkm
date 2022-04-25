@@ -52,31 +52,31 @@
         <pkm-space class="fix-btn" direction="vertical" fill>
           <pkm-space direction="vertical" fill v-show="showBtn">
             <pkm-button type="primary" status="success" shape="circle" size="large" @click="add('folder')"><icon-folder /></pkm-button>
-            <pkm-button type="primary" status="warning" shape="circle" size="large" @click="add('document')"><icon-file /></pkm-button>
+            <pkm-button type="primary" status="warning" shape="circle" size="large" @click="add('file')"><icon-file /></pkm-button>
           </pkm-space>
           <pkm-button type="primary" shape="circle" size="large" @click="showBtn = !showBtn">
             <icon-plus />
           </pkm-button>
         </pkm-space>
-        <file-form-drawer v-model="drawerVisible" :type="type" :initValue="drawerData" @success="successHandler" />
+        <document-form-drawer width="100%" v-model="drawerVisible" :type="type" :initValue="drawerData" @success="successHandler" />
       </div>
     </template>
   </mobile-layout>
 </template>
 <script lang="ts">
 import { defineComponent, ref, getCurrentInstance } from 'vue'
-import MobileLayout from '../../components/layout/mobile-layout.vue'
-import FileFormDrawer from '../../components/file-form/drawer.vue'
-import SearchList, { ListItemType } from '../../components/search-list/index.vue'
+import MobileLayout from '@/components/layout/mobile-layout.vue'
+import DocumentFormDrawer from '@/components/pkm-document/form-drawer.vue'
+import SearchList, { ListItemType } from '@/components/search-list/index.vue'
 import { useRouter, useRoute } from 'vue-router'
-import { DocumentList, DocumentRemove, DocumentInfo } from '../../apis/document'
-import * as TypesBase from '../../../types/base'
-import * as TypesDocument from '../../../types/document'
+import useDocumentStore from '@/store/modules/document/index'
+import * as TypesBase from '@/types/base'
+import * as TypesDocument from '@/types/document'
 
 export default defineComponent({
   components: {
     MobileLayout,
-    FileFormDrawer,
+    DocumentFormDrawer,
     SearchList
   },
   setup () {
@@ -86,18 +86,19 @@ export default defineComponent({
     const dayjs = app?.appContext.config.globalProperties.$dayjs
     const router = useRouter()
     const route = useRoute()
+    const documentStore = useDocumentStore()
 
     const pageTitle = ref('所有文档的列表')
     const showBtn = ref(false)
     const drawerVisible = ref(false)
     const type = ref()
 
-    const list = ref<TypesDocument.IDocumentPageListItemType[]>([])
-    const drawerData = ref<TypesDocument.IDocumentFormType>()
+    const list = ref<TypesDocument.IDocumentType[]>([])
+    const drawerData = ref<TypesDocument.IDocumentType>()
     const filePath = ref<string[]>([])
 
     const getList = () => {
-      DocumentList({
+      documentStore.docList({
         directory: [...filePath.value]
       }).then(res => {
         list.value = res.data || []
@@ -111,20 +112,13 @@ export default defineComponent({
     const add = (_type: string) => {
       type.value = _type
       drawerData.value = {
-        _id: '',
+        ...documentStore.getFormDefault,
         directory: [...filePath.value],
-        title: '',
-        type: _type as TypesBase.IBaseTypesType,
-        cover: '',
-        desc: '',
-        content: '',
-        tags: [],
-        top: false,
-        order: 99
+        type: _type as TypesBase.IBaseTypesType
       }
       drawerVisible.value = true
     }
-    const edit = (item: TypesDocument.IDocumentFormType) => {
+    const edit = (item: TypesDocument.IDocumentType) => {
       type.value = item.type
       drawerData.value = item
       drawerVisible.value = true
@@ -137,7 +131,7 @@ export default defineComponent({
         simple: true,
         modalClass: ['pkm-modal-simple'],
         onOk () {
-          DocumentRemove(id).then(_ => {
+          documentStore.docRemove(id).then(_ => {
             getList()
           }).catch(err => {
             msg.error(err.message)
@@ -145,7 +139,7 @@ export default defineComponent({
         }
       })
     }
-    const clickHandler = (item: TypesDocument.IDocumentFormType) => {
+    const clickHandler = (item: TypesDocument.IDocumentFileFormType) => {
       const _directory = [...item.directory]
       if (item.type === TypesBase.IBaseTypesType.FILE) {
         router.push({
@@ -164,7 +158,7 @@ export default defineComponent({
     }
 
     const getInfo = (id: string) => {
-      DocumentInfo(id).then(res => {
+      documentStore.docInfo(id).then(res => {
         pageTitle.value = res.data?.title || '所有文档的列表'
       }).catch(err => {
         msg.error(err.message)

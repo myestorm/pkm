@@ -16,12 +16,11 @@
 <script lang="ts">
 import { defineComponent, getCurrentInstance, ref, reactive } from 'vue'
 import { useRoute } from 'vue-router'
-import MobileLayout from '../../components/layout/mobile-layout.vue'
-import MarkdownEditor from '../../components/editor/markdown.vue'
-import { DocumentInfo, DocumentUpdate } from '../../apis/document'
-import type { ToolbarItemType } from '@totonoo/vue-codemirror/dist_types/components/editor/markdown/toolbar'
-import * as TypesBase from '../../../types/base'
-import * as TypesDocument from '../../../types/document'
+import MobileLayout from '@/components/layout/mobile-layout.vue'
+import MarkdownEditor from '@/components/pkm-editor/markdown.vue'
+import useDocumentStore from '@/store/modules/document/index'
+import * as MDEditor  from '@totonoo/vue-codemirror'
+import * as TypesDocument from '@/types/document'
 
 export default defineComponent({
   components: {
@@ -30,6 +29,7 @@ export default defineComponent({
   },
   setup () {
     const route = useRoute()
+    const documentStore = useDocumentStore()
     const app = getCurrentInstance()
     const msg = app?.appContext.config.globalProperties.$message
 
@@ -38,26 +38,13 @@ export default defineComponent({
     const value = ref('')
     const loading = ref(false)
     const title = ref(id ? '' : '添加文档')
-    const formDefault = {
-      _id: '',
-      directory: [],
-      title: '',
-      type: TypesBase.IBaseTypesType.FILE,
-      authorId: '',
-      cover: '',
-      desc: '',
-      content: '',
-      tags: [],
-      top: false,
-      order: 99
-    }
-    let form = reactive<TypesDocument.IDocumentUpdateType>({
-      ...formDefault
+    let form = reactive<TypesDocument.IDocumentType>({
+      ...documentStore.getFormDefault
     })
 
     const getDocumentInfo = (id: string) => {
       loading.value = true
-      DocumentInfo(id).then(res => {
+      documentStore.docInfo(id).then(res => {
         value.value = res.data?.content || ''
         title.value = res.data?.title || '编辑文档'
         if (res.data) {
@@ -72,15 +59,15 @@ export default defineComponent({
       })
     }
 
-    const toolbarItemAction = (item: ToolbarItemType) => {
+    const toolbarItemAction = (item: MDEditor.ToolbarItemType) => {
       if (item.type === 'Save') {
         const postData = {
-          ...form,
+          id: form._id,
           content: value.value
         }
-        if (postData._id) {
+        if (postData.id) {
           loading.value = true
-          DocumentUpdate(postData).then(() => {
+          documentStore.docSaveContent(postData).then(() => {
             msg.success('成功')
           }).catch(err => {
             msg.error(err.message)

@@ -1,6 +1,6 @@
 import empty from '@/components/layout/empty.vue'
 import mobileHome from '@/views/mobile/home.vue'
-import mobileFile from '@/views/mobile/file.vue'
+import mobileDocument from '@/views/mobile/document.vue'
 import mobileBook from '@/views/mobile/book.vue'
 import mobileSetting from '@/views/mobile/setting.vue'
 import mobileMrkdown from '@/views/mobile/markdown.vue'
@@ -33,7 +33,7 @@ export default {
   }, {
     path: `${prefix}/file/:path*`,
     name: 'MobileFile',
-    component: mobileFile,
+    component: mobileDocument,
     meta: {
       title: '文档',
       icon: 'icon-file',
