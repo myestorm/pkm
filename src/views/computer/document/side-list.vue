@@ -179,18 +179,14 @@ export default defineComponent({
     const breadcrumbs = ref<TypesBase.IBreadcrumbType[]>([])
 
     const creatDocument = () => {
-      documentFormDrawerId.value = ''
-      documentFormDrawerType.value = TypesBase.IBaseTypesType.FILE
-      documentFormDrawerVisible.value = true
+      documentStore.create(TypesBase.IBaseTypesType.FILE)
     }
     const creatFolder = () => {
-      documentFormDrawerId.value = ''
-      documentFormDrawerType.value = TypesBase.IBaseTypesType.FOLDER
-      documentFormDrawerVisible.value = true
+      documentStore.create(TypesBase.IBaseTypesType.FOLDER)
     }
 
     const getList = () => {
-      documentStore.getList({
+      documentStore.docList({
         directory: directory.value || []
       }).then(res => {
         list.value = res.data || []
@@ -214,8 +210,7 @@ export default defineComponent({
       documentStore.backTo()
     }
     const edit = (_id: string) => {
-      documentFormDrawerId.value = _id
-      documentFormDrawerVisible.value = true
+      documentStore.edit(_id)
     }
     const remove = (id: string) => {
       modal.open({
@@ -225,7 +220,7 @@ export default defineComponent({
         simple: true,
         modalClass: ['pkm-modal-simple'],
         onOk () {
-          documentStore.remove(id).then(_ => {
+          documentStore.docRemove(id).then(_ => {
             getList()
           }).catch(err => {
             msg.error(err.message)
@@ -237,13 +232,15 @@ export default defineComponent({
       if (keyword.value) {
         loading.value = true
         const conditions = [...directory.value]
-        documentStore.search(keyword.value, conditions).then(res => {
+        documentStore.docSearch(keyword.value, conditions).then(res => {
           list.value = res.data || []
         }).catch(_ => {
           list.value = []
         }).finally(() => {
           loading.value = false
         })
+      } else {
+        getList()
       }
     }
     const searchClear = () => {
@@ -255,7 +252,7 @@ export default defineComponent({
         getList()
       }
       if (val.length > 0) {
-        documentStore.find(val).then(res => {
+        documentStore.docBreadcrumbs(val).then(res => {
           const _data = (res.data || []) as TypesBase.IBreadcrumbType[]
           const _paths: TypesBase.IBreadcrumbType[] = []
           val.forEach(key => {
@@ -314,14 +311,14 @@ export default defineComponent({
       if (dropPosition === 0) { // 转移目录
         const _directory = [...dropItem.directory]
         _directory.push(dropItem._id)
-        documentStore.move({ id: dragItem._id, directory: _directory }).then(_ => {
+        documentStore.docMove({ id: dragItem._id, directory: _directory }).then(_ => {
           getList()
         }).catch(err => {
           msg.error(err.message)
         })
       } else { // 排序
         const _order = dropItem.order + dropPosition
-        documentStore.order({ id: dragItem._id, order: _order }).then(_ => {
+        documentStore.docOrder({ id: dragItem._id, order: _order }).then(_ => {
           getList()
         }).catch(err => {
           msg.error(err.message)
@@ -364,7 +361,7 @@ export default defineComponent({
       if (clipboard.value?._id) {
         switch (clipboardType.value) {
           case TypesBase.IClipboardType.CUT: {
-            documentStore.move({
+            documentStore.docMove({
               id: clipboard.value._id, 
               directory: [...directory.value]
             }).then(_ => {
@@ -381,7 +378,7 @@ export default defineComponent({
               id: clipboard.value._id, 
               directory: [...directory.value]
             }
-            documentStore.copy(postData).then(_ => {
+            documentStore.docCopy(postData).then(_ => {
               clipboard.value = null
               clipboardType.value = TypesBase.IClipboardType.NONE
               getList()

@@ -69,9 +69,9 @@ export const DocumentInfo = (id: string, options?: AxiosRequestConfig): Promise<
   })
 }
 
-// 多文档查询
-export const DocumentFind = (ids: string[], options?: AxiosRequestConfig): Promise<TypesBase.IResponeBodyType<TypesDocument.IDocumentBreadcrumbType[]>> => {
-  return axios.post(`${prefix}/info/find`, { ids }, {
+// 面包屑查询
+export const DocumentBreadcrumbs = (ids: string[], options?: AxiosRequestConfig): Promise<TypesBase.IResponeBodyType<TypesBase.IBreadcrumbType[]>> => {
+  return axios.post(`${prefix}/breadcrumbs`, { ids }, {
     ...options
   })
 }

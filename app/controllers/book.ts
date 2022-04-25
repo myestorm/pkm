@@ -39,23 +39,6 @@ class BookController extends BaseController<TypesBook.IBookModelType> {
     return result
   }
 
-  // async search (keyword: string): Promise<TypesBook.IBookType[]> {
-  //   const reg = new RegExp(keyword, 'gmi')
-
-  //   const params = {
-  //     $or: [
-  //       { title: { $regex: reg } },
-  //       { desc: { $regex: reg } },
-  //       { tags: { $regex: reg } }
-  //     ]
-  //   }
-  //   const list = await this.model.find(params, '_id title desc author cover').sort({
-  //     _id: -1
-  //   })
-  //   list.sort(this.sortMethod)
-  //   return list
-  // }
-
   async addNote (bookId: string, data: TypesBook.INoteAddType): Promise<TypesBook.INoteType | null> {
     const book = await this.model.findById(bookId)
     if (book) {

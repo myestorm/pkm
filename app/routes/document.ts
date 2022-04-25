@@ -143,7 +143,7 @@ export default class DocumentRouter {
     await next()
   }
 
-  @post('/info/find')
+  @post('/breadcrumbs')
   async DocumentInfoFind (ctx: Context, next: Next) {
     const { ids } = ctx.request.body as { ids: string[] }
     let body: TypesBase.IResponeBodyType<TypesDocument.IDocumentType[]> = {
@@ -152,7 +152,7 @@ export default class DocumentRouter {
       data: []
     }
     if (Array.isArray(ids) && ids.length > 0) {
-      const result = await document.findInfo(ids)
+      const result = await document.breadcrumbs(ids)
       body = {
         code: 0,
         msg: 'success',

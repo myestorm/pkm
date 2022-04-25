@@ -96,7 +96,7 @@ export default defineComponent({
               ...form
             }
             loading.value = true
-            documentStore.submitForm(postData).then((res) => {
+            documentStore.docSubmit(postData).then((res) => {
               resolve(res)
             }).catch(err => {
               msg.error(err.message)
@@ -116,7 +116,7 @@ export default defineComponent({
     watchEffect(() => {
       if (props.id) {
         loading.value = true
-        documentStore.getInfo(props.id).then(res => {
+        documentStore.docInfo(props.id).then(res => {
           if (res.data) {
             setFormValue(res.data)
             ctx.emit('info', res.data)

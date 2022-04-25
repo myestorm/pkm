@@ -4,7 +4,7 @@
     <book-form-drawer width="420px" ref="" :id="bookFormDrawerId" :type="bookFormDrawerType" :directory="directory" v-model="bookFormDrawerVisible" @done="drawerDone" />
     <pkm-layout-content>
       <div class="view" v-if="id">
-        <book-info ref="bookInfo" :id="id" @edit="editHandler" @ready="readyHandler" />
+        <book-info class="book-info" ref="bookInfo" :id="id" @edit="editHandler" @ready="readyHandler" />
       </div>
     </pkm-layout-content>
   </pkm-layout>
@@ -75,5 +75,7 @@ export default defineComponent({
   box-sizing: border-box;
   padding: 16px 32px;
   background-color: var(--color-bg-3);
+  height: calc(100vh - 50px);
+  overflow: auto;
 }
 </style>

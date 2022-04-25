@@ -70,7 +70,7 @@ export default class User {
 
   @get('/list')
   async AdminList (ctx: Context, next: Next) {
-    const list = await admin.list({})
+    const list = await admin.adminList()
     const body: TypesBase.IResponeBodyType<TypesAdmin.IAdminType[]> = {
       code: 0,
       msg: 'success',

@@ -52,34 +52,43 @@ const useStore = defineStore('document', {
       _directory.pop()
       this.directory = [..._directory]
     },
-    submitForm (postData: TypesDocument.IDocumentFileFormType) {
+    create (type: TypesBase.IBaseTypesType) {
+      this.documentFormDrawerId = ''
+      this.documentFormDrawerType = type
+      this.documentFormDrawerVisible = true
+    },
+    edit (id: string) {
+      this.documentFormDrawerId = id
+      this.documentFormDrawerVisible = true
+    },
+    docSubmit (postData: TypesDocument.IDocumentFileFormType) {
       return ApiDocument.DocumentForm(postData)
     },
-    remove (id: string) {
+    docRemove (id: string) {
       return ApiDocument.DocumentRemove(id)
     },
-    search (keyword: string, directory?: string[]) {
+    docSearch (keyword: string, directory?: string[]) {
       return ApiDocument.DocumentSearch(keyword, directory)
     },
-    getList (postData: TypesDocument.IDocumentListType) {
+    docList (postData: TypesDocument.IDocumentListType) {
       return ApiDocument.DocumentList(postData)
     },
-    getInfo (id: string) {
+    docInfo (id: string) {
       return ApiDocument.DocumentInfo(id)
     },
-    move (postData: { id: string, directory: string[] }) {
+    docMove (postData: { id: string, directory: string[] }) {
       return ApiDocument.DocumentMove(postData)
     },
-    copy (postData: { id: string, directory: string[] }) {
+    docCopy (postData: { id: string, directory: string[] }) {
       return ApiDocument.DocumentCopy(postData)
     },
-    order (postData: { id: string, order: number }) {
+    docOrder (postData: { id: string, order: number }) {
       return ApiDocument.DocumentUpdateOrder(postData)
     },
-    find (ids: string[]) {
-      return ApiDocument.DocumentFind(ids)
+    docBreadcrumbs (ids: string[]) {
+      return ApiDocument.DocumentBreadcrumbs(ids)
     },
-    saveContent (postData: { id: string, content: string }) {
+    docSaveContent (postData: { id: string, content: string }) {
       return ApiDocument.DocumentUpdateContent(postData)
     }
   }

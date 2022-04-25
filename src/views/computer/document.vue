@@ -113,7 +113,7 @@ export default defineComponent({
 
     const getInfo = (_id: string) => {
       loading.value = true
-      documentStore.getInfo(_id).then((res) => {
+      documentStore.docInfo(_id).then((res) => {
         if (res.data && res.data.type === TypesBase.IBaseTypesType.FILE) {
           setInfoValue(res.data)
           directory.value = res.data.directory || []
@@ -136,7 +136,7 @@ export default defineComponent({
     const saveContent = () => {
       if (id) {
         loading.value = true
-        documentStore.saveContent({
+        documentStore.docSaveContent({
           id,
           content: value.value
         }).then(() => {
@@ -195,9 +195,12 @@ export default defineComponent({
 .editor-box {
   width: 100%;
   height: calc(100vh - 102px);
-  padding: 8px 16px;
+  padding: 16px 32px;
   box-sizing: border-box;
   overflow: auto;
   background-color: var(--color-bg-3);
+  > .markdown-body {
+    max-width: 960px;
+  }
 }
 </style>

@@ -63,12 +63,12 @@ class AdminController extends BaseController<TypesAdmin.IAdminModelType> {
   }
 
   // // 所有用户
-  // async list (): Promise<TypesAdmin.IAdminType[]> {
-  //   const list = await Admin.find({}, '-password').sort({
-  //     _id: -1
-  //   })
-  //   return list
-  // }
+  async adminList (): Promise<TypesAdmin.IAdminType[]> {
+    const list = await Admin.find({}, '-password').sort({
+      _id: -1
+    })
+    return list
+  }
 
   // 重置密码
   async resetPassword (id: string, updatedBy: string): Promise<string> {
