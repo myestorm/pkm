@@ -4,7 +4,8 @@
   "scripts": {
     "start": "pm2 start ecosystem.config.js --env prd",
     "start-docker": "pm2 start ecosystem.config.js --env prd --no-daemon",
-    "dev": "npm run app-build && concurrently -k -p \"[{name}]\" -n \"Vite,TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run vite-dev\" \"npm run app-watch\" \"npm run app-nodemon\"",
+    "dev": "concurrently -k -p \"[{name}]\" -n \"Vite,TypeScript\" -c \"yellow.bold,cyan.bold\" \"npm run vite-dev\" \"npm run app-nodemon\"",
+    "dev_1": "npm run app-build && concurrently -k -p \"[{name}]\" -n \"Vite,TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run vite-dev\" \"npm run app-watch\" \"npm run app-nodemon\"",
     "build": "npm run vite-build && npm run app-build",
     "vite-dev": "vite --host",
     "vite-build": "vue-tsc --noEmit && vite build",
@@ -55,6 +56,7 @@
     "@vitejs/plugin-vue": "^2.3.1",
     "concurrently": "^7.1.0",
     "cross-env": "^7.0.3",
+    "esbuild": "^0.14.38",
     "less": "^4.1.2",
     "nodemon": "^2.0.15",
     "sass": "^1.50.1",

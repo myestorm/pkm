@@ -1,7 +1,7 @@
 {
-  "watch": ["www"],
+  "watch": ["app"],
   "ext": "js,ts,json",
   "ignore": ["app/**/*.spec.ts"],
-  "exec": "node www/app.js",
+  "exec": "ts-node -O {\\\"module\\\":\\\"commonjs\\\"} app/app.ts",
   "delay": 2500
 }
