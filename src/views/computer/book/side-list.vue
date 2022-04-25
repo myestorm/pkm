@@ -243,6 +243,8 @@ export default defineComponent({
         }).finally(() => {
           loading.value = false
         })
+      } else {
+        getList()
       }
     }
     const searchClear = () => {

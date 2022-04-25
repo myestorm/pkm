@@ -428,8 +428,12 @@ body, #app {
           font-size: 14px;
           font-weight: bold;
         }
-        .desc {
+        .author {
           color: var(--color-text-3);
+          font-size: 14px;
+        }
+        .desc {
+          color: var(--color-text-4);
           font-size: 12px;
           padding: 4px 0;
         }
@@ -457,5 +461,22 @@ body, #app {
       margin: 0;
       padding-left: 8px;
     }
+  }
+}
+.#{$--prefix}-editor-drawer {
+  .arco-drawer-body {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+}
+.#{$--prefix}-flex {
+  display: flex;
+  align-items: center;
+  &[align=start] {
+    align-items: flex-start;
+  }
+  [flex=auto] {
+    flex: 1
   }
 }

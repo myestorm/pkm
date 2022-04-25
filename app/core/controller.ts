@@ -56,7 +56,7 @@ class BaseController<T> {
       ],
       $and: and
     }
-    const list = await this.model.find(params, '_id title directory tags cover desc').sort({
+    const list = await this.model.find(params, '_id title directory tags cover desc type').sort({
       _id: -1
     })
     list.sort(this.sortMethod)

@@ -109,6 +109,18 @@ const useStore = defineStore('book', {
     bookInfo (id: string) {
       return Apis.BookInfo(id)
     },
+    noteInfo (bookId: string, id: string) {
+      return Apis.NoteInfo(bookId, id)
+    },
+    noteAdd (bookId: string, postData: TypesBook.INoteAddType) {
+      return Apis.NoteAdd(bookId, postData)
+    },
+    noteUpdate (bookId: string, id: string, postData: TypesBook.INoteAddType) {
+      return Apis.NoteUpdate(bookId, id, postData)
+    },
+    noteRemove (bookId: string, id: string) {
+      return Apis.NoteRemove(bookId, id)
+    }
   }
 })
 export default useStore
