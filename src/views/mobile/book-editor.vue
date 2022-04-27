@@ -15,9 +15,9 @@ import { defineComponent, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 import MobileLayout from '../../components/layout/mobile-layout.vue'
-import BookForm from '../../components/book-form/index.vue'
+import BookForm from '@/components/pkm-book/form.vue'
 
-import { IBookDataFormType } from '../../../types/book'
+import * as TypesBook from '@/types/book'
 
 export default defineComponent({
   components: {
@@ -32,11 +32,11 @@ export default defineComponent({
     const formRef = ref<null | InstanceType<typeof BookForm>>(null)
     const loading = ref(false)
     const title = ref('添加书籍')
-    const infoHandler = (data: IBookDataFormType) => {
+    const infoHandler = (data: TypesBook.IBookType) => {
       title.value = data.title || '添加书籍'
     }
     const submit = () => {
-      formRef.value?.save()
+      formRef.value?.submit()
     }
     const successHandler = () => {
       router.back()

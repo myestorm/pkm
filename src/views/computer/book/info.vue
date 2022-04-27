@@ -94,8 +94,8 @@
 <script lang="ts">
 import { defineComponent, getCurrentInstance, reactive, ref, PropType, CSSProperties } from 'vue'
 
-import BookForm from '../../../components/book-form/index.vue'
-import MarkdownEditor from '../../../components/editor/markdown.vue'
+import BookForm from '@/components/pkm-book/form.vue'
+import MarkdownEditor from '@/components/pkm-editor/markdown.vue'
 import * as MDEditor from '@totonoo/vue-codemirror'
 import * as TypesBook from '@/types/book'
 

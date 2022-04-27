@@ -14,8 +14,9 @@
       <pkm-space direction="vertical" size="medium" fill>
         <pkm-card title="最近文档" class="pkm-card">
           <div class="item" v-for="item in documentList" :key="item._id" @click="documentInfo(item)">
-            <div class="day">{{ dayjs(item.updatedAt).format('YYYY-MM-DD HH:mm') }}</div>
             <div class="name"><icon-file />{{ item.title }}</div>
+            <div class="desc">{{ item.desc }}</div>
+            <div class="day">{{ dayjs(item.updatedAt).format('YYYY-MM-DD HH:mm') }}</div>
           </div>
         </pkm-card>
         <pkm-card title="书架更新" class="pkm-card">

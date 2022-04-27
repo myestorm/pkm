@@ -2,7 +2,8 @@
   <mobile-layout title="文档" :subtitle="pageTitle" :back="pageBack">
     <template #main>
       <div class="pkm-mobile-file-list">
-        <search-list placeholder="搜索当前文档" type="document" :conditions="filePath" @itemClick="itemClickHandler"></search-list>
+        <pkm-input-search placeholder="搜索当前文档" v-model="keyword" class="pkm-search-input" :loading="loading" :allow-clear="true" @input="searchHandle" @search="searchHandle" @clear="searchClear" @focus="showSearchResult" @blur="searchBlurHandler" />
+        <!-- <search-list placeholder="搜索当前文档" type="document" :conditions="filePath" @itemClick="itemClickHandler"></search-list> -->
         <!-- <div class="filter"></div> -->
         <div class="content">
           <div class="file-list">
@@ -50,25 +51,27 @@
           </div>
         </div>
         <pkm-space class="fix-btn" direction="vertical" fill>
-          <pkm-space direction="vertical" fill v-show="showBtn">
-            <pkm-button type="primary" status="success" shape="circle" size="large" @click="add('folder')"><icon-folder /></pkm-button>
-            <pkm-button type="primary" status="warning" shape="circle" size="large" @click="add('file')"><icon-file /></pkm-button>
+          <pkm-space direction="vertical" fill v-show="addBtns">
+            <pkm-button type="primary" status="success" shape="circle" size="large" @click="creatFolder"><icon-folder /></pkm-button>
+            <pkm-button type="primary" status="warning" shape="circle" size="large" @click="creatDocument"><icon-file /></pkm-button>
           </pkm-space>
-          <pkm-button type="primary" shape="circle" size="large" @click="showBtn = !showBtn">
+          <pkm-button type="primary" shape="circle" size="large" @click="addBtns = !addBtns">
             <icon-plus />
           </pkm-button>
         </pkm-space>
-        <document-form-drawer width="100%" v-model="drawerVisible" :type="type" :initValue="drawerData" @success="successHandler" />
+        <document-form-drawer width="100%" :id="documentFormDrawerId" :type="documentFormDrawerType" :directory="directory" v-model="documentFormDrawerVisible" @done="drawerDone" />
       </div>
     </template>
   </mobile-layout>
 </template>
 <script lang="ts">
 import { defineComponent, ref, getCurrentInstance } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { storeToRefs } from 'pinia'
+
 import MobileLayout from '@/components/layout/mobile-layout.vue'
 import DocumentFormDrawer from '@/components/pkm-document/form-drawer.vue'
-import SearchList, { ListItemType } from '@/components/search-list/index.vue'
-import { useRouter, useRoute } from 'vue-router'
+
 import useDocumentStore from '@/store/modules/document/index'
 import * as TypesBase from '@/types/base'
 import * as TypesDocument from '@/types/document'
@@ -76,8 +79,7 @@ import * as TypesDocument from '@/types/document'
 export default defineComponent({
   components: {
     MobileLayout,
-    DocumentFormDrawer,
-    SearchList
+    DocumentFormDrawer
   },
   setup () {
     const app = getCurrentInstance()
@@ -87,41 +89,21 @@ export default defineComponent({
     const router = useRouter()
     const route = useRoute()
     const documentStore = useDocumentStore()
+    const { directory, documentFormDrawerId, documentFormDrawerType, documentFormDrawerVisible } = storeToRefs(documentStore)
 
     const pageTitle = ref('所有文档的列表')
-    const showBtn = ref(false)
-    const drawerVisible = ref(false)
-    const type = ref()
+    const addBtns = ref(false)
 
     const list = ref<TypesDocument.IDocumentType[]>([])
-    const drawerData = ref<TypesDocument.IDocumentType>()
-    const filePath = ref<string[]>([])
 
-    const getList = () => {
-      documentStore.docList({
-        directory: [...filePath.value]
-      }).then(res => {
-        list.value = res.data || []
-      }).catch(err => {
-        msg.error(err.message)
-      })
+    const creatDocument = () => {
+      documentStore.create(TypesBase.IBaseTypesType.FILE)
     }
-    const successHandler = () => {
-      getList()
-    }
-    const add = (_type: string) => {
-      type.value = _type
-      drawerData.value = {
-        ...documentStore.getFormDefault,
-        directory: [...filePath.value],
-        type: _type as TypesBase.IBaseTypesType
-      }
-      drawerVisible.value = true
+    const creatFolder = () => {
+      documentStore.create(TypesBase.IBaseTypesType.FOLDER)
     }
     const edit = (item: TypesDocument.IDocumentType) => {
-      type.value = item.type
-      drawerData.value = item
-      drawerVisible.value = true
+      documentStore.edit(item._id)
     }
     const remove = (id: string) => {
       modal.open({
@@ -139,7 +121,19 @@ export default defineComponent({
         }
       })
     }
-    const clickHandler = (item: TypesDocument.IDocumentFileFormType) => {
+    const getList = () => {
+      documentStore.docList({
+        directory: [...directory.value]
+      }).then(res => {
+        list.value = res.data || []
+      }).catch(err => {
+        msg.error(err.message)
+      })
+    }
+    const drawerDone = () => {
+      getList()
+    }
+    const clickHandler = (item: TypesDocument.IDocumentType) => {
       const _directory = [...item.directory]
       if (item.type === TypesBase.IBaseTypesType.FILE) {
         router.push({
@@ -166,8 +160,8 @@ export default defineComponent({
     }
 
     if (route.params.path) {
-      filePath.value = [...route.params.path]
-      const _lastId = filePath.value[filePath.value.length - 1]
+      directory.value = [...route.params.path]
+      const _lastId = directory.value[directory.value.length - 1]
       if (_lastId) {
         getInfo(_lastId)
       }
@@ -185,7 +179,7 @@ export default defineComponent({
     }
 
     const pageBack = () => {
-      if (filePath.value && filePath.value.length > 0) {
+      if (directory.value && directory.value.length > 0) {
         router.back()
       } else {
         router.push('/m/home')
@@ -193,19 +187,22 @@ export default defineComponent({
     }
 
     return {
-      pageBack,
-      filePath,
-      pageTitle,
-      showBtn,
-      drawerVisible,
-      type,
-      list,
-      dayjs,
-      drawerData,
-      add,
+      documentFormDrawerId,
+      documentFormDrawerType,
+      documentFormDrawerVisible,
+      drawerDone,
+      creatDocument,
+      creatFolder,
       edit,
       remove,
-      successHandler,
+      directory,
+
+      pageBack,
+      pageTitle,
+      addBtns,
+      list,
+      dayjs,
+ 
       clickHandler,
       itemClickHandler
     }

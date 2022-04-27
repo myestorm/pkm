@@ -10,8 +10,8 @@ import { defineComponent, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 import MobileLayout from '../../components/layout/mobile-layout.vue'
-import BookInfo from '../../components/book-info/index.vue'
-import { IBookDataApiType } from '../../../types/book'
+import BookInfo from './book/info.vue'
+import * as TypesBook from '@/types/book'
 
 export default defineComponent({
   components: {
@@ -23,10 +23,10 @@ export default defineComponent({
     const route = useRoute()
     const id = (route.params.id || '') as string
     const title = ref('')
-    const getInfo = (item: IBookDataApiType) => {
+    const getInfo = (item: TypesBook.IBookType) => {
       title.value = item.title
     }
-    const editBook = (item: IBookDataApiType) => {
+    const editBook = (item: TypesBook.IBookType) => {
       router.push(`/m/book/editor/${item._id}`)
     }
     return {
