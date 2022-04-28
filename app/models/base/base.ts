@@ -6,7 +6,7 @@ export const baseDef = {
     type: String,
     required: true
   },
-  directory: {
+  directory: { // 父级目录
     type: [String],
     default: []
   },

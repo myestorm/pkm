@@ -1,9 +1,11 @@
 import empty from '@/components/layout/empty.vue'
 import mobileHome from '@/views/mobile/home.vue'
+
 import mobileDocument from '@/views/mobile/document.vue'
+import mobileDocumentEditor from '@/views/mobile/document/editor.vue'
+
 import mobileBook from '@/views/mobile/book.vue'
 import mobileSetting from '@/views/mobile/setting.vue'
-import mobileMrkdown from '@/views/mobile/markdown.vue'
 import mobileBookEditor from '@/views/mobile/book-editor.vue'
 import mobileBookInfo from '@/views/mobile/book-info.vue'
 import mobileAdmin from '@/views/mobile/admin.vue'
@@ -31,8 +33,17 @@ export default {
       keepAlive: false
     }
   }, {
-    path: `${prefix}/file/:path*`,
-    name: 'MobileFile',
+    path: `${prefix}/document/editor/:id`,
+    name: 'MobileDocumentEditor',
+    component: mobileDocumentEditor,
+    meta: {
+      title: '文档编辑',
+      icon: 'markdown',
+      keepAlive: false
+    }
+  }, {
+    path: `${prefix}/document/:path*`,
+    name: 'MobileDocument',
     component: mobileDocument,
     meta: {
       title: '文档',
@@ -58,15 +69,6 @@ export default {
       title: '设置',
       icon: 'icon-settings',
       nav: true,
-      keepAlive: false
-    }
-  }, {
-    path: `${prefix}/markdown`,
-    name: 'MobileMrkdown',
-    component: mobileMrkdown,
-    meta: {
-      title: '文档编辑',
-      icon: 'markdown',
       keepAlive: false
     }
   }, {

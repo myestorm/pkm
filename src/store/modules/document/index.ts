@@ -29,6 +29,7 @@ const useStore = defineStore('document', {
     currentId: '',
     currentType: 'view',
     directory: [],
+    directoryList: [],
     list: [],
     keyword: '',
     documentFormDrawerId: '',

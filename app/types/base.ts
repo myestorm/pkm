@@ -23,6 +23,8 @@ export interface IBaseFieldsType {
   updatedBy: string // 修改人
 }
 
+export type IBaseDirectoryListItemType = Pick<IBaseFieldsType, '_id' | 'title' | 'directory' | 'type' | 'cover' | 'desc' | 'tags'>
+
 export interface ICommentType {
   _id: Types.ObjectId,
   title: string, // 标题

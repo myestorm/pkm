@@ -1,4 +1,4 @@
-import { Types, Model } from 'mongoose'
+import { Types, Model, UnpackedIntersection } from 'mongoose'
 import dayjs from 'dayjs'
 import * as TypesBase from '../types/base'
 
@@ -30,8 +30,12 @@ class BaseController<T> {
     return await this.model.findByIdAndRemove(id)
   }
 
-  async info (id: string): Promise<T | null> {
-    return await this.model.findById(id)
+  async info (id: string): Promise<UnpackedIntersection<T, {}> | null> {
+    const result = await this.model.findById(id).populate({
+      path: 'directoryList',
+      select: '_id title directory type cover desc tags'
+    })
+    return result
   }
 
   async search (keyword: string, directory: string[] = []): Promise<T[]> {
@@ -43,7 +47,7 @@ class BaseController<T> {
     if (directory.length > 0) {
       and.push({
         directory: {
-          $in: directory
+          $all: directory
         }
       })
     }
@@ -56,7 +60,10 @@ class BaseController<T> {
       ],
       $and: and
     }
-    const list = await this.model.find(params, '_id title directory tags cover desc type').sort({
+    const list = await this.model.find(params, '_id title directory tags cover desc type').populate({
+      path: 'directoryList',
+      select: '_id title directory type cover desc tags'
+    }).sort({
       _id: -1
     })
     list.sort(this.sortMethod)
@@ -73,7 +80,10 @@ class BaseController<T> {
   }
 
   async list<A> (filter: A): Promise<T[]> {
-    const list = await this.model.find(filter).sort({
+    const list = await this.model.find(filter).populate({
+      path: 'directoryList',
+      select: '_id title directory type cover desc tags'
+    }).sort({
       _id: -1
     })
     list.sort(this.sortMethod)

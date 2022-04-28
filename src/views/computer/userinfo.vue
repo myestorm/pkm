@@ -18,10 +18,10 @@
 import { defineComponent, ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
-import useStore from '../../store/modules/admin/index'
+import useStore from '@/store/modules/admin/index'
 
-import * as TypesAdmin from '../../../types/admin'
-import AdminSelfInfo from '../../components/admin-form/self-info.vue'
+import * as TypesAdmin from '@/types/admin'
+import AdminSelfInfo from '@/components/admin-form/self-info.vue'
 
 export default defineComponent({
   components: {
@@ -32,7 +32,7 @@ export default defineComponent({
     const router = useRouter()
     const { userinfo } = storeToRefs(store)
     const visible = ref(false)
-    const successHandler = (data: TypesAdmin.IApiAdminUpdateSelfInfoType) => {
+    const successHandler = (data: TypesAdmin.IAdminType) => {
       userinfo.value.avatar = data.avatar || userinfo.value.avatar
       userinfo.value.nickname = data.nickname || userinfo.value.nickname
       userinfo.value.email = data.email || userinfo.value.email

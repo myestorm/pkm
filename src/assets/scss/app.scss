@@ -187,10 +187,6 @@ body, #app {
   }
 }
 
-.#{$--prefix}-search-input {
-  border-radius: 16px;
-  background-color: var(--color-bg-1);
-}
 .#{$--prefix}-mobile-file-list {
   .fix-btn {
     position: fixed;
@@ -478,5 +474,13 @@ body, #app {
   }
   [flex=auto] {
     flex: 1
+  }
+}
+
+// mobile
+.#{$--prefix-totonoo}-search {
+  .search-input {
+    border-radius: 16px;
+    background-color: var(--color-bg-1);
   }
 }

@@ -5,6 +5,7 @@ export type DocumentState = {
   currentId: string,
   currentType: string,
   directory: string[],
+  directoryList: TypesBase.IBaseDirectoryListItemType[],
   list: TypesDocument.IDocumentType[],
   keyword: string,
 
