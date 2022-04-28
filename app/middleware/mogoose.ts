@@ -10,6 +10,22 @@ const user: IUserType = {
   id: ''
 }
 
+function setSchemaOptions (schema: Schema, options = {}) {
+  schema.set('toObject', { virtuals: true })
+  schema.set('toJSON', {
+    virtuals: true
+    // transform : (doc, result) => {
+    //   const res = {
+    //     ...result,
+    //     id : result._id
+    //   }
+    //   delete res._id
+    //   delete res.__v
+    //   return res
+    // }
+  })
+}
+
 function createUpdateByPlugin (schema: Schema, options = {}) {
   schema.pre('save', function (next) {
     if (!this.createdBy) {
@@ -28,6 +44,7 @@ function createUpdateByPlugin (schema: Schema, options = {}) {
   })
 }
 
+mongoose.plugin(setSchemaOptions, {})
 mongoose.plugin(createUpdateByPlugin, {})
 mongoose.connect(mongoConfig)
 mongoose.connection.on('error', console.error)
