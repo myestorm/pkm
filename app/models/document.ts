@@ -26,9 +26,6 @@ schema.virtual('directoryList', {
   count: false
 })
 
-schema.set('toObject', { virtuals: true })
-schema.set('toJSON', { virtuals: true })
-
 const DocumentModel = model<TypesDocument.IDocumentModelType>('Document', schema)
 
 export default DocumentModel

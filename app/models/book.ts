@@ -76,9 +76,6 @@ schema.virtual('directoryList', {
   count: false
 })
 
-schema.set('toObject', { virtuals: true })
-schema.set('toJSON', { virtuals: true })
-
 const BookModel = model<TypesBook.IBookModelType>('Book', schema)
 
 export default BookModel
