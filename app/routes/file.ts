@@ -1,8 +1,9 @@
+import * as Formidable from 'formidable'
+import * as TypesBase from '../types/base'
+
 import { Context, Next } from 'koa'
 import { prefix, post } from '../core/router'
 import path from 'path'
-import { File as FileType } from 'formidable'
-import * as TypesBase from '../types/base'
 import getRootDir from '../utils/getRootDir'
 
 const rootDir = getRootDir()
@@ -13,7 +14,7 @@ export default class File {
 
   @post('/upload')
   async Upload (ctx: Context, next: Next) {
-    const file = ctx.request?.files?.file as unknown as FileType
+    const file = ctx.request?.files?.file as unknown as Formidable.File
     if (file) {
       let filepath = path.relative(path.join(rootDir, 'resource/uploads/'), file.filepath)
       filepath = path.join('uploads/', filepath)

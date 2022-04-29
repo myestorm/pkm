@@ -41,7 +41,7 @@ export interface IResponeBodyType<T> {
   data: T
 }
 
-export interface IResponePageBodyType<T> {
+export interface IResponePageType<T> {
   list: T[],
   page: number,
   pagesize: number,

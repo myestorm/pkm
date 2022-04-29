@@ -67,7 +67,7 @@ export default class User {
   @post('/breadcrumbs')
   async BookBreadcrumbs (ctx: Context, next: Next) {
     const { ids } = ctx.request.body as { ids: string[] }
-    const result = await book.breadcrumbs(ids)
+    const result = await book.batchQueryByIds(ids)
     const body: TypesBase.IResponeBodyType<TypesBook.IBookType[]> = {
       code: 0,
       msg: 'success',
@@ -142,7 +142,7 @@ export default class User {
       ISBN: _body.ISBN,
       rating: _body.rating
     }
-    const result = id ? await book.update(id, postData) : await book.add(postData)
+    const result = id ? await book.update(id, postData) : await book.create(postData)
     const body: TypesBase.IResponeBodyType<TypesBook.IBookType | null> = {
       code: 0,
       msg: 'success',
@@ -176,7 +176,7 @@ export default class User {
   async BookListPage (ctx: Context, next: Next) {
     const _body = ctx.request.body as TypesBase.IPageType<{}>
     const result = await book.listPage(_body.page, _body.pagesize, {})
-    const body: TypesBase.IResponeBodyType<TypesBase.IResponePageBodyType<TypesBook.IBookType>> = {
+    const body: TypesBase.IResponeBodyType<TypesBase.IResponePageType<TypesBook.IBookType>> = {
       code: 0,
       msg: 'success',
       data: result

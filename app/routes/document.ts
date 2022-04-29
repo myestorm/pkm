@@ -22,7 +22,7 @@ export default class DocumentRouter {
       tags: _body.tags,
       type: _body.type
     }
-    const result = id ? await document.update(id, postData) : await document.add(postData)
+    const result = id ? await document.update(id, postData) : await document.create(postData)
     const body: TypesBase.IResponeBodyType<TypesDocument.IDocumentType | null> = {
       code: 0,
       msg: 'success',
@@ -152,7 +152,7 @@ export default class DocumentRouter {
       data: []
     }
     if (Array.isArray(ids) && ids.length > 0) {
-      const result = await document.breadcrumbs(ids)
+      const result = await document.batchQueryByIds(ids)
       body = {
         code: 0,
         msg: 'success',
@@ -168,7 +168,7 @@ export default class DocumentRouter {
     const _body = ctx.request.body as TypesBase.IPageType<TypesDocument.IDocumentPartialType>
     const conditions = _body.conditions as TypesDocument.IDocumentPartialType
     const result = await document.listPage(_body.page, _body.pagesize, conditions)
-    const body: TypesBase.IResponeBodyType<TypesBase.IResponePageBodyType<TypesDocument.IDocumentType>> = {
+    const body: TypesBase.IResponeBodyType<TypesBase.IResponePageType<TypesDocument.IDocumentType>> = {
       code: 0,
       msg: 'success',
       data: result

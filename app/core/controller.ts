@@ -9,21 +9,21 @@ class BaseController<T> {
     this.model = model
   }
 
-  async add<A> (data: A): Promise<T> {
+  async create<A> (data: A): Promise<T> {
     const result = await this.model.create(data)
     return result
   }
 
   async update<A> (id: string, data: A): Promise<T | null> {
-    return await this.model.findByIdAndUpdate(id, data, this.updateOption)
+    return await this.model.findByIdAndUpdate(id, data, this.options.update)
   }
 
   async updateDirectory (id: string, directory: string[]): Promise<T | null> {
-    return await this.model.findByIdAndUpdate(id, { directory }, this.updateOption)
+    return await this.model.findByIdAndUpdate(id, { directory }, this.options.update)
   }
 
   async updateOrder (id: string, order: number): Promise<T | null> {
-    return await this.model.findByIdAndUpdate(id, { order }, this.updateOption)
+    return await this.model.findByIdAndUpdate(id, { order }, this.options.update)
   }
 
   async remove (id: string): Promise<T | null> {
@@ -31,10 +31,7 @@ class BaseController<T> {
   }
 
   async info (id: string): Promise<UnpackedIntersection<T, {}> | null> {
-    const result = await this.model.findById(id).populate({
-      path: 'directoryList',
-      select: '_id title directory type cover desc tags'
-    })
+    const result = await this.model.findById(id).populate(this.options.directoryPopulate)
     return result
   }
 
@@ -60,43 +57,38 @@ class BaseController<T> {
       ],
       $and: and
     }
-    const list = await this.model.find(params, '_id title directory tags cover desc type').populate({
-      path: 'directoryList',
-      select: '_id title directory type cover desc tags'
-    }).sort({
+    const list = await this.model.find(params, '_id title directory tags cover desc type').populate(this.options.directoryPopulate).sort({
       _id: -1
     })
-    list.sort(this.sortMethod)
+    list.sort(this.methods.sort)
     return list
   }
 
-  async breadcrumbs (ids: string[]): Promise<T[]> {
+  // 通过ID批量查询数据
+  async batchQueryByIds (ids: string[]): Promise<T[]> {
     const list = await this.model.find({
       _id: {
         $in: ids
       }
-    }, '_id title directory')
+    }).populate(this.options.directoryPopulate)
     return list
   }
 
   async list<A> (filter: A): Promise<T[]> {
-    const list = await this.model.find(filter).populate({
-      path: 'directoryList',
-      select: '_id title directory type cover desc tags'
-    }).sort({
+    const list = await this.model.find(filter).populate(this.options.directoryPopulate).sort({
       _id: -1
     })
-    list.sort(this.sortMethod)
+    list.sort(this.methods.sort)
     return list
   }
 
-  async listPage<A> (page: number, pagesize: number, filter: A): Promise<TypesBase.IResponePageBodyType<T>> {
+  async listPage<A> (page: number, pagesize: number, filter: A): Promise<TypesBase.IResponePageType<T>> {
     const start = (page - 1) * pagesize
     const total = await this.model.find(filter).count()
-    const list: T[] = await this.model.find(filter).skip(start).limit(pagesize).sort({
+    const list: T[] = await this.model.find(filter).populate(this.options.directoryPopulate).skip(start).limit(pagesize).sort({
       _id: -1
     })
-    list.sort(this.sortMethod)
+    list.sort(this.methods.sort)
     const res = {
       list,
       page,
@@ -128,7 +120,7 @@ class BaseController<T> {
         const _id = item._id.toString()
         const _item = {
           ...item.toJSON(),
-          _id: this.createObjectId().toString(),
+          _id: this.methods.createObjectId().toString(),
           oldId: _id
         }
         _list.push(_item)
@@ -193,7 +185,7 @@ class BaseController<T> {
       })
       
       for (const itemData of _list) {
-        await this.model.findByIdAndUpdate(itemData._id, { directory: [...itemData.directory] }, this.updateOption)
+        await this.model.findByIdAndUpdate(itemData._id, { directory: [...itemData.directory] }, this.options.update)
       }
       
       return true
@@ -202,37 +194,45 @@ class BaseController<T> {
     }
   }
 
-  dayjs = dayjs
-
-  updateOption = { 
-    new: true, 
-    upsert: true,
-    setDefaultsOnInsert: true,
-    runValidators: true, 
-    findByIdAndUpdate: 'after' 
+  options = {
+    directoryPopulate: {
+      path: 'directoryList',
+      select: '_id title directory type cover desc tags'
+    },
+    update: { 
+      new: true, 
+      upsert: true,
+      setDefaultsOnInsert: true,
+      runValidators: true, 
+      findByIdAndUpdate: 'after' 
+    }
   }
 
-  createObjectId = () => {
-    return new Types.ObjectId()
-  }
-
-  toObjectId (id: string): Types.ObjectId {
-    return new Types.ObjectId(id)
-  }
-
-  sortMethod = ($a: unknown, $b: unknown): 1 | -1 => {
-    const a = $a as TypesBase.IBaseFieldsType
-    const b = $b as TypesBase.IBaseFieldsType
-    if (a.type === b.type) {
-      if (a.order === b.order) {
-        const _a = a.title.charCodeAt(0)
-        const _b = b.title.charCodeAt(0)
-        return _a - _b > 0 ? 1 : -1
+  methods = {
+    dayjs: dayjs,
+    // 创建ObjectID
+    createObjectId: () => {
+      return new Types.ObjectId()
+    },
+    // 字符转ObjectID
+    toObjectId: (id: string): Types.ObjectId => {
+      return new Types.ObjectId(id)
+    },
+    // 通用排序
+    sort: ($a: unknown, $b: unknown): 1 | -1 => {
+      const a = $a as TypesBase.IBaseFieldsType
+      const b = $b as TypesBase.IBaseFieldsType
+      if (a.type === b.type) {
+        if (a.order === b.order) {
+          const _a = a.title.charCodeAt(0)
+          const _b = b.title.charCodeAt(0)
+          return _a - _b > 0 ? 1 : -1
+        } else {
+          return a.order > b.order ? 1 : -1
+        }
       } else {
-        return a.order > b.order ? 1 : -1
+        return a.type === TypesBase.IBaseTypesType.FILE ? 1 : -1
       }
-    } else {
-      return a.type === TypesBase.IBaseTypesType.FILE ? 1 : -1
     }
   }
 

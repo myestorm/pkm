@@ -10,7 +10,7 @@ class DocumentController extends BaseController<TypesDocument.IDocumentModelType
   }
 
   async updateContent (id: string, content: string): Promise<TypesDocument.IDocumentType | null> {
-    return await Document.findByIdAndUpdate(id, { content }, this.updateOption)
+    return await Document.findByIdAndUpdate(id, { content }, this.options.update)
   }
 
   async count (id: string): Promise<number> {
