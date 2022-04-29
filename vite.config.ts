@@ -1,3 +1,5 @@
+/// <reference types="vitest" />
+
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
@@ -75,5 +77,10 @@ export default defineConfig({
       '/admin/': 'http://localhost:4000',
       '/uploads/': 'http://localhost:4000'
     }
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    include: ['tests/src/unit/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
   }
 })

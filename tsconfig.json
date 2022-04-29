@@ -33,7 +33,7 @@
     "app"
   ],
   "include": [
-    "test/*.ts",
+    "tests/*.ts",
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
