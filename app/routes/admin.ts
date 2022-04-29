@@ -86,7 +86,7 @@ export default class User {
     const _body = ctx.request.body as TypesAdmin.IAdminAddType
     const info = await admin.checkUnique('username', _body.username)
     if (!info) {
-      const result = await admin.add(_body)
+      const result = await admin.create(_body)
       const body: TypesBase.IResponeBodyType<TypesAdmin.IAdminType> = {
         code: 0,
         msg: 'success',
@@ -171,7 +171,7 @@ export default class User {
     const _body = ctx.request.body as TypesAdmin.IAdminUpdateSelfPasswordType
     if (id && _body.password && _body.oldPassword && _body.repeatPassword && _body.password === _body.repeatPassword) {
       const info = await admin.infoCondition({
-        _id: admin.toObjectId(id),
+        _id: admin.methods.toObjectId(id),
         password: _body.oldPassword,
         status: 1
       })

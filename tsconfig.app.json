@@ -11,6 +11,9 @@
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "types": [
+      "mocha"
+    ],
     "typeRoots": [
       "./node_modules/koa-body",
       "./node_modules/@types",
@@ -19,6 +22,7 @@
     ]
   },
   "include": [
+    "test/*.ts",
     "app/**/*.ts",
     "app/**/*.d.ts",
     "types/**/*.ts"

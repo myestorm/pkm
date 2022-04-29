@@ -13,7 +13,8 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "types": [
-      "vite-plugin-pwa/client"
+      "vite-plugin-pwa/client",
+      "mocha"
     ],
     "typeRoots": [
 			"./node_modules/koa-body",
@@ -32,6 +33,7 @@
     "app"
   ],
   "include": [
+    "test/*.ts",
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",

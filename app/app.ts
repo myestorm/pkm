@@ -97,3 +97,5 @@ app.on('error', async (err, ctx) => {
 app.listen(4000, () => {
   console.log('application is running on port 4000')
 })
+
+export default app
