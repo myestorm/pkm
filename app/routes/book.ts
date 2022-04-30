@@ -24,6 +24,19 @@ export default class User {
     await next()
   }
 
+  @post('/list/page')
+  async BookListPage (ctx: Context, next: Next) {
+    const _body = ctx.request.body as TypesBase.IPageType<{}>
+    const result = await book.listPage(_body.page, _body.pagesize, {})
+    const body: TypesBase.IResponeBodyType<TypesBase.IResponePageType<TypesBook.IBookType>> = {
+      code: 0,
+      msg: 'success',
+      data: result
+    }
+    ctx.body = body
+    await next()
+  }
+
   @del('/remove/:id')
   async BookRemove (ctx: Context, next: Next) {
     const { id = '' } = ctx.params
@@ -64,19 +77,6 @@ export default class User {
     await next()
   }
 
-  @post('/breadcrumbs')
-  async BookBreadcrumbs (ctx: Context, next: Next) {
-    const { ids } = ctx.request.body as { ids: string[] }
-    const result = await book.batchQueryByIds(ids)
-    const body: TypesBase.IResponeBodyType<TypesBook.IBookType[]> = {
-      code: 0,
-      msg: 'success',
-      data: result
-    }
-    ctx.body = body
-    await next()
-  }
-
   @post('/copy')
   async BookCopy (ctx: Context, next: Next) {
     const { id, directory } = ctx.request.body as { id: string, directory: string[] }
@@ -103,46 +103,54 @@ export default class User {
     await next()
   }
 
-  @put('/order')
+  @put('/update/:id/order')
   async BookOrder (ctx: Context, next: Next) {
-    const _body = ctx.request.body as { id: string, order: number }
-    const info = await book.info(_body.id)
-    if (info) {
-      const result = await book.updateOrder(_body.id, _body.order)
-      const body: TypesBase.IResponeBodyType<TypesBook.IBookType | null> = {
-        code: 0,
-        msg: 'success',
-        data: result
-      }
-      ctx.body = body
-    } else {
-      ctx.body = {
-        code: 1,
-        msg: '参数不正确'
-      }
+    const { id = '' } = ctx.params
+    const { order } = ctx.request.body as { order: number }
+    const result = await book.updateById(id, { order })
+    const body: TypesBase.IResponeBodyType<TypesBook.IBookType | null> = {
+      code: 0,
+      msg: 'success',
+      data: result
     }
+    ctx.body = body
     await next()
   }
 
-  @post('/add')
-  async BookAdd (ctx: Context, next: Next) {
-    const _body = ctx.request.body as TypesBook.IBookFormType
-    const id = _body._id
-    const postData: TypesBook.IBookAddType = {
-      title: _body.title,
-      directory: _body.directory,
-      cover: _body.cover,
-      desc: _body.desc,
-      tags: _body.tags,
-      type: _body.type,
-      author: _body.author,
-      readed: _body.readed,
-      heard: _body.heard,
-      purchased: _body.purchased,
-      ISBN: _body.ISBN,
-      rating: _body.rating
+  @put('/update/:id/directory')
+  async DocumentUpdateDirectory (ctx: Context, next: Next) {
+    const { id = '' } = ctx.params
+    const _body = ctx.request.body as { directory: string[] }
+    const result = await book.updateById(id, { directory: _body.directory })
+    const body: TypesBase.IResponeBodyType<TypesBook.IBookType | null> = {
+      code: 0,
+      msg: 'success',
+      data: result
     }
-    const result = id ? await book.update(id, postData) : await book.create(postData)
+    ctx.body = body
+    await next()
+  }
+
+  @put('/update/:id')
+  async DocumentUpdate (ctx: Context, next: Next) {
+    const { id = '' } = ctx.params
+    const _body = ctx.request.body as TypesBook.IBookUpdateType
+    const postData = book.methods.clearUnnecessaryFields(_body, ['title', 'directory', 'type', 'cover', 'desc', 'tags', 'author', 'readed', 'heard', 'purchased', 'ISBN', 'rating'])
+    const result = await book.updateById(id, postData)
+    const body: TypesBase.IResponeBodyType<TypesBook.IBookType | null> = {
+      code: 0,
+      msg: 'success',
+      data: result
+    }
+    ctx.body = body
+    await next()
+  }
+
+  @post('/create')
+  async BookCreate (ctx: Context, next: Next) {
+    const _body = ctx.request.body as TypesBook.IBookCreateType
+    const postData = book.methods.clearUnnecessaryFields(_body, ['title', 'directory', 'type', 'cover', 'desc', 'tags', 'author', 'readed', 'heard', 'purchased', 'ISBN', 'rating'])
+    const result = await book.create(postData)
     const body: TypesBase.IResponeBodyType<TypesBook.IBookType | null> = {
       code: 0,
       msg: 'success',
@@ -172,19 +180,6 @@ export default class User {
     await next()
   }
 
-  @post('/list/page')
-  async BookListPage (ctx: Context, next: Next) {
-    const _body = ctx.request.body as TypesBase.IPageType<{}>
-    const result = await book.listPage(_body.page, _body.pagesize, {})
-    const body: TypesBase.IResponeBodyType<TypesBase.IResponePageType<TypesBook.IBookType>> = {
-      code: 0,
-      msg: 'success',
-      data: result
-    }
-    ctx.body = body
-    await next()
-  }
-
   @post('/note/add/:bookId')
   async NoteAdd (ctx: Context, next: Next) {
     const { bookId = '' } = ctx.params
@@ -194,7 +189,7 @@ export default class User {
         msg: '参数不正确'
       }
     } else {
-      const _body = ctx.request.body as TypesBook.INoteAddType
+      const _body = ctx.request.body as TypesBook.INoteCreateType
       const result = await book.addNote(bookId, _body)
       const body: TypesBase.IResponeBodyType<TypesBook.INoteType | null> = {
         code: 0,
@@ -215,7 +210,7 @@ export default class User {
         msg: '参数不正确'
       }
     } else {
-      const _body = ctx.request.body as TypesBook.INoteAddType
+      const _body = ctx.request.body as TypesBook.INoteUpdateType
       const info = await book.noteInfo(bookId, noteId)
       if (info) {
         const result = await book.updateNote(bookId, noteId, _body)

@@ -28,8 +28,7 @@ app.use(async (ctx: Context, next: Next) => {
 
 app.use(historyApiFallback({
   whiteList: [
-    '/api/',
-    '/admin/',
+    '/api/'
   ]
 }))
 
@@ -44,8 +43,10 @@ app.use(config({
 
 app.use(authorization({
   blackList: [
-    '^\/api\/',
-    '^\/admin\/(info|add|signup|signout|list|reset\/password|disabled|self\/password|self\/info)'
+    '/api/*'
+  ],
+  whiteList: [
+    '/api/signin'
   ]
 }))
 app.use(koaBody({

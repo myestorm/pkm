@@ -13,19 +13,17 @@ import mongoConfig from './.mongo.config'
   const pwd = 'totonoo'
   const userinfo = {
     username: 'totonoo',
-    password: MD5(pwd).toString(),
+    password: MD5(MD5(pwd).toString()).toString(),
     avatar: '',
     nickname: 'totonoo',
     mobile: '18688886666',
     email: 'totonoo@totonoo.com',
     root: true,
-    status: 1,
-    createdBy: '', 
-    updatedBy: ''
+    status: 1
   }
-  const result = await admin.checkUnique('username', userinfo.username)
+  const result = await admin.checkUnique({ username: userinfo.username })
   if (!result) {
-    admin.add(userinfo).then(() => {
+    admin.create(userinfo).then(() => {
       console.log(`创建用户成功：${userinfo.username} / ${pwd}`)
     }).catch(err => {
       console.log(err)

@@ -1,4 +1,3 @@
-import { MD5 } from 'crypto-js'
 import jwt from 'jsonwebtoken'
 import Admin from '../models/admin'
 
@@ -12,11 +11,10 @@ class AdminController extends BaseController<TypesAdmin.IAdminModelType> {
     super(Admin)
   }
 
-  // 登录
-  async signin (data: TypesAdmin.ISigninType, secret: string): Promise<string | null> {
-    const result = await this.model.findOne({
+  async signin (data: TypesAdmin.IAdminSigninType, secret: string): Promise<string | null> {
+    const result = await this.findOne({
       username: data.username,
-      password: MD5(data.password).toString(),
+      password: this.methods.md5(data.password),
       status: 1
     })
     if (result) {
@@ -35,102 +33,35 @@ class AdminController extends BaseController<TypesAdmin.IAdminModelType> {
     }
   }
 
-  // 检查账号是否唯一
-  async checkUnique (key: string, value: any): Promise<boolean> {
-    const condition: {
-      [key: string]: unknown
-    } = {}
-    condition[key] = value
-    const info = await this.model.findOne(condition)
+  async checkUnique (condition: TypesAdmin.IAdminQueryType): Promise<boolean> {
+    const info = await this.findOne(condition)
     return Boolean(info && info._id)
   }
 
-  // 添加
-  async addAdmin (data: TypesAdmin.IAdminAddType): Promise<string> {
-    data.password = MD5(data.password).toString()
-    const item = await this.model.create(data)
-    return item._id.toString()
+  async createAdmin (data: TypesAdmin.IAdminCreateType): Promise<string> {
+    data.password = this.methods.md5(data.password)
+    const item = await this.create(data)
+    return item.id
   }
 
-  // 条件查询用户
-  async infoCondition (condition: TypesAdmin.IQueryCondition): Promise<TypesAdmin.IAdminType | null> {
-    if (condition.password) {
-      condition.password = MD5(condition.password).toString()
+  async updateAdmin (id: string, data: TypesAdmin.IAdminUpdateType): Promise<string> {
+    if (data.password) {
+      data.password = this.methods.md5(data.password)
     }
-    return await Admin.findById(condition, {
-      password: 0
-    })
+    await this.updateById(id, data)
+    return id
   }
 
-  // // 所有用户
-  async adminList (): Promise<TypesAdmin.IAdminType[]> {
-    const list = await Admin.find({}, '-password').sort({
+  async infoAdmin (id: string): Promise<TypesAdmin.IAdminType | null> {
+    const result = await this.model.findById(id)
+    return result
+  }
+
+  async listAdmin (filter: TypesAdmin.IAdminQueryType = {}): Promise<TypesAdmin.IAdminType[]> {
+    const list = await this.model.find(filter, '-password -root').sort({
       _id: -1
     })
     return list
-  }
-
-  // 重置密码
-  async resetPassword (id: string, updatedBy: string): Promise<string> {
-    const pwd = '123456!@#$'
-    let password = MD5(pwd).toString()
-    password = MD5(password).toString()
-    await this.model.findByIdAndUpdate(id, { password, updatedBy }, { 
-      new: true, 
-      upsert: true,
-      runValidators: true, 
-      findByIdAndUpdate: 'after' 
-    })
-    return pwd
-  }
-
-  // 修改用户状态 0 禁用 1 启用
-  async disabled (id: string, status: number, updatedBy: string): Promise<string> {
-    await this.model.findByIdAndUpdate(id, { status, updatedBy }, { 
-      new: true, 
-      upsert: true,
-      runValidators: true, 
-      findByIdAndUpdate: 'after' 
-    })
-    return id
-  }
-
-  // 修改自己的密码
-  async updateSelfPassword (id: string, password: string): Promise<string> {
-    const _password = MD5(password).toString()
-    await this.model.findByIdAndUpdate(id, {
-      password: _password
-    }, { 
-      new: true, 
-      upsert: true,
-      runValidators: true, 
-      findByIdAndUpdate: 'after' 
-    })
-    return id
-  }
-
-  // 修改自己的账号信息
-  async updateSelf (id: string, data: TypesAdmin.IAdminUpdateSelfInfoType): Promise<string> {
-    const _data: TypesAdmin.IAdminUpdateSelfInfoType = {}
-    if (data.avatar) {
-      _data.avatar = data.avatar
-    }
-    if (data.nickname) {
-      _data.nickname = data.nickname
-    }
-    if (data.mobile) {
-      _data.mobile = data.mobile
-    }
-    if (data.email) {
-      _data.email = data.email
-    }
-    await this.model.findByIdAndUpdate(id, _data, { 
-      new: true, 
-      upsert: true,
-      runValidators: true, 
-      findByIdAndUpdate: 'after' 
-    })
-    return id
   }
 
 }

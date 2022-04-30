@@ -1,4 +1,4 @@
-import { Schema, model, now } from 'mongoose'
+import { Schema, model } from 'mongoose'
 import * as TypesDocument  from '../types/document'
 
 import { baseDef } from './base/base'

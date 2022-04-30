@@ -16,23 +16,24 @@ export interface IAdminType {
   updatedAt: Date
 }
 
-export type ISchemaAdminType = Omit<IAdminType, '_id'>
+export type IAdminSchemaType = Omit<IAdminType, '_id'>
 export type IAdminModelType = HydratedDocument<
-  ISchemaAdminType
+  IAdminSchemaType
 >
 
-export type ISigninType = Pick<IAdminType, 'username' | 'password'>
-export type IAdminAddType = Omit<IAdminType, '_id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'updatedBy'>
-export type IAdminUpdateSelfPasswordType = {
+export type IAdminSigninType = Pick<IAdminType, 'username' | 'password'>
+export type IAdminCreateType = Pick<IAdminType, 'username' | 'password' | 'avatar' | 'nickname' | 'mobile' | 'email'>
+export type IAdminUpdateType = Partial<IAdminCreateType>
+
+export type IAdminChangePasswordType = {
   oldPassword: string,
   password: string,
   repeatPassword: string
 }
-export type IAdminUpdateSelfInfoType = Partial<Pick<IAdminType, 'avatar' | 'nickname' | 'mobile' | 'email'>>
-export type IQueryCondition = Partial<Pick<IAdminType, '_id' | 'username' | 'password' | 'mobile' | 'email' | 'status'>>
+export type IAdminChangeAccountInfoType = Partial<Pick<IAdminType, 'avatar' | 'nickname' | 'mobile' | 'email'>>
+export type IAdminQueryType = Partial<Pick<IAdminType, 'username' | 'mobile' | 'email' | 'status'>>
 
-export type IUserInfoType = {
-  userinfo: IAdminType,
+export type IAdminContextUserType = {
+  userinfo: Pick<IAdminType, '_id' | 'username' | 'avatar' | 'nickname' | 'mobile' | 'email'>,
   token: string
 }
-

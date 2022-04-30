@@ -11,35 +11,13 @@ class BookController extends BaseController<TypesBook.IBookModelType> {
 
   async copyBook (id: string, directory: string[] = []): Promise<boolean> {
     const result = this.copy(id, directory, (data: TypesBook.IBookType) => {
-      return {
-        _id: data._id,
-        title: data.title,
-        directory: data.directory,
-        type: data.type,
-        cover: data.cover,
-        desc: data.desc,
-        tags: data.tags,
-        top: data.top,
-        order: data.order,
-        comments: [],
-        notes: data.notes,
-        createdBy: data.createdBy,
-        createdAt: data.createdAt,
-        updatedBy: data.updatedBy,
-        updatedAt: data.updatedAt,
-
-        author: data.author,
-        readed: data.readed,
-        heard: data.heard,
-        purchased: data.purchased,
-        ISBN: data.ISBN,
-        rating: data.rating
-      }
+      const _data = this.methods.clearUnnecessaryFields(data, ['_id', 'title', 'directory', 'type', 'cover', 'desc', 'tags', 'top', 'order', 'comments', 'notes', 'author', 'readed', 'heard', 'purchased', 'ISBN', 'rating'])
+      return _data
     })
     return result
   }
 
-  async addNote (bookId: string, data: TypesBook.INoteAddType): Promise<TypesBook.INoteType | null> {
+  async addNote (bookId: string, data: TypesBook.INoteCreateType): Promise<TypesBook.INoteType | null> {
     const book = await this.model.findById(bookId)
     if (book) {
       book?.notes.unshift(data)
@@ -50,7 +28,7 @@ class BookController extends BaseController<TypesBook.IBookModelType> {
     }
   }
 
-  async updateNote (bookId: string, noteId: string, data: TypesBook.INoteAddType): Promise<TypesBook.INoteType | null> {
+  async updateNote (bookId: string, noteId: string, data: TypesBook.INoteCreateType): Promise<TypesBook.INoteType | null> {
     const book = await this.model.findById(bookId)
     let note = book?.notes.id(noteId)
     note = Object.assign(note, data)

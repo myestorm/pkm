@@ -17,14 +17,12 @@
     "typeRoots": [
       "./node_modules/koa-body",
       "./node_modules/@types",
-      "./app/types",
-      "./src/types"
+      "./app/types"
     ]
   },
   "include": [
-    "tests/*.ts",
     "app/**/*.ts",
     "app/**/*.d.ts",
-    "types/**/*.ts"
+    "app/types/**/*.ts"
   ]
 }

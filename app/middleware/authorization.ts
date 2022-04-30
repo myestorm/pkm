@@ -1,29 +1,35 @@
 import { Context, Next } from 'koa'
 import jwt, { Jwt } from 'jsonwebtoken'
+import minimatch from 'minimatch'
 
 export interface IOptionsType {
-  blackList: string[]
+  blackList: string[],
+  whiteList: string[],
+}
+
+const checkInList = (url: string, list: string[]): boolean => {
+  let isIn = false
+  for (let i = 0; i < list.length; i++) {
+    const item = list[i]
+    const isMatch = minimatch(url, item)
+    if (isMatch) {
+      isIn = true
+      break
+    }
+  }
+  return isIn
 }
 
 export default (options: IOptionsType = {
-  blackList: []
+  blackList: [],
+  whiteList: [],
 }) => {
-  const checkInBlackList = (url: string): boolean => {
-    let isIn = false
-    for (let i = 0; i < options.blackList.length; i++) {
-      const item = options.blackList[i]
-      const reg = new RegExp(item)
-      if (reg.test(url)) {
-        isIn = true
-        break
-      }
-    }
-    return isIn
-  }
   return async (ctx: Context, next: Next) => {
     // 是否需要验证权限
-    const isInBlackList = checkInBlackList(ctx.request.url)
-    if (isInBlackList) {
+    const url = ctx.request.url
+    const isInBlackList = checkInList(url, options.blackList)
+    const isInWhiteList = checkInList(url, options.whiteList)
+    if (isInBlackList && !isInWhiteList) {
       if (ctx.header && ctx.header.authorization) {
         const parts = ctx.header.authorization.split(' ')
         if (parts.length === 2) {

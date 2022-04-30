@@ -6,16 +6,16 @@ export interface IDocumentType extends BaseTypes.IBaseFieldsType {
   comments: BaseTypes.ICommentType[]
 }
 
-export type ISchemaDocumentType = Omit<IDocumentType, '_id'>
+export type IDocumentSchemaType = Omit<IDocumentType, '_id'>
 export type IDocumentModelType = HydratedDocument<
-  ISchemaDocumentType & {
+  IDocumentSchemaType & {
     comments: Types.DocumentArray<
       BaseTypes.ICommentType
     > & Types.Subdocument
   }
 >
 
-export type IDocumentAddType = Pick<IDocumentType, 'title' | 'directory' | 'cover' | 'desc' | 'tags' | 'type'>
-export type IDocumentPartialType = Partial<IDocumentType>
+export type IDocumentCreateType = Pick<IDocumentType, 'title' | 'directory' | 'cover' | 'desc' | 'tags' | 'type' | 'content'>
+export type IDocumentUpdateType = Partial<IDocumentCreateType>
 
-export type IDocumentAddRouteType = IDocumentAddType & { _id: string }
+export type IDocumentQueryType = Partial<IDocumentType>

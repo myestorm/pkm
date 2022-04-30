@@ -1,5 +1,7 @@
 import { Types, Model, UnpackedIntersection } from 'mongoose'
 import dayjs from 'dayjs'
+import { MD5 } from 'crypto-js'
+
 import * as TypesBase from '../types/base'
 
 class BaseController<T> {
@@ -14,16 +16,8 @@ class BaseController<T> {
     return result
   }
 
-  async update<A> (id: string, data: A): Promise<T | null> {
+  async updateById<A> (id: string, data: A): Promise<T | null> {
     return await this.model.findByIdAndUpdate(id, data, this.options.update)
-  }
-
-  async updateDirectory (id: string, directory: string[]): Promise<T | null> {
-    return await this.model.findByIdAndUpdate(id, { directory }, this.options.update)
-  }
-
-  async updateOrder (id: string, order: number): Promise<T | null> {
-    return await this.model.findByIdAndUpdate(id, { order }, this.options.update)
   }
 
   async remove (id: string): Promise<T | null> {
@@ -32,6 +26,11 @@ class BaseController<T> {
 
   async info (id: string): Promise<UnpackedIntersection<T, {}> | null> {
     const result = await this.model.findById(id).populate(this.options.directoryPopulate)
+    return result
+  }
+
+  async findOne<A> (condition: A): Promise<T | null> {
+    const result = await this.model.findOne(condition)
     return result
   }
 
@@ -96,6 +95,15 @@ class BaseController<T> {
       total
     }
     return res
+  }
+
+  async countChildren (id: string): Promise<number> {
+    const total = await this.model.find({
+      directory: {
+        $in: [id]
+      }
+    }).count()
+    return total
   }
 
   async copy (id: string, directory: string[] = [], copyFields: Function): Promise<boolean> {
@@ -210,14 +218,21 @@ class BaseController<T> {
 
   methods = {
     dayjs: dayjs,
+
+    md5: (str: string) => {
+      return MD5(str).toString()
+    },
+
     // 创建ObjectID
     createObjectId: () => {
       return new Types.ObjectId()
     },
+
     // 字符转ObjectID
     toObjectId: (id: string): Types.ObjectId => {
       return new Types.ObjectId(id)
     },
+
     // 通用排序
     sort: ($a: unknown, $b: unknown): 1 | -1 => {
       const a = $a as TypesBase.IBaseFieldsType
@@ -233,7 +248,17 @@ class BaseController<T> {
       } else {
         return a.type === TypesBase.IBaseTypesType.FILE ? 1 : -1
       }
+    },
+
+    // 清理必要字段
+    clearUnnecessaryFields: <A>(data: A, fields: (keyof A)[]): A => {
+      const res: A = {} as A
+      fields.map(key => {
+        res[key] = data[key]
+      })
+      return res
     }
+
   }
 
 }

@@ -10,19 +10,11 @@ const document = new Document()
 @prefix('/api/document')
 export default class DocumentRouter {
 
-  @post('/add')
-  async DocumentAdd (ctx: Context, next: Next) {
-    const _body = ctx.request.body as TypesDocument.IDocumentAddRouteType
-    const id = _body._id
-    const postData: TypesDocument.IDocumentAddType = {
-      title: _body.title,
-      directory: _body.directory,
-      cover: _body.cover,
-      desc: _body.desc,
-      tags: _body.tags,
-      type: _body.type
-    }
-    const result = id ? await document.update(id, postData) : await document.create(postData)
+  @post('/create')
+  async DocumentCreate (ctx: Context, next: Next) {
+    const _body = ctx.request.body as TypesDocument.IDocumentCreateType
+    const postData = document.methods.clearUnnecessaryFields(_body, ['title', 'directory', 'type', 'cover', 'desc', 'tags', 'content'])
+    const result = await document.create(postData)
     const body: TypesBase.IResponeBodyType<TypesDocument.IDocumentType | null> = {
       code: 0,
       msg: 'success',
@@ -32,45 +24,60 @@ export default class DocumentRouter {
     await next()
   }
 
-  @put('/update/order')
+  @put('/update/:id/order')
   async DocumentUpdateOrder (ctx: Context, next: Next) {
-    const _body = ctx.request.body as { id: string, order: number }
-    const info = await document.info(_body.id)
-    if (info) {
-      const result = await document.updateOrder(_body.id, _body.order)
-      const body: TypesBase.IResponeBodyType<TypesDocument.IDocumentType | null> = {
-        code: 0,
-        msg: 'success',
-        data: result
-      }
-      ctx.body = body
-    } else {
-      ctx.body = {
-        code: 1,
-        msg: '参数不正确'
-      }
+    const { id = '' } = ctx.params
+    const _body = ctx.request.body as { order: number }
+    const result = await document.updateById(id, { order: _body.order })
+    const body: TypesBase.IResponeBodyType<TypesDocument.IDocumentType | null> = {
+      code: 0,
+      msg: 'success',
+      data: result
     }
+    ctx.body = body
     await next()
   }
 
-  @put('/update/content')
-  async DocumentUpdateContent (ctx: Context, next: Next) {
-    const _body = ctx.request.body as { id: string, content: string }
-    const info = await document.info(_body.id)
-    if (info) {
-      const result = await document.updateContent(_body.id, _body.content)
-      const body: TypesBase.IResponeBodyType<TypesDocument.IDocumentType | null> = {
-        code: 0,
-        msg: 'success',
-        data: result
-      }
-      ctx.body = body
-    } else {
-      ctx.body = {
-        code: 1,
-        msg: '参数不正确'
-      }
+  @put('/update/:id/directory')
+  async DocumentUpdateDirectory (ctx: Context, next: Next) {
+    const { id = '' } = ctx.params
+    const _body = ctx.request.body as { directory: string[] }
+    const result = await document.updateById(id, { directory: _body.directory })
+    const body: TypesBase.IResponeBodyType<TypesDocument.IDocumentType | null> = {
+      code: 0,
+      msg: 'success',
+      data: result
     }
+    ctx.body = body
+    await next()
+  }
+
+  @put('/update/:id/content')
+  async DocumentUpdateContent (ctx: Context, next: Next) {
+    const { id = '' } = ctx.params
+    const _body = ctx.request.body as { content: string }
+    const result = await document.updateById(id, { content: _body.content })
+    const body: TypesBase.IResponeBodyType<TypesDocument.IDocumentType | null> = {
+      code: 0,
+      msg: 'success',
+      data: result
+    }
+    ctx.body = body
+    await next()
+  }
+
+  @put('/update/:id')
+  async DocumentUpdate (ctx: Context, next: Next) {
+    const { id = '' } = ctx.params
+    const _body = ctx.request.body as TypesDocument.IDocumentUpdateType
+    const postData = document.methods.clearUnnecessaryFields(_body, ['title', 'directory', 'type', 'cover', 'desc', 'tags', 'content'])
+    const result = await document.updateById(id, postData)
+    const body: TypesBase.IResponeBodyType<TypesDocument.IDocumentType | null> = {
+      code: 0,
+      msg: 'success',
+      data: result
+    }
+    ctx.body = body
     await next()
   }
 
@@ -78,29 +85,22 @@ export default class DocumentRouter {
   async DocumentRemove (ctx: Context, next: Next) {
     const { id = '' } = ctx.params
     if (id) {
-      const info = await document.info(id)
-      if (info) {
-        const total = await document.count(info._id.toString())
-        if (total === 0) {
-          await document.remove(id)
-          const body: TypesBase.IResponeBodyType<string> = {
-            code: 0,
-            msg: 'success',
-            data: id
-          }
-          ctx.body = body
-        } else {
-          ctx.body = {
-            code: 3,
-            msg: '目录下还有文件，请先删除子目录或文件'
-          }
+      const total = await document.countChildren(id)
+      if (total === 0) {
+        await document.remove(id)
+        const body: TypesBase.IResponeBodyType<string> = {
+          code: 0,
+          msg: 'success',
+          data: id
         }
+        ctx.body = body
       } else {
         ctx.body = {
           code: 2,
-          msg: '参数不正确'
+          msg: '目录下还有文件，请先删除子目录或文件'
         }
       }
+
     } else {
       ctx.body = {
         code: 1,
@@ -132,7 +132,7 @@ export default class DocumentRouter {
 
   @post('/list')
   async DocumentList (ctx: Context, next: Next) {
-    const _body = ctx.request.body as TypesDocument.IDocumentPartialType
+    const _body = ctx.request.body as TypesDocument.IDocumentQueryType
     const result = await document.list(_body)
     const body: TypesBase.IResponeBodyType<TypesDocument.IDocumentType[]> = {
       code: 0,
@@ -143,30 +143,10 @@ export default class DocumentRouter {
     await next()
   }
 
-  @post('/breadcrumbs')
-  async DocumentInfoFind (ctx: Context, next: Next) {
-    const { ids } = ctx.request.body as { ids: string[] }
-    let body: TypesBase.IResponeBodyType<TypesDocument.IDocumentType[]> = {
-      code: 0,
-      msg: 'success',
-      data: []
-    }
-    if (Array.isArray(ids) && ids.length > 0) {
-      const result = await document.batchQueryByIds(ids)
-      body = {
-        code: 0,
-        msg: 'success',
-        data: result
-      }
-    }
-    ctx.body = body
-    await next()
-  }
-
   @post('/list/page')
   async DocumentListPage (ctx: Context, next: Next) {
-    const _body = ctx.request.body as TypesBase.IPageType<TypesDocument.IDocumentPartialType>
-    const conditions = _body.conditions as TypesDocument.IDocumentPartialType
+    const _body = ctx.request.body as TypesBase.IPageType<TypesDocument.IDocumentQueryType>
+    const conditions = _body.conditions
     const result = await document.listPage(_body.page, _body.pagesize, conditions)
     const body: TypesBase.IResponeBodyType<TypesBase.IResponePageType<TypesDocument.IDocumentType>> = {
       code: 0,

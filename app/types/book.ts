@@ -21,9 +21,9 @@ export interface IBookType extends BaseTypes.IBaseFieldsType {
   comments: BaseTypes.ICommentType[]
 }
 
-export type ISchemaBookType = Omit<IBookType, '_id'>
+export type IBookSchemaType = Omit<IBookType, '_id'>
 export type IBookModelType = HydratedDocument<
-  ISchemaBookType & {
+  IBookSchemaType & {
     notes: Types.DocumentArray<INoteType> & Types.Subdocument,
     comments: Types.DocumentArray<
       BaseTypes.ICommentType
@@ -31,8 +31,9 @@ export type IBookModelType = HydratedDocument<
   }
 >
 
-export type IBookAddType = Pick<IBookType, 'title' | 'directory' | 'cover' | 'desc' | 'tags' | 'type' | 'author' | 'readed' | 'heard' | 'purchased' | 'ISBN' | 'rating'>
+export type IBookCreateType = Pick<IBookType, 'title' | 'directory' | 'cover' | 'desc' | 'tags' | 'type' | 'author' | 'readed' | 'heard' | 'purchased' | 'ISBN' | 'rating'>
+export type IBookUpdateType = Partial<IBookCreateType>
 export type IBookQueryType = Partial<IBookType>
-export type INoteAddType = Pick<INoteType, 'content'>
 
-export type IBookFormType = IBookAddType & { _id: string }
+export type INoteCreateType = Pick<INoteType, 'content'>
+export type INoteUpdateType = INoteCreateType

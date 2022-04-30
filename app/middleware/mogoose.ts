@@ -34,7 +34,7 @@ function createUpdateByPlugin (schema: Schema, options = {}) {
     this.updatedBy = user.id
     next()
   })
-  schema.pre(['updateOne', 'findOneAndUpdate' ], function (next) {
+  schema.pre(['updateOne', 'findOneAndUpdate'], function (next) {
     const postData = {
       ...this.getUpdate(),
       updatedBy: user.id
