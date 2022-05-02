@@ -52,16 +52,14 @@
             >
               <template #default="{ item, index }">
                 <div class="item" :data-index="index" :key="item.id" :class="[item.id == currentId ? 'current' : '', index % 2 == 0 ? 'odd' : '']">
-                  <div class="icon" @click="sortItemClick(item)">
-                    <icon-file :size="24" :strokeWidth="2" v-if="item.type == 'file'" />
+                  <div class="icon" :class="[item.type == 'file' ? 'icon-image' : '']" @click="sortItemClick(item)">
+                    <img :alt="item.title" :src="item.cover" v-if="item.type == 'file'">
                     <icon-folder :size="24" :strokeWidth="2" v-else />
                   </div>
                   <div class="info" @click="sortItemClick(item)">
-                    <div class="title">{{ item.title }}</div>
+                    <div class="title" :title="item.title">{{ subStr(item.title, 16) }}</div>
+                    <div class="author" :title="item.author">{{ subStr(item.author, 16) }}</div>
                     <div class="desc">{{ subStr(item.desc, 54) }}</div>
-                    <div class="day">
-                      {{ dayjs(item.updatedAt).format('YYYY-MM-DD HH:mm') }}
-                    </div>
                   </div>
                   <div class="action">
                     <pkm-dropdown position="br">
@@ -124,7 +122,7 @@
                     <icon-file />
                   </template>
                   <template #default>
-                    文档
+                    书籍
                   </template>
                 </pkm-doption>
                 <pkm-doption @click="creatFolder">
@@ -201,7 +199,7 @@ export default defineComponent({
       })
     }
     const updatePageInfo = () => {
-      if (currentId.value === pageInfo.value.id) {
+      if (currentId.value && currentId.value === pageInfo.value.id) {
         bookStore.bookInfo(pageInfo.value.id).then(res => {
           const data = res.data
           const type = data.type

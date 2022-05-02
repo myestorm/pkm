@@ -58,7 +58,7 @@
                   </div>
                   <div class="info" @click="sortItemClick(item)">
                     <div class="title">{{ item.title }}</div>
-                    <div class="desc">{{ subStr(item.desc, 54) }}</div>
+                    <div class="desc">{{ subStr(item.desc, 52) }}</div>
                     <div class="day">
                       {{ dayjs(item.updatedAt).format('YYYY-MM-DD HH:mm') }}
                     </div>
@@ -141,7 +141,7 @@
         </div>
       </pkm-layout-sider>
       <pkm-layout-content class="pkm-totonoo-file-content">
-        <div class="pkm-totonoo-markdown-editor">
+        <div class="pkm-totonoo-markdown-editor" v-if="pageInfo.id">
           <div class="pkm-totonoo-flex header">
             <pkm-typography-title flex="auto" class="heading" :heading="6">{{ pageInfo.title }}</pkm-typography-title>
             <div class="action">

@@ -43,16 +43,14 @@
             <div class="file-list">
               <ul v-if="list.length > 0">
                 <li class="item" :class="[item.id == currentId ? 'current' : '']" v-for="item in list" :key="item.id">
-                  <div class="icon" @click="itemClickHandler(item)">
-                    <icon-file :size="24" :strokeWidth="2" v-if="item.type == 'file'" />
+                  <div class="icon" :class="[item.type == 'file' ? 'icon-image' : '']" @click="itemClickHandler(item)">
+                    <img :alt="item.title" :src="item.cover" v-if="item.type == 'file'">
                     <icon-folder :size="24" :strokeWidth="2" v-else />
                   </div>
                   <div class="info" @click="itemClickHandler(item)">
-                    <div class="title">{{ item.title }}</div>
-                    <div class="desc">{{ item.desc }}</div>
-                    <div class="day">
-                      {{ dayjs(item.updatedAt).format('YYYY-MM-DD HH:mm') }}
-                    </div>
+                    <div class="title" :title="item.title">{{ subStr(item.title, 24) }}</div>
+                    <div class="author" :title="item.author">{{ subStr(item.author, 24) }}</div>
+                    <div class="desc">{{ subStr(item.desc, 108) }}</div>
                   </div>
                   <div class="action">
                     <pkm-dropdown position="br">
@@ -116,6 +114,7 @@ import BookInfo from '@/views/components/book/info-mobile.vue'
 import useBookStore from '@/store/book/index'
 import * as TypesBase from '@/types/base'
 import * as TypesBook from '@/types/book'
+import { subStr } from '@/utils/index'
 
 export default defineComponent({
   components: {
@@ -362,7 +361,8 @@ export default defineComponent({
       creatDocument,
       creatFolder,
 
-      dayjs
+      dayjs,
+      subStr
     }
   }
 })

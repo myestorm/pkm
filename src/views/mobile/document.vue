@@ -49,7 +49,7 @@
                   </div>
                   <div class="info" @click="itemClickHandler(item)">
                     <div class="title">{{ item.title }}</div>
-                    <div class="desc">{{ item.desc }}</div>
+                    <div class="desc">{{ subStr(item.desc, 72) }}</div>
                     <div class="day">
                       {{ dayjs(item.updatedAt).format('YYYY-MM-DD HH:mm') }}
                     </div>
@@ -121,6 +121,7 @@ import * as MDEditor from '@totonoo/vue-codemirror'
 import useDocumentStore from '@/store/document/index'
 import * as TypesBase from '@/types/base'
 import * as TypesDocument from '@/types/document'
+import { subStr } from '@/utils/index'
 
 export default defineComponent({
   components: {
@@ -373,7 +374,8 @@ export default defineComponent({
       creatDocument,
       creatFolder,
 
-      dayjs
+      dayjs,
+      subStr
     }
   }
 })

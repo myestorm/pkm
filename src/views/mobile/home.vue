@@ -46,16 +46,18 @@
       <pkm-space direction="vertical" size="medium" fill>
         <pkm-card title="最近文档" class="pkm-totonoo-card">
           <div class="item" v-for="item in documentList" :key="item.id" @click="linkTo('document', item)">
-            <div class="name"><icon-file />{{ item.title }}</div>
-            <div class="desc">{{ item.desc }}</div>
+            <div class="name"><icon-file style="margin-right: 4px;" />{{ item.title }}</div>
+            <div class="desc">{{ subStr(item.desc, 84) }}</div>
             <div class="day">{{ dayjs(item.updatedAt).format('YYYY-MM-DD HH:mm') }}</div>
           </div>
         </pkm-card>
         <pkm-card title="书架更新" class="pkm-totonoo-card">
           <pkm-row :gutter="[8, 8]">
             <pkm-col :span="8" v-for="item in bookList" :key="item.id" @click="linkTo('book', item)">
-              <pkm-image :src="item.cover || '/images/no-book.png'" width="100%" />
-              <div class="book-title">{{ subStr(item.title, 24) }}</div>
+              <div class="item-box">
+                <pkm-image :alt="item.title" :src="item.cover || '/images/no-book.png'" width="100%" />
+                <div class="book-title" :title="item.title">{{ subStr(item.title, 12) }}</div>
+              </div>
             </pkm-col>
           </pkm-row>
         </pkm-card>
