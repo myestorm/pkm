@@ -4,7 +4,7 @@
   "scripts": {
     "start": "pm2 start ecosystem.config.js --env prd",
     "start-docker": "pm2 start ecosystem.config.js --env prd --no-daemon",
-    "install": "npm run app-build && node ./www/install",
+    "install-app": "npm run app-build && node ./www/install",
     "dev": "concurrently -k -p \"[{name}]\" -n \"Vite,TypeScript\" -c \"yellow.bold,cyan.bold\" \"npm run vite-dev\" \"npm run app-dev\"",
     "dev_1": "npm run app-build && concurrently -k -p \"[{name}]\" -n \"Vite,TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run vite-dev\" \"npm run app-watch\" \"npm run app-dev\"",
     "build": "npm run vite-build && npm run app-build",
