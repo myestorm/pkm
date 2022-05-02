@@ -250,7 +250,7 @@ class BaseController<T> {
       }
     },
 
-    // 清理必要字段
+    // 清理非必要字段
     clearUnnecessaryFields: <A>(data: A, fields: (keyof A)[]): A => {
       const res: A = {} as A
       fields.map(key => {

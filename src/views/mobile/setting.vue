@@ -18,8 +18,8 @@
           </div>
           <pkm-button type="text" status="success" @click="visible = true"><icon-lock /></pkm-button>
           <pkm-button type="text" status="success" @click="visibleInfo = true"><icon-edit /></pkm-button>
-          <admin-self-password v-model="visible" @success="successHandler" />
-          <admin-self-info v-model="visibleInfo" :initValue="userinfo" @success="successInfoHandler" />
+          <change-password v-model="visible" @success="changePasswordSuccessHandler" />
+          <change-account-info v-model="visibleInfo" :initValue="userinfo" @success="changeAccountInfoSuccessHandler" />
         </div>
         <pkm-collapse :default-active-key="activeKey" expand-icon-position="right">
           <pkm-collapse-item header="系统设置" key="1" disabled :show-expand-icon="false">
@@ -41,24 +41,24 @@
 import { defineComponent, ref, reactive, getCurrentInstance } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
-import MobileLayout from '../../components/layout/mobile-layout.vue'
-import AdminSelfPassword from '../../components/admin-form/self-password.vue'
-import AdminSelfInfo from '../../components/admin-form/self-info.vue'
-import useCommonStore from '../../store/index'
-import useAdminStore from '../../store/modules/admin/index'
-import * as TypesAmin from '../../../types/admin'
+import MobileLayout from '@/components/layout/mobile-layout.vue'
+import ChangePassword from '@/views/components/admin/change-password.vue'
+import ChangeAccountInfo from '@/views/components/admin/change-account-info.vue'
+import useStore from '@/store/index'
+import useAdminStore from '@/store/admin/index'
+import * as TypesAdmin from '@/types/admin'
 
 export default defineComponent({
   components: {
     MobileLayout,
-    AdminSelfPassword,
-    AdminSelfInfo
+    ChangePassword,
+    ChangeAccountInfo
   },
   setup () {
     const app = getCurrentInstance()
     const msg = app?.appContext.config.globalProperties.$message
     const modal = app?.appContext.config.globalProperties.$modal
-    const store = useCommonStore()
+    const store = useStore()
     const storeAdmin = useAdminStore()
     const router = useRouter()
     const isDark = ref(store.theme === 'dark')
@@ -81,7 +81,7 @@ export default defineComponent({
         content: `确定需要退出当前用户？`,
         hideCancel: false,
         simple: true,
-        modalClass: ['pkm-modal-simple'],
+        modalClass: ['pkm-totonoo-modal-simple'],
         onOk () {
           storeAdmin.signout().then(_ => {
             router.push('/signin')
@@ -97,14 +97,14 @@ export default defineComponent({
     const adminHandler = () => {
       router.push('/m/admin')
     }
-    const successHandler = (data: TypesAmin.IApiAdminUpdateSelfPasswordType) => {
+    const changePasswordSuccessHandler = (data: TypesAdmin.IAdminChangePasswordType) => {
       storeAdmin.signout().then(_ => {
         router.push('/signin')
       }).catch(err => {
         msg.error(err.message)
       })
     }
-    const successInfoHandler = (data: TypesAmin.IApiAdminUpdateSelfInfoType) => {
+    const changeAccountInfoSuccessHandler = (data: TypesAdmin.IAdminChangeAccountInfoType) => {
       userinfo.value.avatar = data.avatar || userinfo.value.avatar
       userinfo.value.nickname = data.nickname || userinfo.value.nickname
       userinfo.value.email = data.email || userinfo.value.email
@@ -120,8 +120,8 @@ export default defineComponent({
       adminHandler,
       visible,
       visibleInfo,
-      successHandler,
-      successInfoHandler
+      changePasswordSuccessHandler,
+      changeAccountInfoSuccessHandler
     }
   }
 })

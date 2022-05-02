@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div class="pkm-totonoo-app">
     <router-view :key="key"></router-view>
   </div>
 </template>

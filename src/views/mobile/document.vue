@@ -1,22 +1,48 @@
 <template>
   <mobile-layout title="文档" :subtitle="pageTitle" :back="pageBack">
     <template #main>
-      <div class="pkm-mobile-file-list">
+      <div class="pkm-totonoo-mobile-file-list">
         <pkm-space direction="vertical" fill>
           <pkm-breadcrumb :max-count="4">
             <pkm-breadcrumb-item><router-link to="/m/document"><icon-home /></router-link></pkm-breadcrumb-item>
-            <pkm-breadcrumb-item v-for="(item, index) in directoryList" :key="item._id" @click="breadcrumbClickEvent(item, index)">{{ item.title }}</pkm-breadcrumb-item>
+            <pkm-breadcrumb-item v-for="item in breadcrumbs" :key="item.url">
+              <router-link :to="`/m/document/${item.url}`">{{ item.title }}</router-link>
+            </pkm-breadcrumb-item>
             <template #separator>
               <icon-right />
             </template>
           </pkm-breadcrumb>
-          <div class="pkm-totonoo-search">
-            <pkm-input-search placeholder="搜索当前文档" v-model="keyword" class="search-input" :loading="searchLoading" :allow-clear="true" @input="searchHandler" @search="searchHandler" @clear="searchClearHandler" />
+          <div class="pkm-totonoo-auto-complete-search">
+            <pkm-trigger trigger="focus" popup-container=".pkm-totonoo-auto-complete-search" class="pkm-trigger">
+              <pkm-input-search
+                v-model="keyword"
+                :allow-clear="true"
+                :loading="searchLoading"
+                @input="searchHandler"
+                @search="searchHandler"
+                @clear="searchClear"
+                class="search-input"
+                placeholder="输入关键词搜索文档"
+              />
+              <template #content>
+                <div class="search-result">
+                  <ul class="singal">
+                    <li v-for="item in searchList" :key="item.id" @click="linkTo(item)">{{ item.title }}</li>
+                  </ul>
+                  <pkm-empty v-if="searchList.length == 0">
+                    <template #image>
+                      <icon-empty size="32" :strokeWidth="2" />
+                    </template>
+                    没有相关数据
+                  </pkm-empty>
+                </div>
+              </template>
+            </pkm-trigger>
           </div>
           <div class="content">
             <div class="file-list">
               <ul v-if="list.length > 0">
-                <li class="item" v-for="item in list" :key="item._id">
+                <li class="item" v-for="item in list" :class="[item.id == currentId ? 'current' : '']" :key="item.id">
                   <div class="icon" @click="itemClickHandler(item)">
                     <icon-file :size="24" :strokeWidth="2" v-if="item.type == 'file'" />
                     <icon-folder :size="24" :strokeWidth="2" v-else />
@@ -38,13 +64,13 @@
                         </pkm-button>
                       </pkm-button-group>
                       <template #content>
-                        <pkm-doption @click="edit(item)">
+                        <pkm-doption @click="editHandler(item.id)">
                           <template #icon>
                             <icon-edit />
                           </template>
                           编辑
                         </pkm-doption>
-                        <pkm-doption @click="remove(item._id)">
+                        <pkm-doption @click="removeHandler(item.id)">
                           <template #icon>
                             <icon-delete />
                           </template>
@@ -68,27 +94,39 @@
             <icon-plus />
           </pkm-button>
         </pkm-space>
-        <document-form-drawer width="100%" :id="documentFormDrawerId" :type="documentFormDrawerType" :directory="directory" v-model="documentFormDrawerVisible" @done="drawerDone" />
+        <form-drawer width="100%" v-model="formDrawerVisible" :type="formDrawerType" :id="formDrawerId" :directory="formDrawerDirectory" @done="formDrawerDone" />
       </div>
+      <pkm-drawer width="100%" class="pkm-totonoo-editor-drawer" :visible="editorDrawerVisible" :footer="false" @cancel="editorDrawerHide" unmountOnClose>
+        <template #title>
+          {{ editorDrawerTitle }}
+        </template>
+        <pkm-spin class="pkm-spin" :loading="editorDrawerloading" dot>
+          <div class="markdown-editor">
+            <markdown-editor v-model="editorDrawerValue" @toolbarItemAction="editorDrawerToolbarItemAction" height="calc(100vh - 54px)" />
+          </div>
+        </pkm-spin>
+      </pkm-drawer>
     </template>
   </mobile-layout>
 </template>
 <script lang="ts">
-import { defineComponent, ref, getCurrentInstance, compu } from 'vue'
+import { defineComponent, ref, getCurrentInstance, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { storeToRefs } from 'pinia'
 
 import MobileLayout from '@/components/layout/mobile-layout.vue'
-import DocumentFormDrawer from '@/components/pkm-document/form-drawer.vue'
+import FormDrawer from '@/views/components/document/form-drawer.vue'
+import MarkdownEditor from '@/components/editor/markdown.vue'
+import * as MDEditor from '@totonoo/vue-codemirror'
 
-import useDocumentStore from '@/store/modules/document/index'
+import useDocumentStore from '@/store/document/index'
 import * as TypesBase from '@/types/base'
 import * as TypesDocument from '@/types/document'
 
 export default defineComponent({
   components: {
     MobileLayout,
-    DocumentFormDrawer
+    FormDrawer,
+    MarkdownEditor
   },
   setup () {
     const app = getCurrentInstance()
@@ -98,47 +136,87 @@ export default defineComponent({
     const router = useRouter()
     const route = useRoute()
     const documentStore = useDocumentStore()
-    const { directory, directoryList, documentFormDrawerId, documentFormDrawerType, documentFormDrawerVisible } = storeToRefs(documentStore)
 
     const pageTitle = ref('')
-    const keyword = ref('')
-    const searchLoading = ref(false)
     const addBtns = ref(false)
 
+    const paths = ref<string[]>((route.params.path || []) as string[])
+    const currentId = ref<string>(paths.value[paths.value.length - 1] || '')
+    const pageInfo = ref<TypesDocument.IDocumentType>({
+      ...documentStore.getDocumentDefault
+    })
+
+    const loading = ref(false)
     const list = ref<TypesDocument.IDocumentType[]>([])
+    const breadcrumbs = ref<TypesBase.INavigationType[]>([])
+    const getList = () => {
+      loading.value = true
+      documentStore.documentList({
+        directory: paths.value
+      }).then(res => {
+        list.value = res.data
+      }).catch(_ => {
+        list.value = []
+      }).finally(() => {
+        loading.value = false
+      })
+    }
 
-    const mergeDirectory = (item: TypesDocument.IDocumentType): string => {
+    const editorDrawerId = ref('')
+    const editorDrawerVisible = ref(false)
+    const editorDrawerTitle = ref('')
+    const editorDrawerValue = ref('')
+    const editorDrawerloading = ref(false)
+    const editorDrawerHide = () => {
+      editorDrawerVisible.value = false
+    }
+    const editorDrawerToolbarItemAction = (item: MDEditor.ToolbarItemType) => {
+      if (item.type === 'Save') {
+        const docId = editorDrawerId.value
+        const content = editorDrawerValue.value
+        editorDrawerloading.value = true
+        documentStore.documentUpdateContent(docId, content).then(() => {
+          msg.success('成功')
+          getList()
+        }).catch(err => {
+          msg.error(err.message)
+        }).then(() => {
+          editorDrawerloading.value = false
+        })
+      }
+    }
+    const showEditorDrawer = (item: TypesDocument.IDocumentType) => {
+      editorDrawerId.value = item.id
+      editorDrawerTitle.value = item.title
+      editorDrawerVisible.value = true
+      editorDrawerValue.value = item.content
+    }
+
+    const linkDocument = (_paths: string[]) => {
+      router.push(`/m/document/${_paths.join('/')}`)
+    }
+    const itemClickHandler = (item: TypesDocument.IDocumentType) => {
       const _directory = [...item.directory]
-      _directory.push(item.id)
-      return _directory.join('/')
+      const _id = item.id
+      _directory.push(_id)
+      linkDocument(_directory)
+      if (item.id === currentId.value && item.type === TypesBase.IBaseTypesType.FILE) {
+        showEditorDrawer(item)
+      }
     }
-
-    const breadcrumbClickEvent = (item: TypesBase.IBaseDirectoryListItemType, index: number) => {
-      const _directory = mergeDirectory(item)
-      const _directoryList = directoryList.value.slice(0, index + 1)
-
-      directoryList.value = [..._directoryList]
-      router.push(`/m/document/${_directory}`)
+    const editHandler = (id: string) => {
+      formDrawerId.value = id
+      formDrawerVisible.value = true
     }
-
-    const creatDocument = () => {
-      documentStore.create(TypesBase.IBaseTypesType.FILE)
-    }
-    const creatFolder = () => {
-      documentStore.create(TypesBase.IBaseTypesType.FOLDER)
-    }
-    const edit = (item: TypesDocument.IDocumentType) => {
-      documentStore.edit(item._id)
-    }
-    const remove = (id: string) => {
+    const removeHandler = (id: string) => {
       modal.open({
         title: '系统提示',
         content: `该操作会删除内容，是否继续？`,
         hideCancel: false,
         simple: true,
-        modalClass: ['pkm-modal-simple'],
+        modalClass: ['pkm-totonoo-modal-simple'],
         onOk () {
-          documentStore.docRemove(id).then(_ => {
+          documentStore.documentRemove(id).then(_ => {
             getList()
           }).catch(err => {
             msg.error(err.message)
@@ -146,114 +224,155 @@ export default defineComponent({
         }
       })
     }
-    const getList = () => {
-      documentStore.docList({
-        directory: [...directory.value]
-      }).then(res => {
-        list.value = res.data || []
-      }).catch(err => {
-        msg.error(err.message)
-      })
+    const addBtnChangeHandler = (val: TypesBase.IBaseTypesType) => {
+      formDrawerType.value = val
+      formDrawerId.value = ''
+      formDrawerVisible.value = true
     }
-    const drawerDone = () => {
-      getList()
+    const creatDocument = () => {
+      addBtnChangeHandler(TypesBase.IBaseTypesType.FILE)
+    }
+    const creatFolder = () => {
+      addBtnChangeHandler(TypesBase.IBaseTypesType.FOLDER)
     }
 
-    let searchTimer: number
+    const pageBack = () => {
+      router.push('/m/home')
+    }
+
+    const searchList = ref<TypesDocument.IDocumentType[]>([])
+    const searchLoading = ref(false)
+    const keyword = ref('')
     const searchHandler = () => {
-      if (searchTimer) {
-        window.clearTimeout(searchTimer)
-      }
-      if (searchLoading.value || !keyword.value) {
+      if (searchLoading.value) {
         return
       }
-      searchTimer = window.setTimeout(() => {
+      if (keyword.value) {
+        const conditions = [...paths.value]
         searchLoading.value = true
-        documentStore.docSearch(keyword.value, [...directory.value]).then(res => {
-          list.value = res.data || []
+        documentStore.documentSearch(keyword.value, conditions).then(res => {
+          searchList.value = res.data || []
         }).catch(_ => {
-          list.value = []
+          searchList.value = []
         }).finally(() => {
           searchLoading.value = false
         })
-      }, 300)
+      } else {
+        searchList.value = []
+      }
     }
-    const searchClearHandler = () => {
+    const searchClear = () => {
+      searchList.value = []
+    }
+    const linkTo = (item: TypesBase.IBaseFieldsType) => {
+      const urls = [...item.directory]
+      urls.push(item.id)
+      router.push(`/m/document/${urls.join('/')}`)
+    }
+
+    const formDrawerVisible = ref(false)
+    const formDrawerType = ref(TypesBase.IBaseTypesType.FILE)
+    const formDrawerId= ref()
+    const formDrawerDirectory= ref(paths)
+    const formDrawerDone = () => {
       getList()
     }
 
-    const itemClickHandler = (item: TypesDocument.IDocumentType) => {
-      const _directory = [...item.directory]
-      if (item.type === TypesBase.IBaseTypesType.FILE) {
-        router.push(`/m/document/editor/${item._id}`)
-      } else {
-        const __directory = mergeDirectory(item)
-        const __directoryList = [...item.directoryList]
-        __directoryList.push(item)
-        directoryList.value = [...__directoryList]
-        router.push(`/m/document/${__directory}`)
+    const mergeBreadcrumbs = (data: TypesDocument.IDocumentType) => {
+      const type = data.type
+      const _directoryList = [...data.directoryList]
+      let _breadcrumbs: TypesBase.INavigationType[] = []
+      if (type === TypesBase.IBaseTypesType.FOLDER) {
+        _directoryList.push(data)
       }
-    }
-
-    const getInfo = (id: string) => {
-      documentStore.docInfo(id).then(res => {
-        const data = res.data
-        if (data) {
-          pageTitle.value = data.title || '所有文档的列表'
-          const _directoryList = data.directoryList || []
-          _directoryList.push(data)
-          directoryList.value = [..._directoryList]
+      _breadcrumbs = _directoryList.map(item => {
+        const _directory = [...item.directory]
+        _directory.push(item.id)
+        const url = _directory.join('/')
+        return {
+          title: item.title,
+          url
         }
-      }).catch(err => {
-        msg.error(err.message)
       })
+      breadcrumbs.value = _breadcrumbs
     }
-
-    if (route.params.path) {
-      directory.value = [...route.params.path]
-      const _lastId = directory.value[directory.value.length - 1]
-      getInfo(_lastId)
-    } else {
-      pageTitle.value = '所有文档列表'
-      directory.value = []
-      directoryList.value = []
-    }
-    getList()
-
-    const pageBack = () => {
-      if (directory.value && directory.value.length > 0) {
-        router.back()
+    const init = () => {
+      if (currentId.value) {
+        loading.value = true
+        documentStore.documentInfo(currentId.value).then(res => {
+          const data = res.data
+          const type = data.type
+          if (type === TypesBase.IBaseTypesType.FILE) {
+            paths.value = [...data.directory]
+            pageInfo.value = {
+              ...data
+            }
+            showEditorDrawer(data)
+          }
+          pageTitle.value = data.title || '所有文档的列表'
+          mergeBreadcrumbs(data)
+          getList()
+        }).catch(err => {
+          msg.error(err.message)
+        }).finally(() => {
+          loading.value = false
+        })
       } else {
-        router.push('/m/home')
+        breadcrumbs.value = []
+        pageTitle.value = '所有文档的列表'
+        getList()
       }
     }
+    init()
+    watch(
+      () => route.params,
+      params => {
+        const _fullPath = route.fullPath
+        if (/^\/document/.test(_fullPath)) {
+          const _paths = params.path || []
+          paths.value = [..._paths]
+          currentId.value = _paths[_paths.length - 1] || ''
+          init()
+        }
+      }
+    )
 
     return {
       pageTitle,
-      directoryList,
+      pageInfo,
+      currentId,
+      pageBack,
+
       keyword,
+      searchList,
       searchLoading,
       searchHandler,
-      searchClearHandler,
-      mergeDirectory,
-      breadcrumbClickEvent,
+      searchClear,
+      linkTo,
 
       list,
+      breadcrumbs,
       itemClickHandler,
+      editHandler,
+      removeHandler,
 
-      documentFormDrawerId,
-      documentFormDrawerType,
-      documentFormDrawerVisible,
-      drawerDone,
-      creatDocument,
-      creatFolder,
-      edit,
-      remove,
-      directory,
+      formDrawerVisible,
+      formDrawerType,
+      formDrawerId,
+      formDrawerDirectory,
+      formDrawerDone,
 
-      pageBack,
+      editorDrawerVisible,
+      editorDrawerHide,
+      editorDrawerloading,
+      editorDrawerTitle,
+      editorDrawerValue,
+      editorDrawerToolbarItemAction,
       
       addBtns,
+      creatDocument,
+      creatFolder,
+
       dayjs
     }
   }

@@ -1,18 +1,18 @@
 <template>
-  <div class="pkm-mobile-app">
-    <header class="pkm-mobile-app-header fixed">
+  <div class="pkm-totonoo-mobile-app">
+    <header class="pkm-totonoo-mobile-app-header fixed">
       <slot name="header">
         <pkm-page-header :title="title" :subtitle="subtitle" @back="backHandler"></pkm-page-header>
       </slot>
     </header>
-    <main class="pkm-mobile-app-main" :style="mainStyle">
+    <main class="pkm-totonoo-mobile-app-main" :style="mainStyle">
       <slot name="main"></slot>
     </main>
-    <footer class="pkm-mobile-app-footer" v-if="footer">
+    <footer class="pkm-totonoo-mobile-app-footer" v-if="footer">
       <slot name="footer">
         <pkm-row class="footer-nav" justify="space-around">
-          <pkm-col :span="6" :gutter="0" v-for="(item, index) in mobileNav" :key="index">
-            <pkm-button type="text" :class="[mobileCurrent == index ? 'current' : '']" @click="toLink(item.url)">
+          <pkm-col :span="6" :gutter="0" v-for="(item, index) in mobile.navigation" :key="index">
+            <pkm-button type="text" :class="[mobile.currentNav == index ? 'current' : '']" @click="toLink(item.url)">
               <component :size="24" :strokeWidth="3" :is="item.icon"></component>
               <strong>{{ item.title }}</strong>
             </pkm-button>
@@ -23,10 +23,10 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
-import useStore from '../../store/modules/navigation/index'
+import useStore from '@/store/index'
 
 export default defineComponent({
   name: 'SideBar',
@@ -63,14 +63,13 @@ export default defineComponent({
   setup (props) {
     const store = useStore()
     const router = useRouter()
-    const { mobileCurrent, mobileNav } = storeToRefs(store)
+    const { mobile } = storeToRefs(store)
 
     const _mainStyle = { paddingTop: `${props.headerHeight + 16}px`, paddingBottom: props.footer ? '' : '12px' }
     const mainStyle = Object.assign({}, _mainStyle, props.style)
 
     return {
-      mobileNav,
-      mobileCurrent,
+      mobile,
       mainStyle,
       toLink (url: string) {
         router.push(url)

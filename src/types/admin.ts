@@ -1,5 +1,5 @@
 export interface IAdminType {
-  _id: string,
+  id: string,
   username: string,
   password: string,
   avatar: string,
@@ -14,19 +14,19 @@ export interface IAdminType {
   updatedAt: Date
 }
 
-export type IUserInfoType = {
-  userinfo: IAdminType,
-  token: string
-}
+export type IAdminSigninType = Pick<IAdminType, 'username' | 'password'>
+export type IAdminCreateType = Pick<IAdminType, 'username' | 'password' | 'avatar' | 'nickname' | 'mobile' | 'email'>
+export type IAdminUpdateType = Partial<IAdminCreateType>
 
-export type ISigninType = Pick<IAdminType, 'username' | 'password'>
-
-export type IAdminAddType = Omit<IAdminType, '_id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'updatedBy'>
-
-export type IAdminUpdateSelfPasswordType = {
+export type IAdminChangePasswordType = {
   oldPassword: string,
   password: string,
   repeatPassword: string
 }
+export type IAdminChangeAccountInfoType = Partial<Pick<IAdminType, 'avatar' | 'nickname' | 'mobile' | 'email'>>
+export type IAdminQueryType = Partial<Pick<IAdminType, 'username' | 'mobile' | 'email' | 'status'>>
 
-export type IAdminUpdateSelfInfoType = Partial<Pick<IAdminType, 'avatar' | 'nickname' | 'mobile' | 'email'>>
+export type IAdminContextUserType = {
+  userinfo: Pick<IAdminType, 'id' | 'username' | 'avatar' | 'nickname' | 'mobile' | 'email'>,
+  token: string
+}

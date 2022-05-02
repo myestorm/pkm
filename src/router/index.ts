@@ -1,37 +1,23 @@
 import { createRouter, createWebHistory, Router, RouteRecordRaw, RouteLocationNormalized } from 'vue-router'
-import useStore from '@/store/index'
-import useNavigationStore from '@/store/modules/navigation/index'
-import useAdminStore from '@/store/modules/admin/index'
-import { breadcrumbType } from '@/store/modules/navigation/types'
+import * as TypesBase from '@/types/base'
 
-import computer from './computer/index'
+import useStore from '@/store/index'
+import useAdminStore from '@/store/admin/index'
+
+// import useNavigationStore from '@/store/modules/navigation/index'
+
+// import { breadcrumbType } from '@/store/modules/navigation/types'
+
+import def from './default/index'
 import mobile from './mobile/index'
 
 
-import empty from '@/components/layout/empty.vue'
 import signin from '@/views/base/signin.vue'
-import error404 from '@/views/error/404.vue'
+import error404 from '@/views/base/error404.vue'
 
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 NProgress.configure({ easing: 'ease', speed: 500, showSpinner: false })
-
-export const authorizeRoutes: RouteRecordRaw[] = [
-  {
-    path: '/',
-    name: 'Index',
-    component: empty,
-    meta: {
-      title: '首页',
-      icon: 'home',
-      keepAlive: false
-    },
-    children: [
-      computer,
-      mobile
-    ]
-  }
-]
 
 const routes: RouteRecordRaw[] = [{
   path: '/signin',
@@ -56,11 +42,16 @@ const router: Router = createRouter({
   routes
 })
 
+export const authorizeRoutes: RouteRecordRaw[] = [
+  def,
+  mobile
+]
+
 // get root menu
 let isInitialized = false
-const computerNav: breadcrumbType[] = []
-const mobileNav: breadcrumbType[] = []
-authorizeRoutes[0].children?.map(item => {
+const defNav: TypesBase.INavigationType[] = []
+const mobileNav: TypesBase.INavigationType[] = []
+authorizeRoutes.map(item => {
   const _path = item.path
   item.children?.forEach(sub => {
     if (sub.meta?.nav) {
@@ -75,7 +66,7 @@ authorizeRoutes[0].children?.map(item => {
       if (_path === '/m') {
         mobileNav.push(_item)
       } else {
-        computerNav.push(_item)
+        defNav.push(_item)
       }
     }
   })
@@ -83,26 +74,24 @@ authorizeRoutes[0].children?.map(item => {
 })
 
 const findIndex = (_path: string): { type: string, index: number } => {
-  const inPc = /^\/p/.test(_path)
   const inMobile = /^\/m/.test(_path)
   const res = {
-    type: 'computer',
+    type: 'def',
     index: -1
-  }
-  if (inPc) {
-    res.type = 'computer'
-    for (let i = 0; i < computerNav.length; i++) {
-      const reg = new RegExp(`^${computerNav[i].url}`, 'gmi')
-      if (reg.test(_path)) {
-        res.index = i
-        break
-      }
-    }
   }
   if (inMobile) {
     res.type = 'mobile'
     for (let i = 0; i < mobileNav.length; i++) {
       const reg = new RegExp(`^${mobileNav[i].url}`, 'gmi')
+      if (reg.test(_path)) {
+        res.index = i
+        break
+      }
+    }
+  } else {
+    res.type = 'def'
+    for (let i = 0; i < defNav.length; i++) {
+      const reg = new RegExp(`^${defNav[i].url}`, 'gmi')
       if (reg.test(_path)) {
         res.index = i
         break
@@ -114,39 +103,41 @@ const findIndex = (_path: string): { type: string, index: number } => {
 
 const setNavigation = (route: RouteLocationNormalized) => {
   const matched = route.matched
-  const breadcrumbs: breadcrumbType[] = []
-  const storeNavigation = useNavigationStore()
+  const breadcrumbs: TypesBase.INavigationType[] = []
+  const store = useStore()
   matched.map(item => {
     if (item.path !== '/' && !item.redirect) {
       const title = (item.meta.title || '') as string
+      const icon = (item.meta.icon || '') as string
       breadcrumbs.push({
         title,
-        url: item.path
+        url: item.path,
+        icon
       })
     }
     return item
   })
-  storeNavigation.breadcrumbs = breadcrumbs
+  store.breadcrumbs = breadcrumbs
 
   // nav
   if (!isInitialized) {
-    storeNavigation.computerNav = computerNav
-    storeNavigation.mobileNav = mobileNav
+    store.navigation = defNav
+    store.mobile.navigation = mobileNav
     isInitialized = true
   }
 
   // set nav current
   const _path = route.path
   const current = findIndex(_path)
-  if (current.type === 'computer') {
-    storeNavigation.computerCurrent = current.index
-  } else if (current.type === 'mobile') {
-    storeNavigation.mobileCurrent = current.index
+  if (current.type === 'mobile') {
+    store.mobile.currentNav = current.index
+  } else {
+    store.currentNav = current.index
   }
 
   // change page title
   const pageTitle = (route.meta.title || '') as string
-  const sitename = storeNavigation.sitename
+  const sitename = store.sitename
   document.title = pageTitle ? `${pageTitle} - ${sitename}` : sitename
 }
 
@@ -160,29 +151,37 @@ const addRoute = () => {
 let isMounted = false
 // 动态挂载路由
 const mountAuthorizeRoutes = () => {
-  return new Promise<void>((reslove, reject) => {
+  return new Promise<{ isSuccess: boolean, url: string }>((resolve) => {
     const store = useStore()
     const storeAdmin = useAdminStore()
     const isMobile = store.system.isMobile
-    const defaultHome = isMobile ? '/m/home' : '/p/home'
-    let pathName = window.location.pathname
-      if (!pathName || pathName === '/' || /^\/signin/.test(pathName)) {
-        pathName = defaultHome
-      }
+    const defaultHome = isMobile ? '/m/home' : '/home'
+    let _pathName = window.location.pathname
+    let pathName = _pathName
+    if (!pathName || pathName === '/' || /^\/signin/.test(pathName)) {
+      pathName = defaultHome
+    }
     const fullPath = pathName + window.location.search
 
-    storeAdmin.getUserinfo().then(() => {
-      addRoute()
-      router.push(fullPath)
-      reslove()
+    storeAdmin.fetchuserinfo().then((data) => {
+      const token = data.token
+      if (token) {
+        addRoute()
+        resolve({
+          isSuccess: true,
+          url: fullPath
+        })
+      } else {
+        resolve({
+          isSuccess: false,
+          url: fullPath
+        })
+      }
     }).catch(() => {
-      router.push({
-        path: '/signin',
-        query: {
-          refer: encodeURIComponent(fullPath)
-        }
+      resolve({
+        isSuccess: false,
+        url: fullPath
       })
-      reject()
     }).finally(() => {
       isMounted = true
     })
@@ -191,7 +190,21 @@ const mountAuthorizeRoutes = () => {
 
 router.beforeEach((to, from, next) => {
   if (!isMounted) {
-    mountAuthorizeRoutes().finally(() => {
+    mountAuthorizeRoutes().then(res => {
+      const { isSuccess, url } = res
+      if (isSuccess) {
+        router.push(url)
+      } else {
+        if(to.path !== '/signin') {
+          router.push({
+            path: '/signin',
+            query: {
+              refer: encodeURIComponent(url)
+            }
+          })
+        }
+      }
+    }).finally(() => {
       next()
     })
   } else {

@@ -56,11 +56,11 @@ export default class DocumentRouter {
   async DocumentUpdateContent (ctx: Context, next: Next) {
     const { id = '' } = ctx.params
     const _body = ctx.request.body as { content: string }
-    const result = await document.updateById(id, { content: _body.content })
-    const body: TypesBase.IResponeBodyType<TypesDocument.IDocumentType | null> = {
+    await document.updateById(id, { content: _body.content })
+    const body: TypesBase.IResponeBodyType<string> = {
       code: 0,
       msg: 'success',
-      data: result
+      data: id
     }
     ctx.body = body
     await next()
@@ -70,7 +70,7 @@ export default class DocumentRouter {
   async DocumentUpdate (ctx: Context, next: Next) {
     const { id = '' } = ctx.params
     const _body = ctx.request.body as TypesDocument.IDocumentUpdateType
-    const postData = document.methods.clearUnnecessaryFields(_body, ['title', 'directory', 'type', 'cover', 'desc', 'tags', 'content'])
+    const postData = document.methods.clearUnnecessaryFields(_body, ['title', 'directory', 'type', 'cover', 'desc', 'tags'])
     const result = await document.updateById(id, postData)
     const body: TypesBase.IResponeBodyType<TypesDocument.IDocumentType | null> = {
       code: 0,

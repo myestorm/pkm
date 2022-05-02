@@ -2,7 +2,7 @@
   <mobile-layout title="用户管理" subtitle="系统用户管理" :footer="false" :back="pageBack" class="editor-page">
       <template #main>
         <pkm-list class="admin-list">
-          <pkm-list-item v-for="item in list" :key="item._id">
+          <pkm-list-item v-for="item in list" :key="item.id">
             <pkm-list-item-meta class="meta">
               <template #avatar>
                 <pkm-avatar shape="square">
@@ -24,9 +24,9 @@
                 </div>
                 <div class="line line-action">
                   <pkm-button-group>
-                    <pkm-button type="outline" size="mini" @click="disabled(item._id, 1)" v-if="item.status == 0">启用</pkm-button>
-                    <pkm-button type="outline" size="mini" @click="disabled(item._id, 0)" v-else>禁用</pkm-button>
-                    <pkm-button type="outline" size="mini" @click="resetPassword(item._id)">重置密码</pkm-button>
+                    <pkm-button type="outline" size="mini" @click="disabled(item.id, 1)" v-if="item.status == 0">启用</pkm-button>
+                    <pkm-button type="outline" size="mini" @click="disabled(item.id, 0)" v-else>禁用</pkm-button>
+                    <pkm-button type="outline" size="mini" @click="resetPassword(item.id)">重置密码</pkm-button>
                   </pkm-button-group>
                 </div>
               </template>
@@ -36,7 +36,7 @@
         <pkm-button type="primary" shape="circle" class="fix-btn" size="large" @click="add">
           <icon-plus />
         </pkm-button>
-        <admin-form v-model="visible" @success="successHandler" />
+        <create-admin v-model="visible" @success="successHandler" />
       </template>
   </mobile-layout>
 </template>
@@ -44,16 +44,16 @@
 import { defineComponent, ref, getCurrentInstance } from 'vue'
 import { useRouter } from 'vue-router'
 
-import MobileLayout from '../../components/layout/mobile-layout.vue'
-import AdminForm from '../../components/admin-form/index.vue'
+import MobileLayout from '@/components/layout/mobile-layout.vue'
+import CreateAdmin from '@/views/components/admin/create-admin.vue'
 
-import * as TypesAdmin from '../../../types/admin'
-import useAdminStore from '../../store/modules/admin/index'
+import * as TypesAdmin from '@/types/admin'
+import useAdminStore from '@/store/admin/index'
 
 export default defineComponent({
   components: {
     MobileLayout,
-    AdminForm
+    CreateAdmin
   },
   setup () {
     const app = getCurrentInstance()
@@ -61,13 +61,13 @@ export default defineComponent({
     const modal = app?.appContext.config.globalProperties.$modal
     const router = useRouter()
     const storeAdmin = useAdminStore()
-    const list = ref<TypesAdmin.IApiAdminReurnType[]>([])
+    const list = ref<TypesAdmin.IAdminType[]>([])
     const visible = ref(false)
     const pageBack = () => {
       router.push('/m/setting')
     }
     const getList = () => {
-      storeAdmin.list().then(res => {
+      storeAdmin.adminList().then(res => {
         list.value = res.data || []
       }).catch(err => {
         msg.error(err.message)
@@ -85,9 +85,9 @@ export default defineComponent({
         content: `确定要重置该用户的密码？`,
         hideCancel: false,
         simple: true,
-        modalClass: ['pkm-modal-simple'],
+        modalClass: ['pkm-totonoo-modal-simple'],
         onOk () {
-          storeAdmin.resetPassword(id).then(res => {
+          storeAdmin.adminResetPassword(id).then(res => {
             msg.success(`密码已经重置为：${res.data}`)
           }).catch(err => {
             msg.error(err.message)
@@ -95,15 +95,15 @@ export default defineComponent({
         }
       })
     }
-    const disabled = (id: string, status: number) => {
+    const disabled = (id: string, status: 0 | 1) => {
       modal.open({
         title: '系统提示',
         content: `确定要${ status === 0 ? '禁用' : '启用' }该用户？`,
         hideCancel: false,
         simple: true,
-        modalClass: ['pkm-modal-simple'],
+        modalClass: ['pkm-totonoo-modal-simple'],
         onOk () {
-          storeAdmin.disabled(id, status).then(res => {
+          storeAdmin.adminDisabled(id, status).then(res => {
             msg.success(`${ status === 0 ? '禁用' : '启用' }用户成功`)
             getList()
           }).catch(err => {

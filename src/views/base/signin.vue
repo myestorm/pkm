@@ -1,6 +1,6 @@
 <template>
-  <div class="pkm-page-signin">
-    <div class="pkm-page-signin-bg">
+  <div class="pkm-totonoo-page-signin">
+    <div class="signin-bg">
       <pkm-form :model="form" class="login-form" ref="signinFormRef" @submit="submit">
         <pkm-form-item :hide-label="true">
           <TotonooLogo />
@@ -24,7 +24,7 @@ import { MD5 } from 'crypto-js'
 import { ValidatedError } from '@arco-design/web-vue/es/form/interface'
 import { FormInstance } from '@arco-design/web-vue/es/form'
 import { useRoute } from 'vue-router'
-import useAdminStore from '@/store/modules/admin/index'
+import useAdminStore from '@/store/admin/index'
 import TotonooLogo from '@/components/totonoo-logo/index.vue'
 
 export default defineComponent({
@@ -37,7 +37,7 @@ export default defineComponent({
     const app = getCurrentInstance()
     const msg = app?.appContext.config.globalProperties.$message
 
-    const refer = <string>route.query.refer || '/'
+    const refer = (route.query.refer || '/') as string
 
     const form = reactive({
       username: '',
@@ -80,7 +80,7 @@ export default defineComponent({
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
-  .#{$--prefix}-page-signin-bg {
+  .signin-bg {
     width: 100%;
     height: 100%;
     display: flex;

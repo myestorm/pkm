@@ -1,9 +1,9 @@
 <template>
-  <div class="totonoo-logo" :style="style"><Logo /></div>
+  <div class="pkm-totonoo-logo" :style="style"><Logo /></div>
 </template>
 <script lang="ts">
 import { defineComponent, PropType, CSSProperties } from 'vue'
-import Logo from '../../assets/logo/logo.svg?component'
+import Logo from '@/assets/logo/logo.svg?component'
 
 export interface TotonooLogoProps {
   style: CSSProperties
@@ -27,7 +27,7 @@ export default defineComponent({
 })
 </script>
 <style lang="scss" scoped>
-.totonoo-logo {
+.#{$--prefix}-logo {
   display: inline-block;
   margin: 0 auto;
 }

@@ -71,7 +71,7 @@ export default class User {
   @post('/password')
   async Password (ctx: Context, next: Next) {
     const { userinfo } = ctx.state
-    const id = userinfo._id as string
+    const id = userinfo.id as string
     const _body = ctx.request.body as TypesAdmin.IAdminChangePasswordType
     if (id && _body.password && _body.oldPassword && _body.repeatPassword && _body.password === _body.repeatPassword) {
       const info = await admin.findOne({
@@ -80,11 +80,11 @@ export default class User {
         status: 1
       })
       if (info && info._id.toString() === id) {
-        const result = await admin.updateAdmin(id, { password: _body.password })
+        await admin.updateAdmin(id, { password: _body.password })
         ctx.body = {
           code: 0,
           msg: 'success',
-          data: result
+          data: id
         }
       } else {
         ctx.body = {
@@ -104,17 +104,17 @@ export default class User {
   @post('/update')
   async Update (ctx: Context, next: Next) {
     const { userinfo } = ctx.state
-    const id = userinfo._id as string
+    const id = userinfo.id as string
     if (id) {
       const info = await admin.infoAdmin(id)
       if (info && info._id.toString() === id) {
         const _body = ctx.request.body as TypesAdmin.IAdminChangeAccountInfoType
         const data = admin.methods.clearUnnecessaryFields(_body, ['avatar', 'nickname', 'mobile', 'email'])
-        const result = await admin.updateAdmin(id, data)
+        await admin.updateAdmin(id, data)
         ctx.body = {
           code: 0,
           msg: 'success',
-          data: result
+          data: id
         }
       } else {
         ctx.body = {

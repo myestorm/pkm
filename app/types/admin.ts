@@ -34,6 +34,6 @@ export type IAdminChangeAccountInfoType = Partial<Pick<IAdminType, 'avatar' | 'n
 export type IAdminQueryType = Partial<Pick<IAdminType, 'username' | 'mobile' | 'email' | 'status'>>
 
 export type IAdminContextUserType = {
-  userinfo: Pick<IAdminType, '_id' | 'username' | 'avatar' | 'nickname' | 'mobile' | 'email'>,
+  userinfo: Pick<IAdminType, 'username' | 'avatar' | 'nickname' | 'mobile' | 'email'> & { id: string },
   token: string
 }

@@ -46,6 +46,7 @@ app.use(authorization({
     '/api/*'
   ],
   whiteList: [
+    '/api/userinfo',
     '/api/signin'
   ]
 }))

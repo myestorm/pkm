@@ -2,15 +2,12 @@ export enum IBaseTypesType {
   FILE = 'file',
   FOLDER = 'folder'
 }
-export enum IClipboardType {
-  NONE,
-  COPY,
-  CUT
-}
+
 export interface IBaseFieldsType {
-  _id: string,
+  id: string,
   title: string, // 标题
   directory: string[], // 所属目录
+  directoryList: IBaseDirectoryListItemType[],
   type: IBaseTypesType, // 资源类型
   cover: string, // 封面
   desc: string, // 简介
@@ -23,10 +20,10 @@ export interface IBaseFieldsType {
   updatedBy: string // 修改人
 }
 
-export type IBaseDirectoryListItemType = Pick<IBaseFieldsType, '_id' | 'title' | 'directory' | 'type' | 'cover' | 'desc' | 'tags'>
+export type IBaseDirectoryListItemType = Pick<IBaseFieldsType, 'id' | 'title' | 'directory' | 'type' | 'cover' | 'desc' | 'tags'>
 
 export interface ICommentType {
-  _id: string,
+  id: string,
   title: string, // 标题
   authorId: string, // 创建人
   replyId: string, // 创建人
@@ -35,19 +32,13 @@ export interface ICommentType {
   updatedAt: Date // 修改时间
 }
 
-export interface IPageType<T> {
-  page: number,
-  pagesize: number,
-  conditions?: T
-}
-
 export interface IResponeBodyType<T> {
   code: number,
   msg: string,
   data: T
 }
 
-export interface IResponePageBodyType<T> {
+export interface IResponePageType<T> {
   list: T[],
   page: number,
   pagesize: number,
@@ -59,9 +50,30 @@ export interface IFileUploadType {
   filepath: string
 }
 
+export interface IPageType<T> {
+  page: number,
+  pagesize: number,
+  conditions?: T
+}
+
 export interface ISearchParamsType {
   keyword: string,
   directory: string[]
 }
 
-export type IBreadcrumbType = Pick<IBaseFieldsType, '_id' | 'directory' | 'title'>
+export interface INavigationType {
+  title: string,
+  url: string,
+  icon?: string
+}
+
+export enum IClipboardType {
+  NONE,
+  COPY,
+  CUT
+}
+
+export interface ISearchAllDataType {
+  documents: IBaseFieldsType[],
+  books: IBaseFieldsType[]
+}

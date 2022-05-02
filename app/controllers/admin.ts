@@ -19,7 +19,7 @@ class AdminController extends BaseController<TypesAdmin.IAdminModelType> {
     })
     if (result) {
       const payload = {
-        _id: result._id,
+        id: result._id,
         username: result.username,
         avatar: result.avatar,
         nickname: result.nickname,

@@ -1,6 +1,6 @@
 {
   "name": "totonoo-pkm",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "scripts": {
     "start": "pm2 start ecosystem.config.js --env prd",
     "start-docker": "pm2 start ecosystem.config.js --env prd --no-daemon",

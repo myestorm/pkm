@@ -29,32 +29,27 @@ export default (options: IOptionsType = {
     const url = ctx.request.url
     const isInBlackList = checkInList(url, options.blackList)
     const isInWhiteList = checkInList(url, options.whiteList)
-    if (isInBlackList && !isInWhiteList) {
-      if (ctx.header && ctx.header.authorization) {
-        const parts = ctx.header.authorization.split(' ')
-        if (parts.length === 2) {
-          const scheme = parts[0]
-          const token = parts[1]
-          if (/^Bearer$/i.test(scheme)) {
-            const { jwtSecret = '' } = ctx.state.config
-            try {
-              const verifyInfo = <Jwt>jwt.verify(token, jwtSecret, {
-                complete: true
-              })
-              ctx.state.userinfo = verifyInfo.payload || {}
-              ctx.state.token = token || ''
-            } catch (error) {
-              ctx.throw(401)
-            }
-          } else {
-            ctx.throw(401)
-          }
-        } else {
-          ctx.throw(401)
+ 
+    if (ctx.header && ctx.header.authorization) {
+      const parts = ctx.header.authorization.split(' ')
+      if (parts.length === 2) {
+        const scheme = parts[0]
+        const token = parts[1]
+        if (/^Bearer$/i.test(scheme)) {
+          const { jwtSecret = '' } = ctx.state.config
+          try {
+            const verifyInfo = <Jwt>jwt.verify(token, jwtSecret, {
+              complete: true
+            })
+            ctx.state.userinfo = verifyInfo.payload || {}
+            ctx.state.token = token || ''
+          } catch (_) {}
         }
-      } else {
-        ctx.throw(401)
       }
+    }
+
+    if (isInBlackList && !isInWhiteList && !ctx.state.token) {
+      ctx.throw(401)
     }
     await next()
   }

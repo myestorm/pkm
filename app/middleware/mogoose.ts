@@ -51,9 +51,9 @@ mongoose.connection.on('error', console.error)
 
 export default () => {
   return async (ctx: Context, next: Next) => {
-    const userinfo = ctx.state.userinfo as TypesAdmin.IAdminType
-    if (userinfo?._id) {
-      user.id = userinfo._id.toString()
+    const userinfo = ctx.state.userinfo as TypesAdmin.IAdminContextUserType['userinfo']
+    if (userinfo?.id) {
+      user.id = userinfo.id
     }
     await next()
   }

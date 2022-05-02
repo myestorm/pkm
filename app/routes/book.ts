@@ -64,9 +64,10 @@ export default class User {
     await next()
   }
 
-  @post('/search')
+  @post('/search/:keyword')
   async BookSearch (ctx: Context, next: Next) {
-    const { keyword, directory } = ctx.request.body as TypesBase.ISearchParamsType
+    const { keyword = '' } = ctx.params
+    const { directory } = ctx.request.body as TypesBase.ISearchParamsType
     const result = await book.search(keyword, directory)
     const body: TypesBase.IResponeBodyType<TypesBook.IBookType[]> = {
       code: 0,
@@ -107,11 +108,11 @@ export default class User {
   async BookOrder (ctx: Context, next: Next) {
     const { id = '' } = ctx.params
     const { order } = ctx.request.body as { order: number }
-    const result = await book.updateById(id, { order })
-    const body: TypesBase.IResponeBodyType<TypesBook.IBookType | null> = {
+    await book.updateById(id, { order })
+    const body: TypesBase.IResponeBodyType<boolean> = {
       code: 0,
       msg: 'success',
-      data: result
+      data: true
     }
     ctx.body = body
     await next()

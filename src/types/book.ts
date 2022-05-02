@@ -1,7 +1,7 @@
 import * as BaseTypes from './base'
 
 export interface INoteType {
-  _id: string,
+  id: string,
   content: string,
   createdAt: Date,
   createdBy: string,
@@ -20,8 +20,9 @@ export interface IBookType extends BaseTypes.IBaseFieldsType {
   comments: BaseTypes.ICommentType[]
 }
 
-export type INoteAddType = Pick<INoteType, 'content'>
-export type IBookAddType = Pick<IBookType, 'title' | 'directory' | 'cover' | 'desc' | 'tags' | 'type' | 'author' | 'readed' | 'heard' | 'purchased' | 'ISBN' | 'rating'>
-export type IBookFormType = IBookAddType & { _id: string }
-
+export type IBookCreateType = Pick<IBookType, 'title' | 'directory' | 'cover' | 'desc' | 'tags' | 'type' | 'author' | 'readed' | 'heard' | 'purchased' | 'ISBN' | 'rating'>
+export type IBookUpdateType = Partial<IBookCreateType>
 export type IBookQueryType = Partial<IBookType>
+
+export type INoteCreateType = Pick<INoteType, 'content'>
+export type INoteUpdateType = INoteCreateType
