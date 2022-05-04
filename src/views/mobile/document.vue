@@ -42,7 +42,7 @@
           <div class="content">
             <div class="file-list">
               <ul v-if="list.length > 0">
-                <li class="item" v-for="item in list" :class="[item.id == currentId ? 'current' : '']" :key="item.id">
+                <li class="item" v-for="(item, index) in list" :class="[item.id == currentId ? 'current' : '']" :key="item.id">
                   <div class="icon" @click="itemClickHandler(item)">
                     <icon-file :size="24" :strokeWidth="2" v-if="item.type == 'file'" />
                     <icon-folder :size="24" :strokeWidth="2" v-else />
@@ -75,6 +75,14 @@
                             <icon-delete />
                           </template>
                           删除
+                        </pkm-doption>
+                        <pkm-doption @click="sortTopHandler(item.id, !item.top, index)">
+                          <template #icon>
+                            <icon-star-fill v-if="item.top" />
+                            <icon-star v-else />
+                          </template>
+                          <template v-if="item.top">取消推荐</template>
+                          <template v-else>推荐</template>
                         </pkm-doption>
                       </template>
                     </pkm-dropdown>
@@ -225,6 +233,14 @@ export default defineComponent({
         }
       })
     }
+    const sortTopHandler = (id: string, top: boolean, index: number) => {
+      documentStore.documentTop(id, top).then(() => {
+        msg.success('操作成功')
+        list.value[index].top = top
+      }).catch(err => {
+        msg.error(err.message)
+      })
+    }
     const addBtnChangeHandler = (val: TypesBase.IBaseTypesType) => {
       formDrawerType.value = val
       formDrawerId.value = ''
@@ -356,6 +372,7 @@ export default defineComponent({
       itemClickHandler,
       editHandler,
       removeHandler,
+      sortTopHandler,
 
       formDrawerVisible,
       formDrawerType,

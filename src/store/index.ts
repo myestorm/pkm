@@ -12,6 +12,8 @@ if (_theme === 'dark') {
   document.body.removeAttribute('arco-theme')
 }
 
+const prefix = '/api'
+
 const useStore = defineStore('index', {
   state: (): CommonState => ({
     sitename: 'Personal Knowledge Management - Totonoo',
@@ -45,10 +47,19 @@ const useStore = defineStore('index', {
       localStorage.setItem(localStorageTheme, this.theme)
     },
     searchAll (keyword: string, options?: AxiosRequestConfig): Promise<TypesBase.IResponeBodyType<TypesBase.ISearchAllDataType>> {
-      return axios.get<undefined, TypesBase.IResponeBodyType<TypesBase.ISearchAllDataType>>(`/api/search/${keyword}`, options)
+      return axios.get<undefined, TypesBase.IResponeBodyType<TypesBase.ISearchAllDataType>>(`${prefix}/search/${keyword}`, options)
     },
     recent (options?: AxiosRequestConfig): Promise<TypesBase.IResponeBodyType<TypesBase.ISearchAllDataType>> {
-      return axios.get<undefined, TypesBase.IResponeBodyType<TypesBase.ISearchAllDataType>>(`/api/recent`, options)
+      return axios.get<undefined, TypesBase.IResponeBodyType<TypesBase.ISearchAllDataType>>(`${prefix}/recent`, options)
+    },
+    bakData (options?: AxiosRequestConfig): Promise<TypesBase.IResponeBodyType<string>> {
+      return axios.get<undefined, TypesBase.IResponeBodyType<string>>(`${prefix}/bak`, options)
+    },
+    bakDataList (options?: AxiosRequestConfig): Promise<TypesBase.IResponeBodyType<string[]>> {
+      return axios.get<undefined, TypesBase.IResponeBodyType<string[]>>(`${prefix}/bak/list`, options)
+    },
+    restoreData (folder: string, options?: AxiosRequestConfig): Promise<TypesBase.IResponeBodyType<string[]>> {
+      return axios.get<undefined, TypesBase.IResponeBodyType<string[]>>(`${prefix}/restore/${folder}`, options)
     }
   }
 })

@@ -1,0 +1,53 @@
+[
+  {
+    "_id": "626cc924bf8aad5853523a21",
+    "username": "totonoo",
+    "password": "25dff59eca35267306fb277f2e763cd0",
+    "avatar": "/uploads/20220501/ea73fc0210927bfa4a4aeb500.jpeg",
+    "mobile": "18688886666",
+    "email": "totonoo@totonoo.com",
+    "nickname": "totonoo",
+    "root": true,
+    "status": "1",
+    "createdBy": "",
+    "createdAt": "2022-04-30T05:29:07.868Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-01T02:25:16.937Z",
+    "__v": 0,
+    "id": "626cc924bf8aad5853523a21"
+  },
+  {
+    "_id": "626cd172d30f0ec4af22825c",
+    "username": "test",
+    "password": "ae154c5821153e530b4086a2dccd7069",
+    "avatar": "",
+    "mobile": "13511112222",
+    "email": "63401208@qq.com",
+    "nickname": "test",
+    "root": false,
+    "status": "1",
+    "createdBy": "",
+    "createdAt": "2022-04-30T06:03:02.807Z",
+    "updatedBy": "",
+    "updatedAt": "2022-04-30T07:15:30.939Z",
+    "__v": 0,
+    "id": "626cd172d30f0ec4af22825c"
+  },
+  {
+    "_id": "626dedda784c5e585fe6362e",
+    "username": "11",
+    "password": "ae154c5821153e530b4086a2dccd7069",
+    "avatar": "/uploads/20220501/899fbd1f585f056fd8642bb00.jpeg",
+    "mobile": "13566633389",
+    "email": "33@1.com",
+    "nickname": "33",
+    "root": false,
+    "status": "0",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "createdAt": "2022-05-01T02:01:17.070Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T11:50:10.091Z",
+    "__v": 0,
+    "id": "626dedda784c5e585fe6362e"
+  }
+]

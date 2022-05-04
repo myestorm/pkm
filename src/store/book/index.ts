@@ -94,6 +94,9 @@ const useStore = defineStore('book', {
     },
     noteRemove (bookId: string, id: string, options?: AxiosRequestConfig): Promise<TypesBase.IResponeBodyType<boolean>> {
       return axios.delete<undefined, TypesBase.IResponeBodyType<boolean>>(`${prefix}/note/remove/${bookId}/${id}`, options)
+    },
+    bookTop (id: string, top: boolean, options?: AxiosRequestConfig): Promise<TypesBase.IResponeBodyType<string>> {
+      return axios.get<undefined, TypesBase.IResponeBodyType<string>>(`${prefix}/top/${id}/${top}`, options)
     }
   }
 })

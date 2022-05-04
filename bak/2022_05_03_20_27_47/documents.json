@@ -1,0 +1,595 @@
+[
+  {
+    "_id": "626fb218e751e2734634bd72",
+    "title": "Centos8",
+    "directory": [],
+    "type": "folder",
+    "cover": "",
+    "desc": "centos8常用的操作笔记",
+    "tags": [],
+    "top": true,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-03T10:44:43.605Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb218e751e2734634bd72"
+  },
+  {
+    "_id": "626fb22ee751e2734634bd75",
+    "title": "NODE",
+    "directory": [],
+    "type": "folder",
+    "cover": "",
+    "desc": "Node作为一个新兴的前端框架，后台语言，有很多吸引人的地方：RESTful API，单线程",
+    "tags": [],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:24:06.001Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb22ee751e2734634bd75"
+  },
+  {
+    "_id": "626fb23ee751e2734634bd78",
+    "title": "PKM",
+    "directory": [],
+    "type": "folder",
+    "cover": "",
+    "desc": "Totonoo Personal Knowledge Management",
+    "tags": [],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:24:06.001Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb23ee751e2734634bd78"
+  },
+  {
+    "_id": "626fb24de751e2734634bd7b",
+    "title": "前端",
+    "directory": [],
+    "type": "folder",
+    "cover": "",
+    "desc": "前端开发是创建WEB页面或APP等前端界面呈现给用户的过程，通过HTML，CSS及JavaScript以及衍生出来的各种技术、框架、解决方案，来实现互联网产品的用户界面交互。",
+    "tags": [],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:24:06.001Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb24de751e2734634bd7b"
+  },
+  {
+    "_id": "626fb25de751e2734634bd7e",
+    "title": "家庭健康",
+    "directory": [],
+    "type": "folder",
+    "cover": "",
+    "desc": "包括孩子教育，健康饮食生活相关的文档",
+    "tags": [],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:24:06.001Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb25de751e2734634bd7e"
+  },
+  {
+    "_id": "626fb268e751e2734634bd81",
+    "title": "我的文档",
+    "directory": [],
+    "type": "folder",
+    "cover": "",
+    "desc": "我的文档",
+    "tags": [],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:24:06.001Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb268e751e2734634bd81"
+  },
+  {
+    "_id": "626fb278e751e2734634bd84",
+    "title": "文学思哲",
+    "directory": [],
+    "type": "folder",
+    "cover": "",
+    "desc": "中国传统文学，小说，散文、杂文等一些乱七八糟的小东西",
+    "tags": [],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:24:06.001Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb278e751e2734634bd84"
+  },
+  {
+    "_id": "626fb28ce751e2734634bd89",
+    "title": "Linux常用命令",
+    "directory": [
+      "626fb218e751e2734634bd72"
+    ],
+    "type": "file",
+    "cover": "",
+    "desc": "",
+    "tags": [],
+    "top": true,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-03T09:29:02.255Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "## 查看内存占用情况\n\n```bash\nfree       # 用KB为单位展示数据\nfree -m    # 用MB为单位展示数据\nfree -h    # 用GB为单位展示数据\n```\n\n## 查看磁盘剩余空间\n\n```bash\ndf -hl         # 查看磁盘剩余空间\ndf -h          # 查看每个根路径的分区大小\ndu -sh [目录名] # 返回该目录的大小\ndu -sm [文件夹] # 返回该文件夹总M数\ndu -h [目录名]  # 查看指定文件夹下的所有文件大小（包含子文件夹）\n```\n",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb28ce751e2734634bd89"
+  },
+  {
+    "_id": "626fb2b3e751e2734634bd92",
+    "title": "安装mongodb",
+    "directory": [
+      "626fb218e751e2734634bd72"
+    ],
+    "type": "file",
+    "cover": "",
+    "desc": "安装mongodb",
+    "tags": [
+      "安装mongodb",
+      "mongodb"
+    ],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:30:27.803Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "## 前置条件\n\n系统：Centos 8.2\n\n## 安装\n\n```sh\n# 配置yum源\nvi /etc/yum.repos.d/mongodb-org.repo\n```\n\n输入以下内容\n\n```text\n[mongodb-org-4.2]\nname=MongoDB Repository\nbaseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/4.2/x86_64/\ngpgcheck=1\nenabled=1\ngpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc\n```\n\n这里可以找到其他版本[https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/ \"\")\n\n顺序执行以下命令\n\n```sh\ndnf install mongodb-org # 安装\nsystemctl enable mongod --now # 启动\nmongo # 进入\ndb.version() # 打印版本\n# output: 4.2.17\n```\n\n## 创建或修改root用户密码\n\n```sh\nmongo\nuse admin\ndb.system.users.find()\ndb.createUser({ user: \"root\", pwd: \"password\", roles: [\"root\"] })\n```\n\n## 创建普通管理员\n\n```sh\ndb.createUser({user: \"myadmin\", pwd: \"password\", roles: [\"dbAdminAnyDatabase\", \"readWriteAnyDatabase\"] }\n```\n\n## 修改用户\n\n```sh\ndb.update(\"myadmin\", { pwd: \"password123\", roles: [\"dbAdminAnyDatabase\", \"readWriteAnyDatabase\"] }\n```\n\n## 创建数据库管理用户\n\n以下步骤是先登录root用户， 然后创建pkm库的管理用户 dbpkm\n\n```sh\nuse admin\ndb.auth(\"root\",\"password\")\n\nuse pkm\ndb.createUser({ user: \"dbpkm\", pwd: \"password\", roles: [{ role: \"dbOwner\", db: \"pkm\" }] })\n```\n\n## 修改配置\n\n```sh\nvi /etc/mongod.conf\n\n# 找到这个，打开加入用户授权\nsecurity:\n  authorization: enabled\n\n# 这个是允许远程访问，默认是 127.0.0.1\nnet:\n  port: 27017\n  bindIp: 0.0.0.0\n\n# 重启mongo服务生效\nsystemctl restart mongod\n```\n\n## 其他\n\n使用 mongoose 时，密码中含有特殊字符，无法使用，请参照样式：\n\n```javascript\nconst mongoConfig = `mongodb://test001:${encodeURIComponent('password001%^&($#')}@localhost:27017/news`\n```\n\n实际就是只需要对密码进行 URL 编码即可。\n\n",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb2b3e751e2734634bd92"
+  },
+  {
+    "_id": "626fb2e3e751e2734634bda8",
+    "title": "Electron",
+    "directory": [
+      "626fb22ee751e2734634bd75"
+    ],
+    "type": "folder",
+    "cover": "",
+    "desc": "Electron",
+    "tags": [],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:24:06.001Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb2e3e751e2734634bda8"
+  },
+  {
+    "_id": "626fb2ffe751e2734634bdaf",
+    "title": "Electron中node与网页通讯",
+    "directory": [
+      "626fb22ee751e2734634bd75",
+      "626fb2e3e751e2734634bda8"
+    ],
+    "type": "file",
+    "cover": "",
+    "desc": "Electron ipcRenderer通讯方案",
+    "tags": [
+      "通讯",
+      "Electron"
+    ],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:31:39.858Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "## 通讯方案 ipcRenderer\n\n从主进程到渲染进程的异步通信\n\n[ipcMain官方文档](https://www.electronjs.org/zh/docs/latest/api/ipc-main \"ipcMain\")\n\n`ipcRenderer` 是一个 EventEmitter 的实例。 当在主进程中使用时，它处理从渲染器进程（网页）发送出来的异步和同步信息。 从渲染器进程发送的消息将被发送到该模块。\n\n最主要的是通讯是双向的，可以类比websocket理解，也可以用发布订阅的模式理解。\n\n## 使用示例\n\n`preload.js`中，注入ipcRenderer，这样在渲染器进程中可以任意使用。\n\n```javascript\nconst { ipcRenderer } = require('electron')\nwindow.ipcRenderer = ipcRenderer\n```\n\n### 在渲染器进程中使用vue3，订阅和发布消息\n\n```javascript\nimport { ref } from 'vue'\n\nconst { ipcRenderer } = window\n\nexport default {\n  setup () {\n    const receiveMessage = ref('')\n    const sendMessage = (msg) => {\n      ipcRenderer.send('PageToMain', msg)\n    }\n\n    // 向主进程发送消息\n    sendMessage('我来自页面')\n\n    // 订阅主进程发送的消息\n    ipcRenderer.on('MainToPage', (event, args)=>{\n      receiveMessage.value = args\n    })\n    return {\n      receiveMessage,\n      sendMessage\n    }\n  }\n}\n```\n\n### 主进程中订阅和发布消息\n\n```javascript\nconst { ipcMain } = require('electron')\nipcMain.on('PageToMain', (event, args) => {\n  console.log('收到渲染进程的消息',  args)\n  // 发送消息\n  mainWindow.webContents.send('MainToPage', `[] 已收到消息：${args}`)\n})\n```\n",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb2ffe751e2734634bdaf"
+  },
+  {
+    "_id": "626fb32fe751e2734634bdb8",
+    "title": "Electron + vite + vue3 项目搭建",
+    "directory": [
+      "626fb22ee751e2734634bd75",
+      "626fb2e3e751e2734634bda8"
+    ],
+    "type": "file",
+    "cover": "",
+    "desc": "Vite是一种新型前端构建工具，能够显著提升前端开发体验。",
+    "tags": [
+      "vite",
+      "vue3"
+    ],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:32:25.307Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "## 我的环境\n\n系统：win10, node：14.18.1，npm：8.0.0\n\n## 搭建vite项目\n\n```bash\nnpm create vite@latest\n# 按照提示操作就可以了\n\n```\n> 提示：要使用cmd，用git bash方向键选择无效\n\n## 加入UI框架 Arco Design\n\n```bash\nnpm install --save-dev @arco-design/web-vue\n\n# 添加sass和less\nnpm install less sass --save-dev\n```\n\n全量引入arco-design，修改`src/main.js`的内容为\n\n```javascript\nimport { createApp } from 'vue'\nimport ArcoVue from '@arco-design/web-vue'\nimport App from './App.vue'\nimport ArcoVueIcon from '@arco-design/web-vue/es/icon' // icon需要另外导入\nimport '@arco-design/web-vue/es/index.less'\n\nconst app = createApp(App)\napp.use(ArcoVueIcon)\napp.use(ArcoVue)\napp.mount('#app')\n```\n\n修改为自己的主题色，修改`vite.config.js`，如下：\n\n```javascript\nimport { defineConfig } from 'vite'\nimport vue from '@vitejs/plugin-vue'\n\n// https://vitejs.dev/config/\nexport default defineConfig({\n  plugins: [vue()],\n  css: {\n    preprocessorOptions: {\n      less: {\n        modifyVars: {\n          'primary-6': '#009844',\n          'primary-5': '#23C343',\n          'primary-7': '#009A29',\n          'primary-4': '#4CD263',\n          'primary-3': '#7BE188',\n          'primary-2': '#AFF0B5',\n          'primary-1': '#E8FFEA',\n          'color-border-1': '#f2f3f5',\n          'color-border-2': '#e5e6eb',\n          'color-border-3': '#c9cdd4',\n          'color-border-4': '#869C90',\n          'arcoblue-6': '#009844',\n        },\n        javascriptEnabled: true,\n      },\n      scss: {\n        additionalData: `\n          @import \"./src/assets/scss/var.scss\";\n          @import \"./src/assets/scss/mixins.scss\";\n        `\n      }\n    }\n  }\n})\n```\n\n> 我比较喜欢scss，所以加入了两个scss的配置文件\n\n## 加入Electron\n\n先要修改Electron的镜像地址，国内安装太慢了，使用的是华为镜像。打开`C:/Users/当前用户/.npmrc`，加入\n\n```text\nelectron_mirror=https://mirrors.huaweicloud.com/electron/\nELECTRON_CUSTOM_DIR=\"{{ version }}\"\n```\n\n安装\n\n```bash\nnpm install electron --save-dev\n```\n\n1. 在`package.json`的scripts中加入 `\"electron\": \"electron .\"`\n\n```text\n{\n  \"name\": \"ele-file\",\n  \"version\": \"0.0.1\",\n  \"description\": \"ele-file\",\n  \"main\": \"app/main.js\",\n  \"author\": \"author\",\n  \"scripts\": {\n    \"dev\": \"vite\",\n    \"build\": \"vite build\",\n    \"preview\": \"vite preview\",\n    \"electron\": \"electron .\"\n  },\n  \"dependencies\": {\n    \"vue\": \"^3.2.25\"\n  },\n  \"devDependencies\": {\n    \"@arco-design/web-vue\": \"^2.15.1\",\n    \"@vitejs/plugin-vue\": \"^2.0.0\",\n    \"electron\": \"^16.0.7\",\n    \"less\": \"^4.1.2\",\n    \"sass\": \"^1.49.0\",\n    \"vite\": \"^2.7.2\"\n  }\n}\n```\n\n2. 修改`vite.config.js`\n\n```javascript\nimport { defineConfig } from 'vite'\nimport vue from '@vitejs/plugin-vue'\n\n// https://vitejs.dev/config/\nexport default defineConfig(({ command, mode }) => {\n  // command -> serve, build\n  // mode -> development, production\n  return {\n    plugins: [vue()],\n    base: command === 'build' ? '' : '/',\n    css: {\n      preprocessorOptions: {\n        less: {\n          modifyVars: {\n            'primary-6': '#009844',\n            'primary-5': '#23C343',\n            'primary-7': '#009A29',\n            'primary-4': '#4CD263',\n            'primary-3': '#7BE188',\n            'primary-2': '#AFF0B5',\n            'primary-1': '#E8FFEA',\n            'color-border-1': '#f2f3f5',\n            'color-border-2': '#e5e6eb',\n            'color-border-3': '#c9cdd4',\n            'color-border-4': '#869C90',\n            'arcoblue-6': '#009844',\n          },\n          javascriptEnabled: true,\n        },\n        scss: {\n          additionalData: `\n            @import \"./src/assets/scss/var.scss\";\n            @import \"./src/assets/scss/mixins.scss\";\n          `\n        }\n      }\n    }\n  }\n})\n```\n\n3. 执行 `npm run build`\n4. 新建文件`app/main.js`\n\n```javascript\n// main.js\n\n// 控制应用生命周期和创建原生浏览器窗口的模组\nconst { app, BrowserWindow } = require('electron')\nconst path = require('path')\n\nfunction createWindow () {\n  // 创建浏览器窗口\n  const mainWindow = new BrowserWindow({\n    width: 800,\n    height: 600,\n    webPreferences: {\n      preload: path.join(__dirname, 'preload.js')\n    }\n  })\n\n  // 加载 index.html\n  console.log(path.join(__dirname, '../dist/index.html'))\n  mainWindow.loadFile(path.join(__dirname, '../dist/index.html'))\n\n  // 打开开发工具\n  // mainWindow.webContents.openDevTools()\n}\n\n// 这段程序将会在 Electron 结束初始化\n// 和创建浏览器窗口的时候调用\n// 部分 API 在 ready 事件触发后才能使用。\napp.whenReady().then(() => {\n  createWindow()\n\n  app.on('activate', function () {\n    // 通常在 macOS 上，当点击 dock 中的应用程序图标时，如果没有其他\n    // 打开的窗口，那么程序会重新创建一个窗口。\n    if (BrowserWindow.getAllWindows().length === 0) createWindow()\n  })\n})\n\n// 除了 macOS 外，当所有窗口都被关闭的时候退出程序。 因此，通常对程序和它们在\n// 任务栏上的图标来说，应当保持活跃状态，直到用户使用 Cmd + Q 退出。\napp.on('window-all-closed', function () {\n  if (process.platform !== 'darwin') app.quit()\n})\n\n// 在这个文件中，你可以包含应用程序剩余的所有部分的代码，\n// 也可以拆分成几个文件，然后用 require 导入。\n```\n\n5. 新建文件`app/preload.js`\n\n```javascript\n// preload.js\n\n// 所有Node.js API都可以在预加载过程中使用。\n// 它拥有与Chrome扩展一样的沙盒。\nwindow.addEventListener('DOMContentLoaded', () => {\n  const replaceText = (selector, text) => {\n    const element = document.getElementById(selector)\n    if (element) element.innerText = text\n  }\n\n  for (const dependency of ['chrome', 'node', 'electron']) {\n    replaceText(`${dependency}-version`, process.versions[dependency] + '-----')\n  }\n})\n```\n\n6. 执行`npm run electron`，即可以看到效果\n\n## 加入构建打包\n\n```bash\nnpm install --save-dev @electron-forge/cli\nnpx electron-forge import\nnpm run make\n```\n\n至此基本的架子就搭建起来了。\n\n",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb32fe751e2734634bdb8"
+  },
+  {
+    "_id": "626fb34fe751e2734634bdc4",
+    "title": "NODEJS修改文件名",
+    "directory": [
+      "626fb22ee751e2734634bd75"
+    ],
+    "type": "file",
+    "cover": "",
+    "desc": "NODEJS修改文件名",
+    "tags": [
+      "修改文件名"
+    ],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:32:56.928Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "```javascript\nconst fs = require('fs')\nconst path = require('path')\nconst glob = require('glob')\n\nconst files = glob.sync('./m/*.*')\nfiles.map(item => {\n  // 解析路径\n  const _obj = path.parse(item)\n  // 替换文件名中的（live）和空格\n  const name = _obj.name.replace(/((\\(|（)live(\\)|）)|\\s)/gmi, '')\n  // 分割文件名\n  const [title, author] = name.split('-')\n  _obj.name = `${author} - ${title}`\n  _obj.base = _obj.name + _obj.ext\n  // 组成新的文件路径\n  let newName = path.format(_obj)\n  // 替换\\\\为 /，主要是win下使用\n  newName = newName.replace(/\\\\/g, '/')\n  console.log(item, newName)\n  // 替换文件名\n  fs.rename(item, newName, (err) => {\n    if (err) {\n      throw err\n    }\n    console.log(`rename success: ${item} -> ${newName}`)\n  })\n})\n```\n",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb34fe751e2734634bdc4"
+  },
+  {
+    "_id": "626fb36ee751e2734634bdcd",
+    "title": "mongoose学习笔记",
+    "directory": [
+      "626fb22ee751e2734634bd75"
+    ],
+    "type": "file",
+    "cover": "",
+    "desc": "mongoose基础用法学习笔记",
+    "tags": [
+      "mongoose"
+    ],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:33:26.984Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "## 连接数据库\n\n```typescript\n// 数据库配置文件\nconst mongoConfig = `mongodb://用户名:${encodeURIComponent('密码')}@数据库IP:端口/库名`\nexport default mongoConfig\n```\n\n```typescript\nimport mongoose from 'mongoose'\nimport mongoConfig from '../.mongo.config'\nmongoose.connect(mongoConfig)\nmongoose.connection.on('error', console.error)\n```\n\n## 新建Schema\n\n```typescript\nimport { HydratedDocument, Types, now } from 'mongoose'\n\n// 评论类型\nexport interface ICommentType {\n  _id: Types.ObjectId,\n  title: string,\n  content: string,\n  createdAt: Date,\n  updatedAt: Date\n}\n\n// 书本类型【带评论】\nexport interface IBookType {\n  _id: Types.ObjectId,\n  title: string,\n  author: string,\n  comments: ICommentType[],\n  createdAt: Date,\n  updatedAt: Date\n}\n\nexport type ISchemaBookType = Omit<IBookType, '_id'>\n\nexport type IBookModelType = HydratedDocument<\n  ISchemaBookType & {\n    comments: Types.DocumentArray<\n      ICommentType\n    > & Types.Subdocument\n  }\n>\n\nconst commentSchema = new Schema({\n  title: {\n    type: String,\n    default: ''\n  },\n  content: {\n    type: String,\n    default: ''\n  },\n  createdAt: {\n    type: Date,\n    default: now()\n  },\n  updatedAt: {\n    type: Date,\n    default: now()\n  }\n}, {\n  timestamps: { \n    createdAt: 'createdAt',\n    updatedAt: 'updatedAt'\n  }\n})\n\nexport const schema = new Schema({\n  title: {\n    type: String,\n    default: ''\n  },\n  author: {\n    type: String,\n    default: ''\n  },\n  comments: [commentSchema],\n  createdAt: {\n    type: Date,\n    default: now()\n  },\n  updatedAt: {\n    type: Date,\n    default: now()\n  }\n}, {\n  timestamps: { \n    createdAt: 'createdAt',\n    updatedAt: 'updatedAt'\n  }\n})\nconst BookModel = model<IBookModelType>('Book', schema)\n\nexport default BookModel\n```\n\n## 创建修改删除数据\n\n```typescript\nimport Book from '../models/book'\nconst data = {\n  title: '遥远的天国',\n  author: '佚名'\n}\nconst book = await Book.create(data)\nconsole.log(book)\n\n// 修改\nconst updateData = {\n  title: '遥远的天国 - yao',\n  author: '佚名 - china'\n}\nconst update = await Book.findByIdAndUpdate(id, updateData, { \n  new: true, \n  upsert: true,\n  setDefaultsOnInsert: true,\n  runValidators: true, \n  findByIdAndUpdate: 'after' \n})\nconsole.log(update)\n\n// 删除数据\nconst remove = await Book.findByIdAndRemove(id)\nconsole.log(remove)\n```\n\n## 各种查找数据\n\n```typescript\n// 通过ID查找\nconst result = await Book.findById(id)\n\n// 条件查找列表\nconst result = await Book.find(filter).sort({\n  _id: -1\n})\n\n// 分页数据\nconst start = (page - 1) * pagesize\nconst total = await Book.find(filter).count()\n// title 标识返回字段，-title就是不反悔字段\nconst list = await Book.find(filter, 'title -_id').skip(start).limit(pagesize).sort({\n  _id: -1\n})\n\n// $eq\t与指定的值相等\n// $ne\t与指定的值不相等\n// $gt\t大于指定的值\n// $gte\t大于等于指定的值\n// $lt\t小于指定的值\n// $lte\t小于等于指定的值\n// $in\t与查询数组中指定的值中的任何一个匹配\n// $nin\t与查询数组中指定的值中的任何一个都不匹配\n// 返回 age 字段等于 16 或者 18 的所有 document\nModel.find({ age: { $in: [16, 18]} })\n\n// $and\t满足数组中指定的所有条件\n// $nor\t不满足数组中指定的所有条件\n// $or\t满足数组中指定的条件的其中一个\n// $not\t反转查询，返回不满足指定条件的文档\n{$and:[ {expression1},{expression2}, ... ,{expressionN} ]}\n{$nor:[ {expression1},{expression2}, ... ,{expressionN} ]}\n{$or:[ {expression1},{expression2}, ... ,{expressionN} ]}\n{field: { $not: { <operator-expression> }}}\n// 返回 age 字段大于 16 或者 age 字段 不存在 的文档\nModel.find( { age: { $not: { $lte: 16 }}})\n\n// 嵌套对象字段的查找\nModel.find({ 'name.last': 'wang' })\n\n// 数组字段的查找\n// $all\t        匹配包含查询数组中指定的所有条件的数组字段\n// $elemMatch\t匹配数组字段中的某个值满足 $elemMatch 中指定的所有条件\n// $size\t    匹配数组字段的 length 与指定的大小一样的 document\n\n// 数据如下\n// { year: [ 2018, 2019 ] }\n// { year: [ 2017, 2019, 2020 ] }\n// { year: [ 2016, 2020 ] }\n\n// 可使用精确查找写法 {field: value}\nModel.find({ year: 2019 });\n// { \"_id\" : ..., \"year\" : [ 2018, 2019 ] }\n// { \"_id\" : ..., \"year\" : [ 2017, 2019, 2020 ] }\n\n// 使用 $all 查找同时存在 2019 和 2020 的 document\nModel.find({ year: { $all: [ 2019, 2020 ] } });\n// { \"_id\" : ..., \"year\" : [ 2017, 2019, 2020 ] }\n\n// 包含2018或者2020的document\nModel.find({ year: { $in: [ 2018, 2020 ] } });\n// { \"_id\" : ..., \"year\" : [ 2018, 2019 ] }\n// { \"_id\" : ..., \"year\" : [ 2017, 2019, 2020 ] }\n\nModel.find({ year: { $gt: 2019, $lt: 2018 } });\n// { \"_id\" : ..., \"year\" : [ 2017, 2019, 2020 ] }\n// { \"_id\" : ..., \"year\" : [ 2016, 2020 ] }\n\n// $elemMatch 单个字段值满足所有查询条件\n\nModel.find({ year: { $elemMatch: { $gt: 2016, $lt: 2018 } } })\n// { \"_id\" : ..., \"year\" : [ 2017, 2019, 2020 ] }\n\n\n```\n",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb36ee751e2734634bdcd"
+  },
+  {
+    "_id": "626fb39ae751e2734634bdd6",
+    "title": "更新所有的依赖到最新版",
+    "directory": [
+      "626fb22ee751e2734634bd75"
+    ],
+    "type": "file",
+    "cover": "",
+    "desc": "如何更新package.json所有的的依赖到最新版",
+    "tags": [
+      "更新依赖",
+      "ncu"
+    ],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:34:11.952Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "## 首先全局安装 npm-check-updates\n\n```sh\nnpm install -g npm-check-updates\n```\n## 使用实操\n\n然后到对应的项目目录运行:\n\n```sh\nncu -u\n\n# Hmmmmm... this is taking a long time. Your console is telling me to wait for input\n# on stdin, but maybe that is not what you want.\n# Try winpty ncu.cmd, or specify a package file explicitly with --packageFile package.json.\n# See https://github.com/raineorshine/npm-check-updates/issues/136#issuecomment-155721102\n\n# 如果出现上面地的错误尝试使用\nncu -u --packageFile package.json\n```\n\n这样就会看到 package.json 文件对应的依赖的版本都指向最新版本了，然后运行：\n\n```sh\nnpm update\n# 如果是新项目还没有安装依赖，也可以使用npm install\n```\n\n> 这是一种比较安全的更新方式，但是有些依赖新版本会有一些破坏性修改，直接 npm install 最新版可以能会导致整个项目无法运行  \n> 这个也是 nodejs 让人诟病的地方之一\n\n文章参考：[Update all the Node.js dependencies to their latest version](https://nodejs.dev/learn/update-all-the-nodejs-dependencies-to-their-latest-version \"Update all the Node.js dependencies to their latest version\")\n",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb39ae751e2734634bdd6"
+  },
+  {
+    "_id": "626fb3d8e751e2734634bdee",
+    "title": "PKM系统路书",
+    "directory": [
+      "626fb23ee751e2734634bd78"
+    ],
+    "type": "file",
+    "cover": "",
+    "desc": "PKM系统开发过程记录，版本新功能等",
+    "tags": [
+      "PKM系统"
+    ],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:35:12.264Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "## pkm 0.0.2\n\n### bug\n\n- [x] 添加知识库，会变成修改知识库\n- [x] 编辑器内使用 Tab 无效\n- [x] 预览不支持tasklist\n- [x] 拖拽排序\n- [x] 优化预览样式\n- [x] 样式问题\n- [ ] 修改头像是会新增用户\n- [x] 编辑文档时，需要切换到当前目录\n\n### 下一版本功能\n\n- [x] 支持手机版本\n- [ ] 支持备份\n- [x] 书架\n- [x] 支持pwa\n- [x] 快捷键\n\n### 备忘录\n\n- 背景颜色的同步问题\n- 手机端显示工具栏\n- 不显示切换明暗的按钮和快捷方式的提示\n\n",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb3d8e751e2734634bdee"
+  },
+  {
+    "_id": "626fb3ede751e2734634bdf7",
+    "title": "创意脑洞",
+    "directory": [
+      "626fb23ee751e2734634bd78"
+    ],
+    "type": "file",
+    "cover": "",
+    "desc": "",
+    "tags": [],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:35:31.856Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "书 x 我\n音乐 x 我\n电影 x 我",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb3ede751e2734634bdf7"
+  },
+  {
+    "_id": "626fb41ae751e2734634be03",
+    "title": "Javascript",
+    "directory": [
+      "626fb24de751e2734634bd7b"
+    ],
+    "type": "folder",
+    "cover": "",
+    "desc": "js学习笔记",
+    "tags": [],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:24:06.001Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb41ae751e2734634be03"
+  },
+  {
+    "_id": "626fb42ae751e2734634be07",
+    "title": "Typescript",
+    "directory": [
+      "626fb24de751e2734634bd7b"
+    ],
+    "type": "folder",
+    "cover": "",
+    "desc": "TS学习笔记",
+    "tags": [],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:24:06.001Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb42ae751e2734634be07"
+  },
+  {
+    "_id": "626fb439e751e2734634be0b",
+    "title": "codemirror",
+    "directory": [
+      "626fb24de751e2734634bd7b"
+    ],
+    "type": "folder",
+    "cover": "",
+    "desc": "codemirror开发笔记",
+    "tags": [],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:24:06.001Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb439e751e2734634be0b"
+  },
+  {
+    "_id": "626fb44ae751e2734634be0f",
+    "title": "vue",
+    "directory": [
+      "626fb24de751e2734634bd7b"
+    ],
+    "type": "folder",
+    "cover": "",
+    "desc": "vue基础学习笔记",
+    "tags": [],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:24:06.001Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb44ae751e2734634be0f"
+  },
+  {
+    "_id": "626fb46de751e2734634be16",
+    "title": "关于JS拖拽排序的实现",
+    "directory": [
+      "626fb24de751e2734634bd7b",
+      "626fb41ae751e2734634be03"
+    ],
+    "type": "file",
+    "cover": "",
+    "desc": "关于JS拖拽排序的原理，和基本实现",
+    "tags": [
+      "拖拽排序",
+      "drag",
+      "mouse"
+    ],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:37:44.473Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "## JS 拖拽排序\n\n今天做 PKM 系统的拖拽排序，以前一直是使用插件 [draggable](https://shopify.github.io/draggable/ \"draggable\") 其实是比较好用的。但是我的需求有比较简单，所以动了心思撸一下。花了将近一天的时间，确实不简单。\n\n## 可用方案\n\n### 使用 `drag` 方案。\n\n大致流程是：抓取一个对象 -> 移动 -> 放入目标对象\n\n| 事件      | 事件处理程序 | 触发时刻                                                              |\n| --------- | ------------ | --------------------------------------------------------------------- |\n| drag      | ondrag       | 当拖拽元素或选中的文本时触发                                          |\n| dragend   | ondragend    | 当拖拽操作结束时触发 (比如松开鼠标按键或敲“Esc”键)                    |\n| dragenter | ondragenter  | 当拖拽元素或选中的文本到一个可释放目标时触发                          |\n| dragexit  | ondragexit   | 当元素变得不再是拖拽操作的选中目标时触发                              |\n| dragleave | ondragleave  | 当拖拽元素或选中的文本离开一个可释放目标时触发                        |\n| dragover  | ondragover   | 当元素或选中的文本被拖到一个可释放目标上时触发（每 100 毫秒触发一次） |\n| dragstart | ondragstart  | 当用户开始拖拽一个元素或选中的文本时触发                              |\n| drop      | ondrop       | 当元素或选中的文本在可释放目标上被释放时触发                          |\n\n注意：当从操作系统向浏览器中拖拽文件时，不会触发 dragstart 和 dragend 事件\n\n来源：[HTML 拖放 API](https://developer.mozilla.org/zh-CN/docs/Web/API/HTML_Drag_and_Drop_API \"HTML 拖放 API\")\n\n## 使用 `mouse` 方案\n\n大致流程就是，mousedown -> mousemove -> mouseup\n\n## 遇到的问题\n\n- 当 drag 的对象，包含有链接和图片时，使用起来不方便。需要手动处理添加属性控制链接或图片是否可以拖拽；\n- drag 方式，有比较多细节要处理。尤其是要阻止默认事件；\n- mouse 方式，最佳操作是绑定到全局，down 是绑定，up 时卸载所有事件。手机端要使用 touch 事件代替。需要区分操作意图是“点击”还是“拖拽”。尤其是拖拽的对象包含链接时，需要处理；\n- 当与 vue、react 结合时，drag 操作 dom，drop 之后再同步数据；\n- 默认 a 和 img 是可以拖拽的，可以通过设置 `draggable=\"true/false\"` 来控制是否可拖拽；\n- 最好的方式是保持，拖拽对象里面只有文本，否则就要处理拖拽对象。\n\n## 实现\n\n### JS Drag 方案\n\n```html\n<!DOCTYPE html>\n<html>\n  <head>\n    <title>Drag Sort JS DEMO</title>\n    <style>\n      .box {\n        width: 100%;\n        max-width: 780px;\n        margin: 100px auto;\n        display: flex;\n        align-items: stretch;\n        border: 1px var(--border-color) solid;\n        --border-color: #ddd;\n        --primary-color: #0a7a34;\n        --padding: 16px;\n      }\n      .demo {\n        width: 50%;\n        border-right: 1px var(--border-color) solid;\n        padding: var(--padding);\n      }\n      .action {\n        flex: 1;\n        padding: var(--padding);\n      }\n      .preview {\n        width: 100%;\n        height: 300px;\n        overflow: auto;\n        padding: 8px;\n        margin: 0 0 8px 0;\n        background-color: rgba(0,0,0, 0.1);\n        box-sizing: border-box;\n      }\n\n      .totonoo-sort-list, .totonoo-sort-item {\n        margin: 0;\n        padding: 0;\n        list-style: none;\n      }\n      .totonoo-sort-item {\n        display: block;\n        line-height: 32px;\n        border: 1px #dddddd dashed;\n        border-top-width: 0;\n        padding: 0 16px;\n        box-sizing: border-box;\n      }\n      .totonoo-sort-item:first-child {\n        border-top-width: 1px;\n      }\n      .totonoo-sort-item.over {\n        border-top-width: 1px;\n        border-color: var(--primary-color);\n      }\n      .totonoo-sort-item.drag {\n        opacity: 0.8;\n      }\n      .totonoo-sort-item a {\n        color: #666666;\n        text-decoration: none;\n      }\n    </style>\n  </head>\n  <body>\n    <div class=\"box\">\n      <div class=\"demo\">\n        <div id=\"totonoo-sort\"></div>\n      </div>\n      <div class=\"action\">\n        <pre class=\"preview\"></pre>\n        <button id=\"set-value\">重新设置数组</button>\n      </div>\n    </div>\n    <script>\n      class TotonooSort {\n        constructor (data, options) {\n          const opts = Object.assign({\n            selector: '#totonoo-sort',\n            dragItem: 'totonoo-sort-item',\n            overClassName: 'over',\n            dragClassName: 'drag',\n            animate: {\n              duration: 260\n            },\n            change: null\n          }, options)\n\n          this.data = [...data || []]\n          this.options = opts\n          this.box = this.$(opts.selector)\n\n          this.draging = null\n          this.overTarget = null\n\n          this.init()\n        }\n\n        init () {\n          this.render(this.data)\n          const box = this.box\n          box.addEventListener('drag', this.dragHandler.bind(this), false)\n          box.addEventListener('dragstart', this.dragstartHandler.bind(this), false)\n          box.addEventListener('dragend', this.dragendHandler.bind(this), false)\n          box.addEventListener('dragover', this.dragoverHandler.bind(this), false)\n          box.addEventListener('dragenter', this.dragenterHandler.bind(this), false)\n          box.addEventListener('dragleave', this.dragleaveHandler.bind(this), false)\n          box.addEventListener('drop', this.dropHandler.bind(this), false)\n        }\n\n        $ (selector, target) {\n          const tar = target || document\n          return document.querySelector(selector)\n        }\n\n        $$ (selector, target) {\n          const tar = target || document\n          return document.querySelectorAll(selector)\n        }\n\n        render (list = []) {\n          const ul = document.createElement('ul')\n          ul.classList.add('totonoo-sort-list')\n\n          list.forEach((item, index) => {\n            const li = document.createElement('li')\n            const a = document.createElement('a')\n\n            a.textContent = item\n            a.href = `#${index}`\n            a.setAttribute('draggable', 'false')\n\n            li.classList.add(this.options.dragItem)\n            li.setAttribute('draggable', 'true')\n            li.appendChild(a)\n            li.dataset.index = index\n\n            ul.appendChild(li)\n          })\n\n          this.box.appendChild(ul)\n          this.box.style.position = 'relative'\n        }\n\n        // 拖拽对象是否是 li.sort-item\n        isDragItem = (target) => {\n          return (target && target.nodeName === 'LI' && target.classList.contains(this.options.dragItem))\n        }\n\n        // 获取data-index\n        dataIndex = (target) => {\n          const index = (target && target.dataset) ? target.dataset.index : -1\n          return index ? Number(index) : -1\n        }\n\n        // 获取最近的 li.sort-item\n        closestLi = (target) => {\n          return target.closest(`li.${this.options.dragItem}`)\n        }\n\n        // 查找节点在父节点中的索引值\n        findIndex = (target) => {\n          let index = 0\n          if (!target || !target.parentNode) {\n            index = -1\n          } else {\n            const nodes = Array.prototype.slice.call(target.parentNode.children)\n            index = nodes.indexOf(target)\n          }\n          return index\n        }\n\n        // 切换动画\n        animate = (target, translateY) => {\n          return new Promise((reslove) => {\n            if (target) {\n              target.style.transition = `all ${this.options.animate.duration}ms ease`\n              target.style.transform = `translateY(${translateY}px)`\n              window.setTimeout(() => {\n                if (target) {\n                  target.style.transition = ''\n                  target.style.transform = 'translateY(0px)'\n                }\n                reslove()\n              }, this.options.animate.duration)\n            } else {\n              reslove()\n            }\n          })\n        }\n\n        // 获取所有的LI\n        getItems = () => {\n          const box = this.box\n          const items = this.$$(`.${this.options.dragItem}`, box)\n          return items\n        }\n\n        // 获取排序后的数据\n        getValue = () => {\n          const _list = []\n          const children = this.getItems()\n          if (children) {\n            for (let i = 0; i < children.length; i++) {\n              const child = children[i]\n              const index = this.dataIndex(child)\n              if (index > -1) {\n                const val = this.data[index]\n                if (typeof val === 'object') {\n                  const _val = JSON.parse(JSON.stringify(val))\n                  _list.push(_val)\n                } else {\n                  _list.push(val)\n                }\n              }\n            }\n          }\n          return _list\n        }\n\n        // 执行change回调\n        changeEvent = (drag, target) => {\n          setTimeout(() => {\n            const oldIndex = this.dataIndex(drag)\n            const index = this.findIndex(drag)\n            const curr = this.data[oldIndex]\n\n            const tarOldIndex = this.dataIndex(target)\n            const tarIndex = this.findIndex(target)\n            const tarCurr = this.data[tarOldIndex]\n\n            const res = this.getValue()\n            if (oldIndex !== index) {\n              if (typeof this.options.change === 'function') {\n                this.options.change({\n                  drag: {\n                    old: oldIndex,\n                    index: index,\n                    data: curr\n                  },\n                  target: {\n                    old: tarOldIndex,\n                    index: tarIndex,\n                    data: tarCurr\n                  },\n                  list: res\n                })\n              }\n            }\n          }, 300)\n        }\n\n        // 清空所有子节点\n        emptyNodes (target) {\n          while (target.hasChildNodes()) {\n            target.removeChild(target.firstChild)\n          }\n        }\n\n        // 重新设置列表\n        setValue (data = []) {\n          this.emptyNodes(this.box)\n          this.data = [...data || []]\n          this.render(this.data)\n        }\n\n        // 关键事件\n        dragstartHandler (event) {\n          event.dataTransfer.setData('text/plain', event.target.innerText)\n          this.draging = this.closestLi(event.target)\n          this.draging.classList.add(this.options.dragClassName)\n        }\n\n        dragendHandler (event) {\n          const children = this.getItems()\n          if (children) {\n            for (let i = 0; i < children.length; i++) {\n              children[i].classList.remove(this.options.dragClassName)\n            }\n          }\n        }\n\n        dragHandler (event) {\n          event.preventDefault()\n        }\n\n        async dragoverHandler (event) {\n          const target = this.closestLi(event.target)\n          const draging = this.draging\n          if (this.isDragItem(target)) {\n            const dragIndex = this.findIndex(draging)\n            const overIndex = this.findIndex(target)\n\n            if (target.parentNode && dragIndex > -1 && overIndex > -1 && dragIndex !== overIndex) {\n              const referenceNode = dragIndex < overIndex ? target.nextSibling : target\n              const translateY = draging.offsetTop - target.offsetTop\n              await Promise.all([this.animate(draging, translateY * -1), this.animate(target, translateY)])\n              target.parentNode.insertBefore(draging, referenceNode)\n\n              this.overTarget = target\n            }\n          }\n          event.dataTransfer.dropEffect = 'copy'\n          event.preventDefault()\n        }\n\n        dragenterHandler (event) {\n          event.target.classList.add(this.options.overClassName)\n        }\n        \n        dragleaveHandler (event) {\n          event.target.classList.remove(this.options.overClassName)\n        }\n        \n        dropHandler (event) {\n          const draging = this.draging\n          event.target.classList.remove(this.options.overClassName)\n          draging.classList.remove(this.options.dragClassName)\n          this.changeEvent(draging, this.overTarget)\n        }\n      }\n\n      const list = ['香蕉', '苹果', '葡萄', '橙子', '火龙果', '猕猴桃', '樱桃', '哈密瓜', '榴莲', '冬枣']\n      const totonooSort = new TotonooSort(list, {\n        change (data) {\n          totonooSort.$('.preview').textContent = JSON.stringify(data, null, 2)\n          console.log(data)\n        }\n      })\n      totonooSort.$('#set-value').addEventListener('click', () => {\n        totonooSort.setValue(list)\n      }, false)\n    </script>\n  </body>\n</html>\n```\n\n### JS Mouse 方案\n\n```html\n<!DOCTYPE html>\n<html>\n  <head>\n    <title>Mouse Sort JS DEMO</title>\n    <style>\n      .box {\n        width: 100%;\n        max-width: 780px;\n        margin: 100px auto;\n        display: flex;\n        align-items: stretch;\n        border: 1px var(--border-color) solid;\n        --border-color: #ddd;\n        --primary-color: #0a7a34;\n        --padding: 16px;\n      }\n      .demo {\n        width: 50%;\n        border-right: 1px var(--border-color) solid;\n        padding: var(--padding);\n      }\n      .action {\n        flex: 1;\n        padding: var(--padding);\n      }\n      .preview {\n        width: 100%;\n        height: 300px;\n        overflow: auto;\n        padding: 8px;\n        margin: 0 0 8px 0;\n        background-color: rgba(0,0,0, 0.1);\n        box-sizing: border-box;\n      }\n\n      .totonoo-sort-list, .totonoo-sort-item {\n        margin: 0;\n        padding: 0;\n        list-style: none;\n      }\n      .totonoo-sort-item {\n        display: block;\n        line-height: 32px;\n        border: 1px #dddddd dashed;\n        border-top-width: 0;\n        padding: 0 16px;\n        box-sizing: border-box;\n      }\n      .totonoo-sort-item:first-child {\n        border-top-width: 1px;\n      }\n      .totonoo-sort-item a {\n        color: #666666;\n        text-decoration: none;\n      }\n      #totonoo-sort .select {\n        position: absolute;\n        width: 100%;\n        display: block;\n        border: 1px var(--primary-color) dashed;\n        background-color: rgba(255,255,255, 0.1);\n        cursor: pointer;\n        color: #ffffff;\n        box-sizing: border-box;\n      }\n    </style>\n  </head>\n  <body>\n    <div class=\"box\">\n      <div class=\"demo\">\n        <div id=\"totonoo-sort\"></div>\n      </div>\n      <div class=\"action\">\n        <pre class=\"preview\"></pre>\n        <button id=\"set-value\">重新设置数组</button>\n      </div>\n    </div>\n    <script>\n      class TotonooSort {\n        constructor (data, options) {\n          const opts = Object.assign({\n            selector: '#totonoo-sort',\n            dragItem: 'totonoo-sort-item',\n            animate: {\n              duration: 260\n            },\n            change: null\n          }, options)\n\n          this.data = [...data || []]\n          this.options = opts\n          this.box = this.$(opts.selector)\n\n          this.init()\n        }\n\n        init () {\n          this.render(this.data)\n          this.box.addEventListener('mousedown', this.mousedown.bind(this), false)\n        }\n\n        $ (selector, target) {\n          const tar = target || document\n          return document.querySelector(selector)\n        }\n\n        $$ (selector, target) {\n          const tar = target || document\n          return document.querySelectorAll(selector)\n        }\n\n        render (list = []) {\n          const ul = document.createElement('ul')\n          ul.classList.add('totonoo-sort-list')\n\n          list.forEach((item, index) => {\n            const li = document.createElement('li')\n            const a = document.createElement('a')\n\n            a.textContent = item\n            a.href = `#${index}`\n\n            li.classList.add(this.options.dragItem)\n            li.appendChild(a)\n            li.dataset.index = index\n\n            ul.appendChild(li)\n          })\n\n          this.box.appendChild(ul)\n          this.box.style.position = 'relative'\n        }\n\n        // 是否不允许拖拽\n        notAllowed = (target) => {\n          return target.getAttribute('draggable') === 'false'\n        }\n\n        // 拖拽对象是否是 li.sort-item\n        isDragItem = (target) => {\n          return (target && target.nodeName === 'LI' && target.classList.contains(this.options.dragItem))\n        }\n\n        // 获取data-index\n        dataIndex = (target) => {\n          const index = (target && target.dataset) ? target.dataset.index : -1\n          return index ? Number(index) : -1\n        }\n\n        // 获取最近的 li.sort-item\n        closestLi = (target) => {\n          return target.closest(`li.${this.options.dragItem}`)\n        }\n\n        // 查找节点在父节点中的索引值\n        findIndex = (target) => {\n          let index = 0\n          if (!target || !target.parentNode) {\n            index = -1\n          } else {\n            const nodes = Array.prototype.slice.call(target.parentNode.children)\n            index = nodes.indexOf(target)\n          }\n          return index\n        }\n\n        // 切换动画\n        animate = (target, translateY) => {\n          return new Promise((reslove) => {\n            if (target) {\n              target.style.transition = `all ${this.options.animate.duration}ms ease`\n              target.style.transform = `translateY(${translateY}px)`\n              window.setTimeout(() => {\n                if (target) {\n                  target.style.transition = ''\n                  target.style.transform = 'translateY(0px)'\n                }\n                reslove()\n              }, this.options.animate.duration)\n            } else {\n              reslove()\n            }\n          })\n        }\n\n        // 获取所有的LI\n        getItems = () => {\n          const box = this.box\n          const items = this.$$(`.${this.options.dragItem}`, box)\n          return items\n        }\n\n        // 获取排序后的数据\n        getValue = () => {\n          const _list = []\n          const children = this.getItems()\n          if (children) {\n            for (let i = 0; i < children.length; i++) {\n              const child = children[i]\n              const index = this.dataIndex(child)\n              if (index > -1) {\n                const val = this.data[index]\n                if (typeof val === 'object') {\n                  const _val = JSON.parse(JSON.stringify(val))\n                  _list.push(_val)\n                } else {\n                  _list.push(val)\n                }\n              }\n            }\n          }\n          return _list\n        }\n\n        // 执行change回调\n        changeEvent = (drag, target) => {\n          setTimeout(() => {\n            const oldIndex = this.dataIndex(drag)\n            const index = this.findIndex(drag)\n            const curr = this.data[oldIndex]\n\n            const tarOldIndex = this.dataIndex(target)\n            const tarIndex = this.findIndex(target)\n            const tarCurr = this.data[tarOldIndex]\n\n            const res = this.getValue()\n            if (oldIndex !== index) {\n              if (typeof this.options.change === 'function') {\n                this.options.change({\n                  drag: {\n                    old: oldIndex,\n                    index: index,\n                    data: curr\n                  },\n                  target: {\n                    old: tarOldIndex,\n                    index: tarIndex,\n                    data: tarCurr\n                  },\n                  list: res\n                })\n              }\n            }\n          }, 300)\n        }\n\n        // 清空所有子节点\n        emptyNodes (target) {\n          while (target.hasChildNodes()) {\n            target.removeChild(target.firstChild)\n          }\n        }\n\n        // 重新设置列表\n        setValue (data = []) {\n          this.emptyNodes(this.box)\n          this.data = [...data || []]\n          this.render(this.data)\n        }\n\n        // 关键事件\n        mousedown (event) {\n          const mousedownTarget = event.target\n          if (this.notAllowed(mousedownTarget)) {\n            return\n          }\n          event.preventDefault()\n          // 开始拖拽\n          const drag = this.closestLi(mousedownTarget)\n          const box = this.box\n          let movingTarget = null\n\n          let isMoving = false\n          if (drag && box) {\n\n            // 创建拖拽样子\n            const dragRect = drag.getBoundingClientRect()\n            const dragBar = document.createElement('div')\n            dragBar.classList.add('select')\n            dragBar.style.left = drag.offsetLeft + 'px'\n            dragBar.style.top = drag.offsetTop + 'px'\n            dragBar.style.height = dragRect.height + 'px'\n            dragBar.style.display = 'none'\n            dragBar.style.transition = `all ${this.options.animate.duration}ms ease`\n            box.appendChild(dragBar)\n\n            // 鼠标移动事件\n            const mousemoveEvent = async (event) => {\n              if (isMoving) {\n                return\n              }\n              isMoving = true\n              const moveTarget = event.target\n              const target = this.closestLi(moveTarget)\n              if (target && this.isDragItem(target)) {\n                movingTarget = target\n                dragBar.style.display = 'block'\n                dragBar.style.left = target.offsetLeft + 'px'\n                dragBar.style.top = target.offsetTop + 'px'\n\n                const dragIndex = this.findIndex(drag)\n                const overIndex = this.findIndex(target)\n                if (target.parentNode && dragIndex > -1 && overIndex > -1 && dragIndex !== overIndex) {\n                  const referenceNode = dragIndex < overIndex ? target.nextSibling : target\n                  const translateY = drag.offsetTop - target.offsetTop\n                  await Promise.all([this.animate(drag, translateY * -1), this.animate(target, translateY)])\n                  target.parentNode.insertBefore(drag, referenceNode)\n                }\n              }\n              isMoving = false\n            }\n            document.addEventListener('mousemove', mousemoveEvent, false)\n            \n            const mouseupEvent = () => {\n              box.removeChild(dragBar)\n              document.removeEventListener('mousemove', mousemoveEvent)\n              document.removeEventListener('mouseup', mouseupEvent)\n              this.changeEvent(drag, movingTarget)\n            }\n            document.addEventListener('mouseup', mouseupEvent, false)\n          }\n        }\n      }\n\n      const list = ['香蕉', '苹果', '葡萄', '橙子', '火龙果', '猕猴桃', '樱桃', '哈密瓜', '榴莲', '冬枣']\n      const totonooSort = new TotonooSort(list, {\n        change (data) {\n          totonooSort.$('.preview').textContent = JSON.stringify(data, null, 2)\n          console.log(data)\n        }\n      })\n      totonooSort.$('#set-value').addEventListener('click', () => {\n        totonooSort.setValue(list)\n      }, false)\n    </script>\n  </body>\n</html>\n  \n```\n\n### VUE3\n\n```vue\n<template>\n  <div\n    :id=\"id\"\n    class=\"pkm-drag-sort\"\n    @mousedown=\"mousedownEvent($event)\"\n  >\n    <ul\n      class=\"pkm-drag-sort-ul\"\n      :class=\"[options.ulClass]\"\n    >\n      <li v-for=\"(item, index) in list\" :key=\"index\" class=\"sort-item\" :data-index=\"index\" :class=\"[options.liClass]\">\n        <slot name=\"row\" :row=\"item\" :index=\"index\">\n          {{ item }}\n        </slot>\n      </li>\n    </ul>\n  </div>\n</template>\n<script lang=\"ts\">\nimport { defineComponent, ref, watch, nextTick } from 'vue'\nimport { v4 as uuidv4 } from 'uuid'\n\nconst dragItemClassName = 'sort-item'\n\nconst $ = (selector: string) => {\n  return document.querySelector(selector)\n}\n\n// 拖拽对象是否是 li.sort-item\nconst isDragItem = (target: HTMLElement): boolean => {\n  return (target && target.nodeName === 'LI' && target.classList.contains(dragItemClassName))\n}\n\n// 是否不允许拖拽\nconst notAllowed = (target: HTMLElement): boolean => {\n  return target.getAttribute('draggable') === 'false'\n}\n\n// 获取data-index\nconst dataIndex = (target: HTMLElement): number => {\n  const index = (target && target.dataset) ? target.dataset.index : -1\n  return index ? Number(index) : -1\n}\n\n// 获取最近的 li.sort-item\nconst closestLi = (target: HTMLElement): HTMLElement | null => {\n  return target.closest(`li.${dragItemClassName}`)\n}\n\n// 查找节点在父节点中的索引值\nconst findIndex = (target: HTMLElement): number => {\n  let index = 0\n  if (!target || !target.parentNode) {\n    index = -1\n  } else {\n    const nodes = Array.prototype.slice.call(target.parentNode.children)\n    index = nodes.indexOf(target)\n  }\n  return index\n}\n\n// 动画\nconst duration = 260\nconst animate = (target: HTMLElement, translateY: number) => {\n  return new Promise<void>((reslove) => {\n    if (target) {\n      target.style.transition = `all ${duration}ms ease`\n      target.style.transform = `translateY(${translateY}px)`\n      window.setTimeout(() => {\n        if (target) {\n          target.style.transition = ''\n          target.style.transform = 'translateY(0px)'\n        }\n        reslove()\n      }, duration)\n    } else {\n      reslove()\n    }\n  })\n}\n\nexport interface IChangeDataType<T> {\n  drag: {\n    old: number,\n    index: number,\n    data: T\n  },\n  target: {\n    old: number,\n    index: number,\n    data: T\n  },\n  list: T[]\n}\n\nexport default defineComponent({\n  props: {\n    value: {\n      type: Array,\n      default: () => []\n    },\n    options: {\n      type: Object,\n      default: () => {\n        return {\n          ulClass: [],\n          liClass: []\n        }\n      }\n    }\n  },\n  setup (props, ctx) {\n    const uid = uuidv4()\n    const id = `pkm-sort-${uid}`\n    const list = ref<any[]>(props.value)\n\n    watch(\n      () => props.value,\n      async (val) => {\n        list.value = []\n        await nextTick()\n        list.value = val\n      }\n    )\n\n    const getItems = () => {\n      const box = $(`#${id}`)\n      const items = box?.querySelectorAll(`.${dragItemClassName}`)\n      return items\n    }\n\n    const getValue = () => {\n      const _list = []\n      const children = getItems()\n      if (children) {\n        for (let i = 0; i < children.length; i++) {\n          const child = children[i] as HTMLElement\n          const index = Number(child.dataset.index)\n          if (index > -1) {\n            const val = list.value[index]\n            if (typeof val === 'object') {\n              const _val = JSON.parse(JSON.stringify(val))\n              _list.push(_val)\n            } else {\n              _list.push(val)\n            }\n          }\n        }\n      }\n      return _list\n    }\n\n    const changeEvent = (drag: HTMLElement, target: HTMLElement) => {\n      setTimeout(() => {\n        const oldIndex = dataIndex(drag)\n        const index = findIndex(drag)\n        const curr = list.value[oldIndex]\n\n        const tarOldIndex = dataIndex(target)\n        const tarIndex = findIndex(target)\n        const tarCurr = list.value[tarOldIndex]\n\n        const res = getValue()\n        if (oldIndex !== index) {\n          ctx.emit('change', {\n            drag: {\n              old: oldIndex,\n              index: index,\n              data: curr\n            },\n            target: {\n              old: tarOldIndex,\n              index: tarIndex,\n              data: tarCurr\n            },\n            list: res\n          })\n        }\n      }, 300)\n    }\n\n    const mousedownEvent = (event: MouseEvent) => {\n      const mouseTarget = event.target as HTMLElement\n      if (notAllowed(mouseTarget)) {\n        return\n      }\n      event.preventDefault()\n\n      // 开始拖拽\n      const drag = closestLi(mouseTarget)\n      const box = $(`#${id}`)\n\n      let movingTarget: HTMLElement\n\n      let isMoving = false\n      if (drag && box) {\n\n        // 创建拖拽样子\n        const dragBar = document.createElement('div')\n        dragBar.classList.add('select')\n        dragBar.style.left = drag.offsetLeft + 'px'\n        dragBar.style.top = drag.offsetTop + 'px'\n        dragBar.style.height = drag.clientHeight + 'px'\n        dragBar.style.display = 'none'\n        dragBar.style.transition = `all ${duration}ms ease`\n        box.appendChild(dragBar)\n\n        // 鼠标移动事件\n        const mousemoveEvent = async (event: MouseEvent) => {\n          if (isMoving) {\n            return\n          }\n          isMoving = true\n          const moveTarget = event.target as HTMLElement\n          const target = closestLi(moveTarget)\n          if (target && isDragItem(target)) {\n            movingTarget = target\n            dragBar.style.display = 'block'\n            dragBar.style.left = target.offsetLeft + 'px'\n            dragBar.style.top = target.offsetTop + 'px'\n\n            const dragIndex = findIndex(drag)\n            const overIndex = findIndex(target)\n            if (target.parentNode && dragIndex > -1 && overIndex > -1 && dragIndex !== overIndex) {\n              const referenceNode = (dragIndex < overIndex ? target.nextSibling : target) as HTMLElement\n              const translateY = drag.offsetTop - target.offsetTop\n              await Promise.all([animate(drag, translateY * -1), animate(target, translateY)])\n              target.parentNode.insertBefore(drag, referenceNode)\n            }\n          }\n          isMoving = false\n        }\n        document.addEventListener('mousemove', mousemoveEvent, false)\n        \n        const mouseupEvent = () => {\n          box.removeChild(dragBar)\n          document.removeEventListener('mousemove', mousemoveEvent)\n          document.removeEventListener('mouseup', mouseupEvent)\n          changeEvent(drag, movingTarget)\n        }\n        document.addEventListener('mouseup', mouseupEvent, false)\n      }\n    }\n\n    return {\n      id,\n      list,\n      mousedownEvent\n    }\n  }\n})\n</script>\n<style lang=\"scss\">\n.pkm-drag-sort {\n  position: relative;\n  user-select: none;\n  ul, li {\n    @include reset();\n  }\n  .select {\n    position: absolute;\n    width: 100%;\n    display: block;\n    border: 1px rgb(var(--primary-6)) dashed;\n    background-color: rgba(0,0,0, 0.1);\n    cursor: pointer;\n    color: #ffffff;\n    box-sizing: border-box;\n  }\n}\n</style>\n```\n\n## 补充\n\n- 从最后的开发结果来看“mouse”方式比“drag”方式更简单一些\n- 我企图使用vue的响应式来更新数据，发现效果很差。所以最后就是初始化使用vue，排序的过程是操作dom，一次过程完成之后再同步数据。\n",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb46de751e2734634be16"
+  },
+  {
+    "_id": "626fb492e751e2734634be25",
+    "title": "TS类型运算",
+    "directory": [
+      "626fb24de751e2734634bd7b",
+      "626fb42ae751e2734634be07"
+    ],
+    "type": "file",
+    "cover": "",
+    "desc": "TS类型运算也可以运算，增删改查时，类型特别好用",
+    "tags": [],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:38:20.996Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "```typescript\nexport interface IDataType {\n  _id?: string,\n  title: string,\n  desc: string\n}\n\nexport type IDataOmitType = Omit<IDataType, '_id' | 'title'>\n{\n  desc: string\n}\n\nexport type IDataPickType = Pick<IBookrackType, '_id' | 'title'>\n{\n  _id: string,\n  title: string,\n}\n\nexport type IDataPartialType = Partial<IBookrackType>\n{\n  _id?: string,\n  title?: string,\n  desc?: string\n}\n\nexport type IDataRequiredType = Required<IBookrackType>\n{\n  _id: string,\n  title: string,\n  desc: string\n}\n```\n\n## 类泛型\n\n```typescript\nclass Ani<T> {\n  name: T\n  constructor (name: T) {\n    this.name = name\n  }\n  speak () {\n    console.log(`Hi, my name is ${this.name}.`)\n  }\n}\n\nclass Cat extends Ani<string> {\n  constructor (name: string) {\n    super(name)\n  }\n\n  getName () {\n    return this.name\n  }\n}\n\nconst cat = new Cat('Lili')\ncat.speak()\nconsole.log(cat.getName())\n```\n",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb492e751e2734634be25"
+  },
+  {
+    "_id": "626fb4b6e751e2734634be34",
+    "title": "codemirror6 开发小笔记",
+    "directory": [
+      "626fb24de751e2734634bd7b",
+      "626fb439e751e2734634be0b"
+    ],
+    "type": "file",
+    "cover": "",
+    "desc": "记录codemirror6 开发过程中的笔记",
+    "tags": [
+      "codemirror6"
+    ],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:38:54.504Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "## 安装\n\n```bash\nnpm install @codemirror/basic-setup --save -d\n```\n一次性安装所有基本模块，也可以通过单个安装如：`npm install @codemirror/state --save -d`，只不过这样太麻烦了\n\n基本模块包括：\n\n- the default command bindings\n- line numbers\n- special character highlighting\n- the undo history\n- a fold gutter\n- custom selection drawing\n- drop cursor\n- multiple selections\n- reindentation on input\n- the default highlight style (as fallback)\n- bracket matching\n- bracket closing\n- autocompletion\n- rectangular selection\n- active line highlighting\n- active line gutter highlighting\n- selection match highlighting\n- search\n- commenting\n- linting\n\n详细见文档：[https://codemirror.net/6/docs/ref/#basic-setup](https://codemirror.net/6/docs/ref/#basic-setup \"\")\n\n\nMarkdown语言支持\n\n```bash\nnpm install @codemirror/lang-javascript @codemirror/lang-html @codemirror/lang-css @codemirror/lang-json @codemirror/lang-markdown --save -d\n```\n\n## 第一个实例\n\n```javascript\nimport { EditorView } from '@codemirror/view'\nimport { EditorState } from '@codemirror/state'\n\nlet myView = new EditorView({\n  state: EditorState.create({ doc: 'hello' }),\n  parent: document.body // Element | DocumentFragment\n})\n\n```\n",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb4b6e751e2734634be34"
+  },
+  {
+    "_id": "626fb4e2e751e2734634be43",
+    "title": "关于如何发布一个自己的vue组件",
+    "directory": [
+      "626fb24de751e2734634bd7b",
+      "626fb44ae751e2734634be0f"
+    ],
+    "type": "file",
+    "cover": "",
+    "desc": "发布一个自己的vue组件的详细过程记录，包括发布到npm",
+    "tags": [
+      "vue",
+      "组件",
+      "发布npm"
+    ],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:39:44.267Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "## 先确立一个小目标\n\ncodemirror发布了新版，vue3也成为了默认版本。尝试做一个基于codemirror的富文本编辑器。\n\n确定一下基本的开发要求：\n\n- vite\n- typescript\n- codemirror\n- scss并采用css新特性来支持，明暗模式\n\n## 搭建初始项目\n\n```bash\nnpm create vite@latest\n√ Project name: ... vue-codemirror\n√ Select a framework: » vue\n√ Select a variant: » vue-ts\n\nScaffolding project in ...vue-codemirror...\n\nDone. Now run:\n\ncd vue-codemirror\nnpm install\nnpm run dev\n```\n\n## 添加codemirror\n\n[codemirror官方网站](https://codemirror.net/6/ \"codemirror\")\n\n```bash\nnpm install @codemirror/next --save -d\n# 语言支持\nnpm install @codemirror/lang-javascript @codemirror/lang-html @codemirror/lang-css @codemirror/lang-json @codemirror/lang-markdown --save -d\n```\n\n## 添加scss支持\n\n```bash\nnpm add -D sass\n```\n\n## 开发组件\n\n[https://github.com/myestorm/vue-codemirror.git](https://github.com/myestorm/vue-codemirror.git \"vue-codemirror\")\n\n## 发布到NPM（scoped public packages）\n\n- 注册npm账号，并添加组织\n- 在对应的项目目录，执行 `npm init --scope=你的组织名称` ，然后一路按照提示填写即可\n- 执行 `npm login` 输入账号、密码、验证码登录\n- 执行 `npm publish --access public` 推送代码即可\n\n> vue3 + ts + vite组件演示仓库 [https://github.com/sethidden/vue-tsc-component-library-example](https://github.com/sethidden/vue-tsc-component-library-example \"\")\n\n## package.json与NPM发布相关的字段说明\n\n\n| 字段    | 说明    |\n| --- | --- |\n|  main   |  入口文件   |\n|  module   |  模块入口文件   |\n|  typings   | ts类型入口    |\n|  files   | 配置需要发布的文件    |\n|  exports   |  配置导入时的默认文件   |\n|  repository   |  仓库地址   |\n|  keywords   |  关键字   |\n|  author   | 作者    |\n|  license   | 授权协议    |\n|  bugs   |  bug反馈地址   |\n|  homepage   |  主页   |\n\n\n",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb4e2e751e2734634be43"
+  },
+  {
+    "_id": "626fb535e751e2734634be53",
+    "title": "食疗补血的方式",
+    "directory": [
+      "626fb25de751e2734634bd7e"
+    ],
+    "type": "file",
+    "cover": "",
+    "desc": "食疗补血的方式",
+    "tags": [
+      "食疗",
+      "补血"
+    ],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:41:03.130Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "## 为什么要补血\n\n## 补血的方式\n\n食补是很不错的补血方法：\n\n- 比如说红枣，葡萄，桂圆等；\n- 动物肝脏、鱼、虾这些也是不错的选择，也能够起到补血的作用。\n\n运动也是必不可缺的补血措施。\n\n保持良好的心态，也能够起到补血补气的效果。\n\n## 食谱\n\n### 杂粮粥\n\n原料：大枣、赤小豆（或红豆）、枸杞、花生（红皮的）\n\n1. 把这5种材料放入锅中熬水，最好用砂锅；\n2. 我没按什么比例，我大概每次放5个大枣，一小把小豆、一小把枸杞（不要放太多，否则容易流鼻血）、一小把花生、一勺红糖；\n3. 红糖。枸杞和红糖都是快熬好了再放的，小豆不爱熟，提前泡好；\n4. 熬成一小碗每天坚持喝，不到半个月就感觉浑身都有劲了。\n\n## 补血的药品\n\n可以用来补血的药品有以下几种:\n\n- 第一种，硫酸亚铁片，硫酸亚铁品中含有铁元素，可以用来治疗缺铁性贫血；\n- 第二种，阿胶口服液，阿胶中含有丰富的营养物质，具有补益气血的功效；\n\n除了上述这两种药品之外，在中医方面还可以多吃一些具有补血益气功能的中草药，例如人参，人参具有促进造血机能的作用，还有当归，当归具有补血、和血的功效。\n",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb535e751e2734634be53"
+  },
+  {
+    "_id": "626fb56fe751e2734634be61",
+    "title": "心经",
+    "directory": [
+      "626fb278e751e2734634bd84"
+    ],
+    "type": "file",
+    "cover": "",
+    "desc": "《心经》，全称《摩诃般若波罗蜜多心经》，略称《般若心经》。是阐述大乘佛教中空和般若思想的经典，是所有佛经中翻译次数最多，译成文种最丰富，并最常被念诵的经典。有广本及略本两种本子。汉传佛教通行版为玄奘译。这部经在佛教三藏中的地位殊胜，就相当于释迦牟尼佛的心脏一样。收于大正藏第八册。",
+    "tags": [
+      "心经",
+      "佛经"
+    ],
+    "top": false,
+    "order": 99,
+    "createdAt": "2022-05-02T10:24:06.001Z",
+    "createdBy": "626cc924bf8aad5853523a21",
+    "updatedAt": "2022-05-02T10:42:04.931Z",
+    "updatedBy": "626cc924bf8aad5853523a21",
+    "content": "## 心经原文\n\n观自在菩萨，行深般若波罗蜜多时，照见五蕴皆空，渡一切苦厄。\n\n舍利子！色不异空，空不异色；色即是空，空即是色；受想行识，亦复如是。\n\n舍利子！是诸法空相，不生不灭，不垢不净，不增不减。\n\n是故空中无色，无受想行识，无眼耳鼻舌身意，无色声香味触法，无眼界，乃至无意识界。\n\n无无明，亦无无明尽，乃至无老死，亦无老死尽，无苦集灭道。无智亦无得。\n\n以无所得故，菩提萨埵，依般若波罗蜜多故，心无罣碍，无罣碍故，无有恐怖， 远离颠倒梦想，究竟涅槃。\n\n三世诸佛，依般若波罗蜜多故，得阿耨多罗三藐三菩提。\n\n故知般若波罗蜜多，是大神咒，是大明咒，是无上咒，是无等等咒，能除一切苦，真实不虚。\n\n故说般若波罗蜜多咒，即说咒曰︰揭諦揭諦，波罗揭諦，波罗僧揭諦，菩提娑婆呵。\n\n## 注音解释\n\nbō rě bō luó mì duō xīn jīng  \n般若波罗蜜多心经  \nguān zì zài pú sà，xíng shēn bō rě bō luó mì duō shí  \n观自在菩萨，行深般若波罗蜜多时  \n解释：观音菩萨，深入的修行心经时\n\nzhào jiàn wǔ yùn jiē kōng，dù yī qiē kǔ è  \n照见五蕴皆空，度一切苦厄。  \n解释：看到五蕴：形相、情欲、意念、行为、心灵，都是空的，就将一切苦难置之度外  \n\nshè lì zǐ，sè bù yì kōng，kōng bù yì sè  \n舍利子，色不异空，空不异色  \n解释：菩萨对学生舍利子说，形相不异乎空间，空间不异乎形相  \n\nsè jí shì kōng，kōng jí shì sè  \n色即是空，空即是色。  \n解释：所以形相等于空间，空间等于形相  \n\nshòu xiǎng xíng shí，yì fù rú shì  \n受想行识，亦复如是。  \n解释：情欲、意念、行为、心灵，都是一样的\n\nshè lì zǐ，shì zhū fǎ kōng xiāng  \n舍利子，是诸法空相  \n解释：舍利子呀，一切法则都是空的\n\nbù shēng bù miè，bù gòu bù jìng，bù zēng bù jiǎn  \n不生不灭，不垢不净，不增不减  \n解释：不生不灭，不垢不净，不增不减\n\nshì gù kōng zhōng wú sè, wú shòu xiǎng xíng shí  \n是故空中无色，无受想行识  \n解释：因此空间是没有形相的，也没有情欲、意念、行为和心灵\n\nwú yǎn ěr bí shé shēn yì, wú sè shēng xiāng wèi chù fǎ  \n无眼耳鼻舌身意，无色声香味触法  \n解释：没有眼、耳、鼻、舌、身、意等六根，更没有色、声、香、味、触、法等六尘\n\nwú yǎn jiè，nǎi zhì wú yì shí jiè  \n无眼界，乃至无意识界  \n解释：没有眼睛所能看到的界限，直到没有心灵所能感受的界限\n\nwú wú míng , yì wú wú míng jìn  \n无无明，亦无无明尽  \n解释：没有不能了解的，也没有不能了解的尽头\n\nnǎi zhì wú lǎo sǐ, yì wú lǎo sǐ jìn  \n乃至无老死，亦无老死尽。  \n解释：直到没有老和死，也没有老和死的尽头\n\nwú kǔ jí miè dào， wú zhì yì wú dé，yǐ wú suǒ dé gù  \n无苦集灭道，无智亦无得，以无所得故。  \n解释：没有痛苦的集合以及修道的幻灭，不用智慧去强求，所以得到与否并不重要\n\npú tí sà duǒ，yī bō rě bō luó mì duō gù，xīn wú guà ài  \n菩提萨埵，依般若波罗蜜多故，心无挂碍。  \n解释：菩萨觉悟之后，依照心经，心中没有碍\n\nwú guà ài gù，wú yǒu kǒng bù  \n无挂碍故，无有恐怖  \n解释：由于没有碍，所以不恐怖\n\nyuǎn lí diān dǎo mèng xiǎng, jiū jìng niè pán  \n远离颠倒梦想，究竟涅槃。  \n解释：远离颠倒梦想 ，最后达到彼岸\n\nsān shì zhū fó， yī bō rě bō luó mì duō gù  \n三世诸佛，依般若波罗蜜多故  \n解释：过去、现在和未来的三世诸佛，依照心经\n\ndé ā nuò duō luó sān miǎo sān pú tí  \n得阿耨多罗三藐三菩提。  \n解释：得到无上、正宗、正觉的三种佛果\n\ngù zhī bō rě bō luó mì duō，shì dà shén zhòu, shì dà míng zhòu  \n故知般若波罗蜜多，是大神咒，是大明咒  \n解释：所以说心经，是变幻莫测的咒语，是神光普照的咒语\n\nshì wú shàng zhòu, shì wú děng děng zhòu  \n是无上咒，是无等等咒。  \n解释：是无上的咒语，是最高的咒语\n\nnéng chú yī qiē kǔ， zhēn shí bù xū  \n能除一切苦，真实不虚。  \n解释：能除一切苦 ，不是骗人的\n\ngù shuō bō rě bō luó mì duō zhòu  \n故说般若波罗蜜多咒。  \n解释：所以说心经\n\njí shuō zhòu yuē，jiē dì jiē dì， bō luó jiē dì  \n即说咒曰：揭谛揭谛，波罗揭谛  \n解释：其咒语曰：去吧，去吧，到彼岸去吧\n\nbō luó sēng jiē dì, pú tí sà pó hē  \n波罗僧揭谛，菩提萨婆诃。  \n解释：大家快去彼岸，修成正果\n\n\n## 心经简介\n\n《心经》是一本佛教徒必读，必知的一本经典佛经。全称《摩诃般若波罗蜜多心经》，梵文paramitahrdayasutra。略称《般若心经》或《心经》。全经只有一卷，260字。属于《大品般若经》中600卷中的一节，是佛经中字数最少的一部经典著作，因其字数最少、含义最深、传奇最多、影响最大，被认为是般若经类的提要。该经曾有过七种汉译本。较为有名的是后秦鸠摩罗什所译的《摩诃般若波罗蜜大明咒经》和唐朝玄奘所译的《般若波罗蜜多心经》。\n\n汉传佛教通行版为玄奘译。这部经在佛教三藏中的地位殊胜，就相当于释迦牟尼佛的心脏一样，收于大正藏第八册。\n\n心（梵hrdaya ），指心脏，含有精要、心髓等意。本经系将内容庞大之般若经浓缩，成为表现“般若皆空”精神之简洁经典。全经举出五蕴、三科、十二因缘、四谛等法以总述诸法皆空之理。“色即是空，空即是色”一语，即是出自本经。\n\n般若，智慧也。波罗蜜，到彼岸也。多，定也。经，径也。言此经乃定心之径路也。\n\n此经以单法为名，实相为体，观照为宗，度苦为用，大乘为教相。\n\n此五者，经中所说之旨也。单法者，即般若波罗蜜多也。实相者，即诸法空相也。观照者，即照见五蕴皆空妄也。度苦者，即度一切业报苦厄也。大乘者，即菩萨所行甚深般若也。\n\n## 般若波罗密多心经释解\n\n人要度苦厄，了生死，成大觉，非从自心下手不可。但要明白自心，只依这二百六十个字，已经够了。但空的道理不明白，自心的相貌也难彻了。这个经，最主要是说性空的道理，不是世人所说的空，那是断灭空，他们误解佛法是消极自了的。今把此经判分七段，用白话来逐字逐句解释，使世人明白空的真义，不至误会造业。由此断一切苦厄，并可发大悲平等心救世，证明佛法在社会上的大用，实是开发世界大同唯一的法宝。\n\n【般若】这是梵文，我国名为大智慧。因为中国文字难尽其义，所以仍用原文，并且尊重这几个字，所以不译。这个般若，全是说心的妙用。上自佛，下至众生，无不由此而成佛道，了生死，度苦厄。论其性体，是不生不灭的金刚;论其相貌，却是无形无状的实相;论其妙用，乃是不可测知的圆通神妙。这个般若，是人人有分的，佛和众生都是平等的;不过佛是开了般若慧，众生是有而不开，被无明所蒙住了。至于般若两个字，解释却有许多字，当云“通达世间法出世间法，融通无碍，恰到好处，而又不执取诸法的大智慧。”才能尽其义。因为世间法人事等等，都是佛法。佛是觉义，能觉悟世上一切人情世故。尽了人道，才可成佛。总之，入世出世，只是一心，颠倒烦恼，贪嗔痴迷，是六道众生的心;如能空净自在，不固执，便是佛菩萨的心。所以离世法，便没有佛法;离了般若，只有作孽受苦厄的分了。\n\n【波罗】 此言彼岸;因为有个度字，所以假定一条生死河，众生在苦恼的此岸，要度过到清净的彼岸，用来比喻，不是真有此岸彼岸。\n\n【蜜】 是到的意思，是到了果位了。果位是究竟涅盘，涅盘就是清净。\n\n【多】是上面的意思。到彼岸之上，才是究竟。现在假分五步：第一步在此岸;第二步入流，是下了渡船了，是初发心的人，亦是初果罗汉;第三步是中流，船在河中间，如声闻缘觉;第四步到了彼岸，是十地以下的菩萨，终不是究竟;必第五步上岸，“多”舍去了船，即是舍去了法见，扫除了执心，斯是了无挂碍的等觉菩萨和佛。\n\n【心】心是什么?是个影子，不能说有，不能说无：所以无形段，不过是六根（眼、耳、鼻、舌、身、意）和六尘（色、声、香、味、触、法）相对起了认识，叫做六识（眼识、耳识、鼻识、舌识、身识、意识），所以是集起的。就是心同外境集合而缘起的幻影，即名幻心;心中起的道理，叫做幻法;执住个幻我成个幻见，于是成熟了，就有六道生死。但造成这个生死的是幻心，要开般若智慧了脱生死的，还是要用这幻心;成到佛（涅盘），也是用这幻心，你既然知道是幻的，那么就有幻心造成幻法，一切人事等等，六道生死涅盘，还不是一样是幻的?由此可觉本来没有生死，都是冤枉造作。既无生死，就用不着涅盘了，所以说诸法空相，涅盘生死等空华，即是此意。但又为什么分真心妄心呢?这是不得已而替初学的人说，其实心，根本不有，不可得，又分什么真和妄呢?不过幻心不能除，人事上一切的幻用不能废，所以权分真心妄心。真心是无心之心，何以叫无心之心呢?即是不起念时，而见闻觉知仍旧了了，却无分别，寂然不动的，此是真心;如一起了念，分别人事，而可以心不颠倒，亦不逐境流浪，顿然归到无心本位，此还是真心。至于念念流浪，不觉渐渐入了迷途，此名妄心，但本体勿失的。这部心经，就教你凛觉的法子，用智慧观照什么是心?什么是苦厄?又如何回归到清净寂灭无心之心的本位?所以名为般若波罗蜜多心经。\n\n【经】有许多意思：如“路”，指示我们回复真心之路的;“法”，一切方法;“贯”，贯通前后的义理;“契”，契合各人的机，各事的理，有这几种解释。现在二百六十个字，是文字般若，指示我们观照般若的方法;照此去做，实证实相般若的究竟，总不出众生心行中事，所以经是完全指我们自身而说的。\n\n此经共有七个翻译，这是唐朝三藏大师玄奘所译，文是简单的，义是深奥的。虽有七译，意义是一样的。读经当重意义，不可徒在文字上死执。此经是替大乘菩萨登佛位说的，表至高无上的佛境，意境只有自己晓得，说不出的，所以叫做无字真经。并不是真的无字，愿学人自己领会自己的境界，到了如何地位;至于佛的境界，却不是二乘人或十地以下的菩萨可以测知的。我们东土人，大乘根器多而厚，所以不论男的女的，识字不识字，都喜欢读这个经;譬如人闻香，个个人知道香味好，但多半不知道是什么香;而受薰是平等的，所以不可思议。以上释题竟。\n\n【观】定下了心，运想那个道理叫做观。这个观，是已证到果地圆成的妙观，不是因地初修作观的观，是大自在观，般若的大机大用已经启发，心无能观，亦无所观，是能所双忘的妙观。\n\n【自在】是无可无不可的自在，不是自由。自由是不肯受拘束的，但环境不如你的意思，便苦了。独有自在，是到处能安，自然地不受环境所困，一切好坏随缘;乐亦不喜，苦亦不恼，知道他是本来空，自己有主宰的。这个自在，是指大自在。\n\n【菩萨】是菩提萨埵的简称，能自己觉悟，再能觉悟人的谓之菩萨;所以是人天的导师，为三界的善知识。三界是：（一）欲界，由人的一部分下至五道;（二）色界，指天道;（三）无色界，指禅天;总是在六道中。菩萨分在家，出家，地前，登地，十地等觉，最高是一生补处菩萨，就是佛退位后，他来接位的，如此土的弥勒佛，西方的观世音大士。这个菩萨，是指十地等觉将登佛位的大自在菩萨。\n\n【行】 心行，心中起种种妙观妙行的大用，作种种自利利他二事业。\n\n【深】 不是深浅的深，是不可测量的意思，圆遍广大，究竟无上的妙行。\n\n【般若波罗蜜多】 上面已经解释过了，就说菩萨的功行，已到究竟地，登彼岸之上了。\n\n【时】这时字关系甚大，显明到了这个境界的时候，正是果位的时候，已经断除一切烦恼，度尽苦厄，没有挂碍的了。在下两句“照见五蕴皆空，度一切苦厄”之后的意境，点明大自在的光景，不可草草。\n\n【照见】 朗然觉照，彻见无余的意思，是无功用的功用，毫不著意的觉照，心神会通的了。\n\n【五蕴】指色、受、想、行、识，这五事蕴结不分，叫做五蕴。此言心和外境相蕴合，统名曰色。一个色字，包括五个字在内，并且包括外面一切一切有相相形形色色，内面无相相思想方面都在内。外境原是色，而我的眼、耳、鼻、舌、身、意也是色;外色和内色接触了，就有个受;既受了，就要去想象他，这是想;想到了，心中一行转念，这是行;转出那知识来，就是识;所以受想行识四个也还是色，总是幻心幻起的作用，成就种种的幻法。这个五蕴，是众生造孽受苦成立六道生死的资本，但也是开般若，除习气，度苦厄，了生死的工具，也就是佛菩萨成大觉度众生的工具。同要用五蕴，只是佛菩萨能照见本空，可以善用，不被所转，众生反被所缚;是在觉不觉，明空不明空之别，不要指定为不好的东西，反生了偏见。\n\n【皆】 统统包尽无余，就是一切的意思。不但人空，法亦空，连照见亦空，因为照见亦是五蕴，所以称皆。\n\n【空】世上的人，往往不明白空的道理，笼统说：空就是没有了。不知“空”有空间、虚空、空相、空义种种的分别。今分为两种：一空相，是有相的，如空屋，人满了，空相破了，所以“有”与“空”是相对的，这就是世人说的没有就是空了。经上另有十八空义，不必尽说。\n\n至于佛经上所说的“空”，是空义，是性空，是本来空，是与一切万有相和合的，不是相对的，不是没有的，是有而空的。要明白这个空的意义，先得明白几点：所谓宇宙间一切形形色色，山河大地，日月星辰，下至一切用物、植物、动物和我的身体，都是有相相;还有我的思想、道理、人事、人情、喜怒哀乐，都是无相相;一切包括在内，总名曰色，在因地上总是空的。因为以上一切色，寻不出一件是有独立自性的。第一说有相的：拿布来比，布没有独立自性，变成为布的，须依于纱线而成;纱线不能自为纱线，必待棉花;棉花不能自有，必由种子;种子不能自种，必赖人工天时地肥等等。不必分析开来才空，在未成布成纱前，及正有布有纱时，他的本身是由众缘和合而成;因为是因缘生，所以无有实体，求其究竟相，毕竟不可得，身体亦是如此。所以一切一切，无自性，无实体，因缘生，不可得的，所以是性空。第二说无相的：拿心来说，心是什么?根本是不有，但只集起的是心。譬如夏天凉爽的席上，人睡得甜美之极，这时候便没有我，没有心;忽然蚊虫咬了一口觉得了，这觉得的便是蚊虫和我集合而起的心。此外一切都同此理，所以心也是无自性，因缘生，无实体，不可得的，所以是性空。因此物和心，无一不是空。但是有而空，是幻有的，这是性空，和一切一切分不开的;不是心物之外另有个空，也不是这个是空，那个不是空的。所以说到色，即不能离开空;说到空，就不能离开一切色。但要认明却是缘生幻有，又须切实知道这个空是因地本来空，是性空，非眼耳可以见闻，其义实空。\n\n既决定知道一切一切是本空而幻有，那又何必执取当他是实呢!但世上一切人事，如何可废，我仍随缘应付;不是麻木无心，只是勿住，行云流水的到处自在，这才是真心空。佛说空是这个道理，世上盲目妄加批评，岂不可惜!世人果能明空，自然心勿执取，那贪得心，嗔恨心，痴迷心，自不会深入，天下没有极端的争夺了。佛法岂不是社会上最大的利益，有什么迷信可说呢!又修行人往往有口头禅，说：“莫著了空!”这是怕他执著空见，正因为他根本不曾明空，总在空有二见上作道理，格外搅扰不清了。所以明空则破色，破色则心空，这是断苦厄的第一法门!\n\n【度】 超脱的意思，就是登彼岸之上，法见都净了也。\n\n【一切】 包罗所有，净尽无余，凡有相无相，人我法我种种苦厄，尽包在内。\n\n【苦厄】身上的痛苦，心上的不安，有相无相，粗细微细，都是苦厄。其实全由心起，我果无心，苦在何处?心果无见，厄在何处?不是不知，不是不受;因为有智慧知道本来空，能够知而有若无知，受而等于不受;譬如两个人同时受苦，一个挡不住，甚至苦上加苦，因苦成病;一个却无所谓，心不著意，便无苦厄了。\n\n以上四句判为总持分，是第一段，总三藏十二部经一切法，持无量义，亦是此经纲领。通了这四句，就明白心经宗旨了。照此做去，自然度苦厄，了生死，出三界，成佛道，绰乎有余的了。凡不明心要的人，总在文字上会，不肯从自心上会;弄得没有办法时，只好今日求佛，明日求法;下此者，求福报，求神通，死要一个有相的凭据，离佛道更远了。深入迷途，岂不可痛!\n\n【舍利子】 佛弟子的名字，即是舍利弗;在声闻乘中，他是智慧第一。\n\n【色不异空，空不异色，色即是空，空即是色，受想行识，亦复如是】首四句实是一个意思，总是说色空不二的道理。初说不异，说没有两样的，还是方便的说;后说即是，是说就是一个，不能分的，是究竟说;斩金截铁，毫无犹豫。色一个字，不单是代表五蕴，连外面宇宙万有形形色色都包在内。因为宇宙万有，就没有离了我的性海，浑同一体，尽是色;而我的受、想、行、识，是无相相，也是色。这内外两种色，都是因缘生，无自性，无实体，不可得，根本是性空。现下虽是幻有，毕竟不可得的，所以即色即空，并不是色之外另有个空。参透上面所说的空义，就知道这个意义了。所以心的形形种种，亦是五蕴流转;而色的形形种种，全似空华的乱起乱灭，如电影的一幕一幕，总是有而不可得。你莫把这四句看作玄妙，实是极普通极寻常的道理。你只认明“一切是因缘生，无自性，无实体，不可得，所以是性空”。不但色如是，受、想、行、识四蕴也如是;不但五蕴如是，宇宙万有的有相相，和下面一切法，如十八界，十二因缘，四谛法，六度万行的智得等，是无相相，一切皆复如是的性空。但是凡夫执有，所以说色不异空;二乘又执空，所以说空不异色;还有菩萨未曾会通不二的，所以说色即是空，空即是色，总是破他们的法见。倘明白法见也是本空，就了无挂碍的了。\n\n以上七句判为色空分，为第二段，用以会通色空不二的道理。\n\n【舍利子】 此时要点到本来上，在紧要关头了，故又呼其名而告之，是郑重的意思。\n\n【是诸法空相】法是什么?是心影，是心中缘起的种种道理。如果没有对象，也就没有心没有法了，所以是因缘生、生而不生，无自性，无实物，不可得，本来是空，不是造作出来的空。古人说：心生法生，心灭法灭，心既是幻，法岂是真!诸法是说一切法，就是一切心。世上的人，总是以心缘心，以法缘法，不知本空，遂当他实有，彼此固执住了，争执就此多了。这个相字，应作义字解，下面正点到不生不灭的原理。\n\n【不生不灭】佛经上最不容易了解的就是这一句，须知宇宙间一切一切连我的思想五蕴等等，都是不生不灭的。因为一切是：（一）不自生，如上面说布不能自生为布，是无自性的，须赖众缘和合而生。（二）不他生，不是单靠他缘，还不能离我这个布，所以也不是他生。那么是（三）共生的了?不!也不是共生，因为两面也都是缘生，两无实体，只是一个偶合，所以也不是共生。（四）不无因生，现在的假相，似乎是生，但必由因成果;没有可以成布的因，就没有成布的果。以此类推，一切一切是不生的，现在虽有相，终是生而不生的。既不生，即不灭;但现在的假相，却有个假灭，只是不自灭，如布烧成灰，布不能自烧;不他灭，虽有火烧，终不能离了布;不共灭，不无因灭，都是一个理，可以推想得到的。\n\n【不垢不净，不增不减】因为不生不灭，所以垢净、增减、长短、是非、好坏、来去，一对一对的都是因分别而缘生，统统是幻有不可得，所有的相，本来是空相;因世事无一不由相对而成，苦恼也由相对而立。倘知根本是因缘生，无自性，无实体，不可得，根本是生而不生，不过暂时有这个虚妄相，那又何必执为实体呢?既不执有，亦不废有;即一切法，离一切法;既此用，离此用;心如长空万里，包罗一切，自在无住，此是诸法空相的本来面目，亦即无心可心的本来面目。但众生久已不知的了，有全不知者是六道众生，半知者是二乘，知而未彻者是菩萨，都是有挂碍。所谓有五部，有此岸，有入流，有中流，有彼岸而未登岸上种种。以上五句，判为本来分，为第三段，修行人最要紧是这一点，切勿忽过。\n\n【是故】 此是决定的口气。\n\n【空中无色，无受想行识，无眼耳鼻舌身意，无色声香味触法，无眼界，乃至无意识界】既明白了空中的道理，那么空之中还有什么实体可得呢?这“无”字有两个解释：一是无有，是根本不有的意思。二是毋的意思。因为现在虽有幻相，但毕竟是无，毋庸执取以为实有而生法见，添许多烦恼。所以五蕴（色、受、想、行、识）、六根（眼、耳、鼻、舌、身、意）、六尘（色、声、香、味、触、法）这是十二入，再加上六识（眼识、耳识、鼻识、舌识、身识、意识）共为十八界，都是不可得;因为是缘生的，无自性的，无实体的，不可得的。然而人既有此幻身，自有幻心作用，不能断灭;佛菩萨也要用以度众生，救世间无量苦，我人正要用此以开般若，了生死，出三界，不过圣人明白本来空，所以无法执;众生迷了，遂生颠倒，这是众生的大挂碍。因为地狱众生，挂碍在具足多分贪嗔痴，鬼道挂碍于多分的贪，畜道挂碍于多分的痴，魔道挂碍于多分的嗔，人道挂碍于半分的贪嗔痴，天道挂碍于少分的贪。这贪、嗔、痴三毒，都由六根六尘六识而起，只一空字可以化除一切烦恼挂碍。化除了，当下即是菩提;所以烦恼菩提，同是这个东西。\n\n【无无明，亦无无明尽，乃至无老死，亦无老死尽】这是缘觉（即辟支佛，是不曾闻到佛法而借因缘觉悟的）执取十二因缘法而生挂碍，他不知道诸法空相。既说是因缘，可见是缘生不实，但伊不能明空，被法见缚住了，不得自在。那十二因缘即是：一、无明：是过去的根本烦恼，只要碰到缘就动了。缘就是转下去的意思。二、无明缘行：行是行动，做种种或善或恶的行业。三、行缘识：由于过去的行业，而起现世受胎的一念，是因认识而成为果的。四、识缘名色：在胎中已有形体而有名色。五、名色缘六入：是六根具足，可以和六尘相对的了。六、六入缘触：是出胎后对于一切有所接触了。七、触缘受：接触之后，就受苦受乐而生种种感觉。八、受缘爱：如成年以后，就有强盛的爱欲。九、爱缘取：有了爱欲，就想去取得，心去四面驰求。十、取缘有：取得就有了，是有业成就的果位。十一、有缘生：这是成立了，生生不已，转入未来。十二、生缘老死：有生就有灭，一切本是梦幻泡影，终必变灭，老死是这一段生死的果。但只是无明未灭，再来一转，生生世世转辗不已，遂有六道轮回，总是无明作祟。乃至两个字，是由无明跳至老死，中间略去十位。这十二因缘，位位都依据无明作主，不知皆是妄心幻法缘起，根本无有。尽者，极也，就是无之极也，言无亦无有也，是绝对不可得的意思。所以无明非有实体，如空中华，梦中事;梦中非无，及至梦醒，了不可得。可惜众生不能断无明，缘缘而下，无有穷期，无非是惑业苦。缘觉虽已悟到十二因缘，原是假有的一合相;但以为是定法不移，所以法见不净而生挂碍。\n\n【无苦集灭道】这是声闻执取四谛法，而生挂碍。苦、集、灭、道，是名四谛，就是四种重要的道理。苦是身心逼迫不安。众生身有三苦：老、病、死。心有三苦：贪、嗔、痴。后世有三苦：地狱、鬼、畜生。更有三灾八难苦、坏苦、行苦、苦苦、不知足苦、不安命苦、心无寄托苦，这是苦谛。却是三界六道生死苦果，无不由心和境集合而成，这是集谛。灭是消灭的意思，断一切苦，归到清净寂灭。因为结业既灭，则无生死的患累，这是灭谛。但要灭除那集合的诸苦，必得有个道理，道是正道;做到正道，必要助道，助其离一切苦，到涅盘乐，这是道谛。声闻执此法见以为究竟，所以分段生死，或者可了，变易生死却不易了。倘明本来空，知此四谛法，不过一时的缘生;不但是果上色空，实是因上色空，不必执取，便无挂碍了。\n\n【无智亦无得】这是菩萨的挂碍。菩萨执取六度万行诸法，以为确有智慧可得，有众生可度，有佛可成，心中不免具此波罗蜜的行相，微细的法见不曾净，所以不到究竟涅盘地。从前阿难问佛如何是烦恼地狱种性?佛说行六波罗蜜行是烦恼地狱种;如我能布施，因见他人不肯布施而生厌恶，是烦恼地狱种;我能持戒等等，因见别人不能持戒等等，心生厌恨，是烦恼地狱种。这就是弥陀经上说的见浊，是名染法，染糊涂了。况且有智无智，都是幻心作用，分别为二。同是性空，更有何法可得?世尊昔在燃灯佛所得佛授记，成无上菩提，世尊当时并不取以为胜，因为知道性空!实无少法可得，不过名为菩提而已。所以菩萨必到法无我的时候，才是挂碍净尽。\n\n【以无所得故】这是总结一句，极言上面五蕴、十八界、十二因缘、四谛法、六度智得一切本空，仔细推求，实无所得。以上十三句判为法用分，为第四段，说空了之后，般若法用自然启发，也不受法缚了。\n\n【菩提萨埵】 简称就是菩萨，此指已登佛位的明心菩萨，又名开士、大士;又萨埵译为精进勇猛，堪以荷担如来事业的人。\n\n【依般若波罗蜜多故】他因为依自性的金刚般若，能够超登彼岸的缘故，所以有下面实证的受用。我们应该知道修行不是图利，更不能图名，名利是生死最毒的药;名利的心不死，永无出头的日子。因此因地要正，总要在自性上打算，老老实实，真参实究，决不要在神通奇特，出语玄妙上求，丝毫挡不住生死的。菩萨尚不能离开般若，何况我辈，离了般若之外，更有何法?这是成佛的根本条件，肯向这条法上走的，才是有智慧的人，此生决可成就。\n\n【心无挂碍】这个心，是毫无挂碍，人空法空，寂灭轻安的大自在心，视世间出世间一切一切皆量等虚空，无有边际，包罗万有，了无挂碍。心且不有，挂碍何依?苦厄安在?\n\n【无挂碍故，无有恐怖，远离颠倒梦想】心里既是净空无见，白天没有想象，夜间自无乱梦，正如千眼千手，圆照十方，岂有颠倒?凡人恐怖，先有一个得失心，就是有我的果，正是六道生死的种性。如能心空法空，登于佛位，两个生死已了。菩萨再来世间，是大悲愿力，不是业力，自然没有恐怖，颠倒梦想，都远离了，到了生灭灭已，寂灭为乐的境界了。\n\n【究竟涅盘】这涅盘是清净的意思。二乘人是有余涅盘，不是究竟;这究竟涅盘是佛位，名为无余涅盘，连涅盘亦不可得。所谓成了佛，也没有成佛的法见。本来涅盘是对生死说的，既本来没有生死，亦安有涅盘，不过同是个假名罢了。这是菩萨的果德。\n\n【三世诸佛】无论现在佛，过去佛，未来佛，统包括三世一切诸佛，不问已成未成，都是一体平等。须知释迦弥陀是果上佛，我和六道众生是因上佛，性自平等，所以不可自弃，也不可轻人。\n\n【依般若波罗蜜多故，得阿耨多罗三藐三菩提】三世诸佛，也无不由此法门而得无上菩提。一切大智慧，无不由自性佛母所生，生是启发的意思。这个得，正是无得之得;必得心中了无所得，然后本来的面目斯得。此时无人，无我，无众生，无寿者，寂然不动，而妙用恒沙，由此启发，这是佛的果德。阿耨多罗是无上，三藐是正等，三菩提是正觉;就是无上正等正觉，是言佛的意境。你想连佛也不能离此法门，众生岂可自外，另觅途径，岂非颠倒!所以不自求而他求，都是因地不正，适以自误!\n\n以上十句判为果德分，为第五段，是说到果德地位，一切挂碍才算净尽，才是究竟涅盘，都赖观空成就，并无别法。又以上可算是上半部心经，专说此法无实。下面再翻身过来说个无虚，金刚经说：“此法无实无虚。”要人不要执实，也不要执虚，正显般若无住的妙用。若再深一层讲，心既不有，法于何依?既没有法，更谈不到无实无虚的了。所以说，涅盘生死等空华。\n\n【故知般若波罗蜜多】以下是转入无虚，点明一知字的妙用。这知字是灵照觉知，表明悟后的意境，仿佛是转而为有;不知这知字也是法，也是性空，一时的缘生，暂时的法用，即是知而无知，生而不生;所以不明无生的道理，就不能证知真空的道理。前说一空字，是般若的体;此说一知字，是般若的用。所以表般若的至德，无可形容，无可言表;至此言语道断，心行处灭;惟有神会，惟有赞叹，正是冷暖自知的时候。\n\n【是大神咒，是大明咒，是无上咒，是无等等咒，能除一切苦，真实不虚】这六句是赞叹的辞句。咒是密意，以决定如是曰咒，如军令严速曰咒。以无所不包谓之大;以无所不通谓之神;以无所不照谓之明;以无可比对无可再加谓之无上;以毕竟平等谓之无等等;空不偏空，有不著有，于寂灭无住的性体中，能启发恒沙妙用。六祖云：何期自性本不生灭，本不动摇;何期自性能生万法。前为无实之体，此为无虚之用;故能除一切苦，真实不虚。你想世上的人，没一个人没有挂碍的痛苦，哪一个人能离了佛法，佛法又何曾迷信呢!\n\n以上七句判为证知分，分第六段，要亲证才知这个境界，不是靠文字可以得知的。所以得知的必须要真参实究，从自性上用功，经是不过借来考证罢了。总之，心通才是最大神通;但心不空就不能通，不通就不能明，不明则一切智慧被无明所覆，不能启发。这一分是说心到了真空的境界，自然有许多力量;不是有苦再除，却使一切苦厄无所依附，根本无苦厄的了。\n\n【故说般若波罗蜜多咒，即说咒曰：揭谛揭谛，波罗揭谛，波罗僧揭谛，菩提萨婆诃】梵咒本来不许翻译的，因为怕持的人着了解释，反而添知见，心乱了。但此经是自利利他的，终不能忘记众生，离了大悲本愿。姑将咒义略述一二：揭谛揭谛，是说度过去呀!度过去呀!波罗揭谛，是向彼岸度过去呀!波罗僧揭谛，是彼岸大家度过去呀!菩提萨婆诃，是速速证到菩提呀!以上六句判为秘密分，为第七段，只有自己知道，没法出口的意思。\n\n佛说的三藏十二部，总是说个心，这心经是说心内精华。大凡人有七个心，每每自己不知道的，那六个是六道心，每日流转勿停;忽而天道心，忽而人道心，又忽而三恶道心，总是无主的逐境流浪心。下等的人，并且不知道什么是叫做心，中等的人才知道善心恶心的分别心，上等人是多有向上的心，可以得人天的好果。还有第七个心是空心，是无上的心，是无住的心，是有主的心，是清净自在的心;这个心不是修证到是不会知道的，连二乘人和权乘菩萨也不会知道的。佛说：微生虫到处可去，只是火里不能去。众生的心到处可缘，只是不肯向般若上去，就是不知道那第七个心。这个心是出世的心，明了这个心，去成佛就不远了。众生在此岸，是六个心，超登彼岸，便是那第七个无心的心，正是毫无挂碍的心了。但人不从六个心上下手，就不能出世，要从烦恼上参透，挂碍上打开，方可成佛。譬如人已落在泥坑里，必要从泥里拔出来，所以世法正是出世的资粮。人先要明白烦恼是什么?还是我的六个心。\n",
+    "comments": [],
+    "__v": 0,
+    "id": "626fb56fe751e2734634be61"
+  }
+]

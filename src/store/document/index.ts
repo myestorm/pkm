@@ -85,6 +85,9 @@ const useStore = defineStore('document', {
     documentSearch (keyword: string, directory: string[], options?: AxiosRequestConfig): Promise<TypesBase.IResponeBodyType<TypesDocument.IDocumentType[]>> {
       return axios.post<undefined, TypesBase.IResponeBodyType<TypesDocument.IDocumentType[]>>(`${prefix}/search/${keyword}`, { directory }, options)
     },
+    documentTop (id: string, top: boolean, options?: AxiosRequestConfig): Promise<TypesBase.IResponeBodyType<string>> {
+      return axios.get<undefined, TypesBase.IResponeBodyType<string>>(`${prefix}/top/${id}/${top}`, options)
+    }
   }
 })
 export default useStore

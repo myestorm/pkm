@@ -83,6 +83,14 @@
                           </template>
                           删除
                         </pkm-doption>
+                        <pkm-doption @click="sortTopHandler(item.id, !item.top, index)">
+                          <template #icon>
+                            <icon-star-fill v-if="item.top" />
+                            <icon-star v-else />
+                          </template>
+                          <template v-if="item.top">取消推荐</template>
+                          <template v-else>推荐</template>
+                        </pkm-doption>
                       </template>
                     </pkm-dropdown>
                   </div>
@@ -327,6 +335,14 @@ export default defineComponent({
         }
       })
     }
+    const sortTopHandler = (id: string, top: boolean, index: number) => {
+      bookStore.bookTop(id, top).then(() => {
+        msg.success('操作成功')
+        list.value[index].top = top
+      }).catch(err => {
+        msg.error(err.message)
+      })
+    }
     const creatDocument = () => {
       addBtnChangeHandler(TypesBase.IBaseTypesType.FILE)
     }
@@ -488,6 +504,7 @@ export default defineComponent({
       sortItemClick,
       sortEditHandler,
       sortRemoveHandler,
+      sortTopHandler,
       creatDocument,
       creatFolder,
       clipboard,
