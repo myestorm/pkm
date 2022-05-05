@@ -10,7 +10,7 @@ import { prefix, get, post } from '../core/router'
 import * as TypesBase from '../types/base'
 import Document from '../controllers/document'
 import Book from '../controllers/book'
-import Admin from '../controllers/Admin'
+import Admin from '../controllers/admin'
 
 const document = new Document()
 const book = new Book()
