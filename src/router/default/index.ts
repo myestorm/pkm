@@ -4,6 +4,7 @@ import home from '@/views/default/home.vue'
 import document from '@/views/default/document.vue'
 import book from '@/views/default/book.vue'
 import setting from '@/views/default/setting.vue'
+import filelist from '@/views/default/filelist.vue'
 
 export default {
   path: '/',
@@ -51,6 +52,16 @@ export default {
     meta: {
       title: '设置',
       icon: 'icon-setting',
+      nav: false,
+      keepAlive: false
+    }
+  }, {
+    path: '/filelist',
+    name: 'Filelist',
+    component: filelist,
+    meta: {
+      title: '文件管理',
+      icon: 'icon-storage',
       nav: false,
       keepAlive: false
     }

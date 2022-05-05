@@ -4,6 +4,18 @@
       <pkm-card-grid class="item">
         <pkm-card
           class="card"
+          title="DEMO文件上传"
+          :bordered="false"
+        >
+          <pkm-space direction="vertical" fill>
+            <upload-unzip />
+            <pkm-button long @click="toLink('/filelist')">管理DEMO文件</pkm-button>
+          </pkm-space>
+        </pkm-card>
+      </pkm-card-grid>
+      <pkm-card-grid class="item">
+        <pkm-card
+          class="card"
           title="数据备份"
           :bordered="false"
         >
@@ -22,14 +34,21 @@
 <script lang="ts">
 import { defineComponent, getCurrentInstance, ref } from 'vue'
 import useStore from '@/store/index'
+import { useRouter } from 'vue-router'
+
+import UploadUnzip from '@/components/upload/upload-unzip.vue'
 
 export default defineComponent({
   name: 'Home',
+  components: {
+    UploadUnzip
+  },
   setup () {
     const app = getCurrentInstance()
     const msg = app?.appContext.config.globalProperties.$message
     const modal = app?.appContext.config.globalProperties.$modal
     const store = useStore()
+    const router = useRouter()
     const bakList = ref<string[]>([])
     const folder = ref('')
 
@@ -80,12 +99,17 @@ export default defineComponent({
       }
     }
 
+    const toLink = (path: string) => {
+      router.push(path)
+    }
+
     getList()
     return {
       bakList,
       bakHandler,
       folder,
-      restoreHandler
+      restoreHandler,
+      toLink
     }
   }
 })

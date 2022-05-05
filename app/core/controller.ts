@@ -24,8 +24,8 @@ class BaseController<T> {
     return await this.model.findByIdAndRemove(id)
   }
 
-  async info (id: string): Promise<UnpackedIntersection<T, {}> | null> {
-    const result = await this.model.findById(id).populate(this.options.directoryPopulate)
+  async info (id: string, populate = true,): Promise<UnpackedIntersection<T, {}> | T | null> {
+    const result = populate ? await this.model.findById(id).populate(this.options.directoryPopulate) : await this.model.findById(id)
     return result
   }
 
@@ -81,13 +81,17 @@ class BaseController<T> {
     return list
   }
 
-  async listPage<A> (page: number, pagesize: number, filter: A): Promise<TypesBase.IResponePageType<T>> {
+  async listPage<A> (page: number, pagesize: number, filter: A, populate = true, sort = true): Promise<TypesBase.IResponePageType<T>> {
     const start = (page - 1) * pagesize
     const total = await this.model.find(filter).count()
-    const list: T[] = await this.model.find(filter).populate(this.options.directoryPopulate).skip(start).limit(pagesize).sort({
+    const list: T[] = populate ? await this.model.find(filter).populate(this.options.directoryPopulate).skip(start).limit(pagesize).sort({
+      _id: -1
+    }) : await this.model.find(filter).skip(start).limit(pagesize).sort({
       _id: -1
     })
-    list.sort(this.methods.sort)
+    if (sort) {
+      list.sort(this.methods.sort)
+    }
     const res = {
       list,
       page,

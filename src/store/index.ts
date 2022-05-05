@@ -4,6 +4,7 @@ import { localStorageTheme } from '@/config/index'
 import { axios } from '@/plugins/axios'
 import { AxiosRequestConfig } from 'axios'
 import * as TypesBase from '@/types/base'
+import * as TypesFile from '@/types/file'
 
 const _theme = localStorage.getItem(localStorageTheme) || 'light'
 if (_theme === 'dark') {
@@ -60,7 +61,13 @@ const useStore = defineStore('index', {
     },
     restoreData (folder: string, options?: AxiosRequestConfig): Promise<TypesBase.IResponeBodyType<string[]>> {
       return axios.get<undefined, TypesBase.IResponeBodyType<string[]>>(`${prefix}/restore/${folder}`, options)
-    }
+    },
+    fileList (postData: TypesBase.IPageType<TypesFile.IFileQueryType>, options?: AxiosRequestConfig): Promise<TypesBase.IResponeBodyType<TypesBase.IResponePageType<TypesFile.IFileType>>> {
+      return axios.post<TypesBase.IPageType<TypesFile.IFileQueryType>, TypesBase.IResponeBodyType<TypesBase.IResponePageType<TypesFile.IFileType>>>(`${prefix}/file/list/page`, postData, options)
+    },
+    fileRemove (id: string, options?: AxiosRequestConfig): Promise<TypesBase.IResponeBodyType<string>> {
+      return axios.delete<undefined, TypesBase.IResponeBodyType<string>>(`${prefix}/file/remove/${id}`, options)
+    },
   }
 })
 export default useStore

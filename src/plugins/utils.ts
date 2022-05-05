@@ -22,6 +22,13 @@ export default {
         get () {
           return dayjs
         }
+      },
+      $copy: {
+        get () {
+          return (text: string) => {
+            return navigator.clipboard.writeText(text || '')
+          }
+        }
       }
     })
   }

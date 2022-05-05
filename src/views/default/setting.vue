@@ -35,9 +35,9 @@
         <pkm-table-column title="操作">
           <template #cell="{ record }">
             <pkm-button-group>
-              <pkm-button type="outline" size="mini" @click="disabled(record._id, 1)" v-if="record.status == 0">启用</pkm-button>
-              <pkm-button type="outline" size="mini" @click="disabled(record._id, 0)" v-else>禁用</pkm-button>
-              <pkm-button type="outline" size="mini" @click="resetPassword(record._id)">重置密码</pkm-button>
+              <pkm-button type="outline" size="mini" @click="disabled(record.id, 1)" v-if="record.status == 0">启用</pkm-button>
+              <pkm-button type="outline" size="mini" @click="disabled(record.id, 0)" v-else>禁用</pkm-button>
+              <pkm-button type="outline" size="mini" @click="resetPassword(record.id)">重置密码</pkm-button>
             </pkm-button-group>
           </template>
         </pkm-table-column>
