@@ -12,6 +12,7 @@ export default defineConfig({
     vue(),
     svgLoader(),
     VitePWA({
+      registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
       manifest: {
         name: 'Totonoo - Personal Knowledge Management',
